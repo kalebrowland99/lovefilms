@@ -171,9 +171,9 @@ const ScrollExpandMedia = ({
   return (
     <div
       ref={sectionRef}
-      className='transition-colors duration-700 ease-in-out overflow-x-hidden'
+      className='transition-colors duration-700 ease-in-out overflow-x-hidden bg-black'
     >
-      <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
+      <section className='relative flex flex-col items-center justify-start min-h-[100dvh] bg-black'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
           <motion.div
             className='absolute inset-0 z-0 h-full'
@@ -259,7 +259,7 @@ const ScrollExpandMedia = ({
                     <div className='relative w-full h-full pointer-events-none'>
                       <video
                         src={mediaSrc}
-                        poster={posterSrc}
+                        {...(posterSrc && { poster: posterSrc })}
                         autoPlay
                         muted
                         loop

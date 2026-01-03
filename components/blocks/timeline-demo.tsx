@@ -5,12 +5,39 @@ import { Timeline } from "@/components/ui/timeline";
 export function TimelineDemo() {
   const data = [
     {
-      title: "Weddings",
+      title: "Planning",
       content: (
         <div>
           <p className="text-[#5C4033] dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            Capture the magic of your special day with cinematic wedding videography. 
-            From intimate ceremonies to grand celebrations, we tell your love story beautifully.
+            We'll hop on a call to discuss your vision, preferences, and all the details that make your wedding unique. 
+            This is where we get to know you and create a customized plan for your big day.
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <Image
+              src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=800&h=600&fit=crop"
+              alt="planning consultation"
+              width={500}
+              height={500}
+              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
+            />
+            <Image
+              src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop"
+              alt="wedding planning"
+              width={500}
+              height={500}
+              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Wedding Day",
+      content: (
+        <div>
+          <p className="text-[#5C4033] dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+            The big day! We'll capture every precious moment, from getting ready to the last dance. 
+            Our team works discreetly to document your wedding story as it naturally unfolds.
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
@@ -46,100 +73,41 @@ export function TimelineDemo() {
       ),
     },
     {
-      title: "Corporate",
-      content: (
-        <div>
-          <p className="text-[#5C4033] dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            Professional corporate video production that elevates your brand. From company 
-            profiles to product launches, we create content that drives results.
-          </p>
-          <p className="text-[#5C4033] dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            Our corporate services include promotional videos, training content, event coverage, 
-            and brand storytelling that resonates with your audience.
-          </p>
-          <div className="grid grid-cols-2 gap-4">
-            <Image
-              src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=600&fit=crop"
-              alt="corporate event"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=600&fit=crop"
-              alt="business team"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="https://images.unsplash.com/photo-1560439514-4e9645039924?w=800&h=600&fit=crop"
-              alt="office work"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop"
-              alt="team meeting"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: "Events",
+      title: "Video Delivery",
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-4">
-            From concerts to conferences, we capture every memorable moment of your event 
-            with professional-grade equipment and creative expertise.
+            Fast & quality delivery with revisions included. Your beautifully edited wedding film 
+            will be ready to share and cherish for a lifetime.
           </p>
           <div className="mb-8">
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Concert & Music Festival Coverage
+              ✅ Professional Color Grading
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Conference & Seminar Recording
+              ✅ Cinematic Editing
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Sports Events & Tournaments
+              ✅ Music & Sound Design
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Private Parties & Celebrations
+              ✅ Revisions Included
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Multi-Camera Live Production
+              ✅ Fast Turnaround Time
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop"
-              alt="event crowd"
+              src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=600&fit=crop"
+              alt="video editing"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
             <Image
-              src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop"
-              alt="concert lights"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=600&fit=crop"
-              alt="conference"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?w=800&h=600&fit=crop"
-              alt="stage performance"
+              src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=600&fit=crop"
+              alt="final delivery"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"

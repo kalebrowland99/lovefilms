@@ -2,22 +2,44 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Heart } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X } from 'lucide-react';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
+    <>
+      {/* Promotional Banner */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#8b8370] text-white py-2 px-4 text-center text-xs md:text-sm">
+        <span className="font-medium">
+          Destination & Nashville Wedding Videographer. 1/3 Of 2026 Dates Have Been Booked. So{' '}
+          <a
+            href="#booking"
+            className="underline font-semibold hover:text-neutral-200 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            Reach Out Now
+          </a>
+        </span>
+      </div>
+
+      <header className="fixed top-8 md:top-9 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo Section */}
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <Heart className="h-5 w-5 md:h-6 md:w-6 text-black dark:text-white" />
-              <span className="text-lg md:text-xl font-bold text-black dark:text-white tracking-wide">
-                YOUR LOVE FILMS
-              </span>
+              <Image 
+                src="/YLFText.png" 
+                alt="Your Love Films" 
+                width={400}
+                height={80}
+                className="h-10 md:h-16 w-auto object-contain dark:invert"
+              />
             </Link>
             <div className="hidden md:block h-8 w-px bg-neutral-200 dark:bg-neutral-700" />
             <span className="hidden md:block text-sm text-neutral-600 dark:text-neutral-400">
@@ -140,5 +162,6 @@ export function Header() {
         )}
       </div>
     </header>
+    </>
   );
 }

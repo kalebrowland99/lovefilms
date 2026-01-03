@@ -28,13 +28,27 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Google Analytics */}
+        <Script 
+          src="https://www.googletagmanager.com/gtag/js?id=AW-11434978629" 
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-11434978629');
+          `}
+        </Script>
+
         {children}
         <Script 
           src="https://player.vimeo.com/api/player.js" 
           strategy="lazyOnload"
         />
         <Script 
-          src="https://assets.calendly.com/assets/external/widget.js" 
+          src="//embed.typeform.com/next/embed.js" 
           strategy="lazyOnload"
         />
       </body>

@@ -4,38 +4,24 @@ export function MeetTheCrew() {
   const crew = [
     {
       quote:
-        "With over 10 years of experience in videography, I'm passionate about capturing authentic moments and telling compelling stories. Every wedding and event is unique, and I strive to deliver films that couples will treasure forever.",
+        "With over 10 years of experience in videography, Kaleb is passionate about capturing authentic moments and telling compelling stories. Every wedding and event is unique, and he strives to deliver films that couples will treasure forever.",
       name: "Kaleb Rowland",
-      designation: "Owner & Lead Videographer",
-      src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800&auto=format&fit=crop",
+      designation: "Owner",
+      src: "/kaleb.png",
     },
     {
       quote:
-        "I bring creativity and technical expertise to every project. From color grading to sound design, I ensure every frame tells your story beautifully. My goal is to create cinematic experiences that evoke emotion.",
+        "Alex brings creativity and technical expertise to every project. From color grading to sound design, he ensures every frame tells your story beautifully. His goal is to create cinematic experiences that evoke emotion.",
       name: "Alex Martinez",
       designation: "Senior Video Editor",
-      src: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=800&auto=format&fit=crop",
+      src: "/alex.png",
     },
     {
       quote:
-        "Capturing candid moments is my specialty. I love documenting the little details and genuine emotions that make each celebration special. Every shot I take aims to preserve the magic of your day.",
-      name: "Jordan Taylor",
-      designation: "Videographer",
-      src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      quote:
-        "As a cinematographer, I focus on creating dynamic shots and beautiful compositions. Whether it's drone footage or intimate close-ups, I'm dedicated to capturing your story from every angle.",
-      name: "Sam Rivera",
-      designation: "Videographer",
-      src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      quote:
-        "I'm here to make your booking experience seamless and stress-free. From initial consultation to final delivery, I ensure clear communication and coordinate all the details so you can focus on your special day.",
-      name: "Taylor Johnson",
+        "Grace is here to make your booking experience seamless and stress-free. From initial consultation to final delivery, she ensures clear communication and coordinates all the details so you can focus on your special day.",
+      name: "Grace Moffatt",
       designation: "Booking Coordinator",
-      src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=800&auto=format&fit=crop",
+      src: "/grace.png",
     },
   ];
 
