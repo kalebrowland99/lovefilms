@@ -1,0 +1,144 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { Menu, X, Heart } from 'lucide-react';
+
+export function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo Section */}
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2">
+              <Heart className="h-5 w-5 md:h-6 md:w-6 text-black dark:text-white" />
+              <span className="text-lg md:text-xl font-bold text-black dark:text-white tracking-wide">
+                YOUR LOVE FILMS
+              </span>
+            </Link>
+            <div className="hidden md:block h-8 w-px bg-neutral-200 dark:bg-neutral-700" />
+            <span className="hidden md:block text-sm text-neutral-600 dark:text-neutral-400">
+              Capturing Your Story
+            </span>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
+            <a
+              href="#quick-previews"
+              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors scroll-smooth"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('quick-previews')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Portfolio
+            </a>
+            <a
+              href="#services"
+              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors scroll-smooth"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Services
+            </a>
+            <a
+              href="#reviews"
+              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors scroll-smooth"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Reviews
+            </a>
+          </nav>
+
+          {/* CTA Button and Mobile Menu */}
+          <div className="flex items-center gap-4">
+            <a
+              href="#booking"
+              className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm hover:shadow-lg transition-all"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Book Consultation ✨
+            </a>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-neutral-200 dark:border-neutral-800 py-4">
+            <nav className="flex flex-col gap-4">
+              <a
+                href="#quick-previews"
+                className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors py-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  document.getElementById('quick-previews')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Portfolio
+              </a>
+              <a
+                href="#services"
+                className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors py-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Services
+              </a>
+              <a
+                href="#reviews"
+                className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors py-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Reviews
+              </a>
+              <a
+                href="#booking"
+                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm mt-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Book Consultation ✨
+              </a>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}

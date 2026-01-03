@@ -1,65 +1,142 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect } from 'react';
+import { Header } from '@/components/ui/header';
+import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero';
+import { MeetTheCrew } from '@/components/blocks/meet-the-crew';
+import { TestimonialsSection } from '@/components/ui/testimonials-with-marquee';
+import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
+import { TimelineDemo } from '@/components/blocks/timeline-demo';
+import { FeaturedOn } from '@/components/blocks/featured-on';
+import { Footer } from '@/components/ui/footer';
+
+const mediaContent = {
+  src: '/2.mp4',
+  poster: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1280&auto=format&fit=crop',
+  background: '/3.mp4',
+  title: '',
+  date: 'Capturing Your Story',
+  scrollToExpand: 'Scroll to Explore',
+};
+
+const testimonials = [
+  {
+    author: {
+      name: "Emily & Jordan",
+      handle: "@emilyandjordan",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face"
+    },
+    text: "We couldn't be happier with our wedding film! Every emotion, every tear, every laugh was captured beautifully. Watching it feels like reliving our perfect day all over again.",
+  },
+  {
+    author: {
+      name: "Rachel & Tyler",
+      handle: "@rachelandtyler",
+      avatar: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=150&h=150&fit=crop&crop=face"
+    },
+    text: "From our first meeting to receiving the final video, the entire experience was amazing. They made us feel so comfortable on camera and captured moments we didn't even know happened!",
+  },
+  {
+    author: {
+      name: "Lauren & Chris",
+      handle: "@laurenandchris",
+      avatar: "https://images.unsplash.com/photo-1606800052052-a08af7148866?w=150&h=150&fit=crop&crop=face"
+    },
+    text: "Our wedding video is a work of art. The way they captured the golden hour shots at our venue was breathtaking. We watch it constantly and cry happy tears every time!",
+  },
+  {
+    author: {
+      name: "Amanda & Blake",
+      handle: "@amandaandblake",
+      avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?w=150&h=150&fit=crop&crop=face"
+    },
+    text: "The drone footage of our outdoor ceremony was absolutely stunning! They captured the beauty of our venue and the emotion of our day perfectly. We're so grateful we chose them!",
+  },
+  {
+    author: {
+      name: "Megan & Daniel",
+      handle: "@megananddaniel",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+    },
+    text: "Best investment we made for our wedding! The attention to detail, the cinematic quality, the beautiful music - everything was perfect. Our families watch the video on repeat!",
+  }
+];
 
 export default function Home() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      <Header />
+      <ScrollExpandMedia
+        mediaType="video"
+        mediaSrc={mediaContent.src}
+        posterSrc={mediaContent.poster}
+        bgImageSrc={mediaContent.background}
+        title={mediaContent.title}
+        date={mediaContent.date}
+        scrollToExpand={mediaContent.scrollToExpand}
+      />
+
+      <FeaturedOn />
+
+      {/* Calendly Booking Section - Top */}
+      <section className="py-20 px-4 bg-white dark:bg-neutral-950">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+              Limited spots available
+            </h2>
+            <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
+              Let's discuss your special day and create something unforgettable together
+            </p>
+          </div>
+          <div 
+            className="calendly-inline-widget rounded-2xl overflow-hidden" 
+            data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+            style={{ minWidth: '320px', height: '700px' }}
+          />
+        </div>
+      </section>
+      
+      <MeetTheCrew />
+      
+      <div id="services">
+        <TimelineDemo />
+      </div>
+      
+      <div id="reviews">
+        <TestimonialsSection
+          title="What Our Couples Say ❤️"
+          description="Join hundreds of satisfied clients who trust us with their most important moments"
+          testimonials={testimonials}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      </div>
+
+      {/* Calendly Booking Section */}
+      <section id="booking" className="py-20 px-4 bg-white dark:bg-neutral-950">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+              Limited spots available
+            </h2>
+            <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
+              Let's discuss your special day and create something unforgettable together
+            </p>
+          </div>
+          <div 
+            className="calendly-inline-widget rounded-2xl overflow-hidden" 
+            data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+            style={{ minWidth: '320px', height: '700px' }}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+
+      <InstagramScrollDemo />
+
+      <Footer />
+    </>
   );
 }
