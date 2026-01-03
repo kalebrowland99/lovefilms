@@ -11,9 +11,9 @@ import { FeaturedOn } from '@/components/blocks/featured-on';
 import { Footer } from '@/components/ui/footer';
 
 const mediaContent = {
-  src: '/2.mp4',
+  src: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/2.mp4?alt=media',
   poster: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1280&auto=format&fit=crop',
-  background: '/3.mp4',
+  background: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/1.mp4?alt=media',
   title: '',
   date: 'Capturing Your Story',
   scrollToExpand: 'Scroll to Explore',

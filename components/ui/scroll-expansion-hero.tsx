@@ -181,7 +181,7 @@ const ScrollExpandMedia = ({
             animate={{ opacity: 1 - scrollProgress }}
             transition={{ duration: 0.1 }}
           >
-            {bgImageSrc.endsWith('.mp4') || bgImageSrc.endsWith('.webm') ? (
+            {bgImageSrc.includes('.mp4') || bgImageSrc.includes('.webm') ? (
               <video
                 src={bgImageSrc}
                 autoPlay
