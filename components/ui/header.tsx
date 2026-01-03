@@ -11,23 +11,25 @@ export function Header() {
   return (
     <>
       {/* Promotional Banner */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#8b8370] text-white py-2 px-4 text-center text-xs md:text-sm">
-        <span className="font-medium">
-          Destination & Nashville Wedding Videographer. 1/3 Of 2026 Dates Have Been Booked. So{' '}
-          <a
-            href="#booking"
-            className="underline font-semibold hover:text-neutral-200 transition-colors"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            Reach Out Now
-          </a>
-        </span>
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#8b8370] text-white py-3 px-3 text-center text-[11px] leading-snug md:text-sm md:py-2">
+        <div className="max-w-7xl mx-auto">
+          <span className="font-medium">
+            Destination & Nashville Wedding Videographer. 1/3 Of 2026 Dates Have Been Booked. So{' '}
+            <a
+              href="#booking"
+              className="underline font-semibold hover:text-neutral-200 transition-colors whitespace-nowrap"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Reach Out Now
+            </a>
+          </span>
+        </div>
       </div>
 
-      <header className="fixed top-8 md:top-9 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
+      <header className="fixed top-[52px] md:top-9 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo Section */}

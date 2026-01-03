@@ -15,7 +15,7 @@ const mediaContent = {
   background: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/1.mp4?alt=media',
   title: '',
   date: '📍 Nashville, Tennessee',
-  scrollToExpand: 'Capturing Your Story',
+  scrollToExpand: 'Scroll down to see more',
 };
 
 const testimonials = [

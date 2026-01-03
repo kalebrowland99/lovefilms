@@ -19,11 +19,11 @@ export function FeaturedOn() {
     <section className="relative py-20 bg-white dark:bg-neutral-950">
       <div className="mx-auto max-w-7xl px-4 md:px-8 lg:px-10">
         <div className="overflow-hidden py-4 [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-          <InfiniteSlider gap={64} reverse={false} speed={40} speedOnHover={15}>
+          <InfiniteSlider gap={32} reverse={false} speed={40} speedOnHover={15}>
             {publications.map((pub, index) => (
               <div
                 key={`pub-${index}`}
-                className="flex items-center justify-center px-4"
+                className="flex items-center justify-center px-2 md:px-4"
               >
                 <Image
                   src={pub.logo}
