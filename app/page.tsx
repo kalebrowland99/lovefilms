@@ -109,9 +109,9 @@ export default function Home() {
       </div>
 
       {/* Typeform Booking Section */}
-      <section id="booking" className="py-20 px-4 bg-white dark:bg-neutral-950">
+      <section className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-8">
+          <div id="booking" className="text-center mb-8">
             <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
               Limited spots available
             </h2>
