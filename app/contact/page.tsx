@@ -1,0 +1,357 @@
+'use client';
+
+import { useState } from 'react';
+
+export default function ContactPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+
+    console.log('Submitting form data:', data);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Response result:', result);
+
+      if (result.success) {
+        setSubmitMessage(result.message);
+        form.reset();
+      } else {
+        setSubmitMessage(result.message || 'Something went wrong. Please try again or email us directly at hi@yourlovefilms.com');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitMessage('Something went wrong. Please try again or email us directly at hi@yourlovefilms.com');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-gradient-to-br from-neutral-900 to-neutral-800">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-40"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop')"
+          }}
+        />
+        <div className="relative z-10 text-center text-white px-4">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-wider">
+            NEWLY ENGAGED?
+          </h1>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="py-16 md:py-24 px-4 bg-neutral-50 dark:bg-neutral-950">
+        <div className="max-w-4xl mx-auto">
+          
+          {/* Main Offer */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+            <h2 className="text-3xl md:text-4xl font-semibold text-center mb-6 text-neutral-800 dark:text-neutral-100">
+              A Rare Wedding Videography Opportunity for 2026–2027 Couples!
+            </h2>
+            
+            <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+              For a very limited time, only 3 newly engaged couples planning weddings in 2026 or 2027 in Tennessee can receive:
+            </p>
+
+            <div className="space-y-4 mb-8">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">-</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  $1,000 off my most popular wedding videography collection
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">-</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  A complimentary engagement session when you book
+                </p>
+              </div>
+            </div>
+
+            <p className="text-lg font-semibold text-neutral-800 dark:text-neutral-100 text-center">
+              Once these 3 spots are claimed, this offer will not be extended.
+            </p>
+          </div>
+
+          {/* Who This Is For */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+              Who This Is For
+            </h3>
+            
+            <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+              This opportunity is designed for couples who:
+            </p>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="text-xl">•</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  Value videography as a top priority
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-xl">•</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  Want a calm, guided wedding day experience
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-xl">•</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  Are ready to secure a trusted professional videographer early
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Wedding Photo */}
+          <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
+            <img 
+              src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop" 
+              alt="Wedding couple" 
+              className="w-full h-[400px] object-cover"
+            />
+          </div>
+
+          {/* The Experience */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+              The Experience You're Securing
+            </h3>
+            
+            <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+              The couples who book early get more than peace of mind — they get first access to planning support, priority scheduling, and a videographer who knows their vision long before the wedding day.
+            </p>
+
+            <p className="text-lg font-semibold text-neutral-800 dark:text-neutral-100 text-center">
+              That's how wedding days stay calm and intentional.
+            </p>
+          </div>
+
+          {/* What's Included */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+              What's Included
+            </h3>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  $1,000 off my most popular wedding videography collection
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  A complimentary engagement session
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  A personalized, stress-free experience
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                  Only 3 couples will receive this offer
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* How to Claim */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+              How to Claim One of the 3 Spots
+            </h3>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+                  1
+                </span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300 pt-1">
+                  Complete the short form below
+                </p>
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+                  2
+                </span>
+                <p className="text-lg text-neutral-700 dark:text-neutral-300 pt-1">
+                  I'll reach out with next steps
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Important Note */}
+          <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-6 text-neutral-800 dark:text-neutral-100">
+              Important Note
+            </h3>
+            
+            <p className="text-lg text-neutral-700 dark:text-neutral-300 text-center">
+              2026 dates are over 50% booked already and prime 2027 dates are already filling quickly due to recent engagements. Once these 3 offer spots are taken — or your date is booked by another couple — this opportunity is gone.
+            </p>
+          </div>
+
+          {/* Apply Now Section */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12">
+            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+              Apply Now to Check Availability
+            </h3>
+            
+            {/* Contact Form */}
+            <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Name"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Email Address"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Cell Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Cell Phone Number"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="fianceName" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Fiance's Full Name
+                </label>
+                <input
+                  type="text"
+                  id="fianceName"
+                  name="fianceName"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Fiance's Full Name"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="weddingDate" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Wedding Date (Estimate if Unsure)
+                </label>
+                <input
+                  type="text"
+                  id="weddingDate"
+                  name="weddingDate"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Wedding Date (Estimate if Unsure)"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="venue" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Wedding Venue/s
+                </label>
+                <input
+                  type="text"
+                  id="venue"
+                  name="venue"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Wedding Venue/s"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="videographer" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Do You Have A Videographer Booked Yet? (Yes/No)
+                </label>
+                <input
+                  type="text"
+                  id="videographer"
+                  name="videographer"
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-300 text-black font-bold text-lg py-4 px-8 rounded-lg transition-colors duration-200 uppercase tracking-wider disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
+              </button>
+
+              {submitMessage && (
+                <div className={`text-center p-4 rounded-lg ${submitMessage.includes('Thank you') ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200'}`}>
+                  {submitMessage}
+                </div>
+              )}
+            </form>
+          </div>
+
+        </div>
+      </section>
+    </>
+  );
+}
+
