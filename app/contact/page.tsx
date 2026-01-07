@@ -107,65 +107,65 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-16 md:py-24 px-4 bg-white dark:bg-neutral-950">
+      <section className="py-12 md:py-24 px-4 bg-white dark:bg-neutral-950">
         <div className="max-w-4xl mx-auto">
           
           {/* Main Offer */}
-          <div className="bg-[#d9d4c8] rounded-2xl p-8 md:p-12 mb-8">
-            <h2 className="text-3xl md:text-4xl font-serif font-normal text-center mb-6 text-neutral-800">
+          <div className="bg-[#d9d4c8] rounded-2xl p-6 md:p-12 mb-8">
+            <h2 className="text-2xl md:text-4xl font-serif font-normal text-center mb-4 md:mb-6 text-neutral-800 leading-tight">
               A Rare Wedding Videography Opportunity for 2026–2027 Couples!
             </h2>
             
-            <p className="text-lg font-serif text-neutral-800 mb-6">
+            <p className="text-base md:text-lg font-serif text-neutral-800 mb-4 md:mb-6">
               For a very limited time, only 3 newly engaged couples planning weddings in 2026 or 2027 in Tennessee can receive:
             </p>
 
-            <div className="space-y-4 mb-8">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl font-serif">-</span>
-                <p className="text-lg font-serif text-neutral-800">
+            <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-xl md:text-2xl font-serif flex-shrink-0">-</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800">
                   $1,000 off my most popular wedding videography collection
                 </p>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="text-2xl font-serif">-</span>
-                <p className="text-lg font-serif text-neutral-800">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-xl md:text-2xl font-serif flex-shrink-0">-</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800">
                   A complimentary engagement session when you book
                 </p>
               </div>
             </div>
 
-            <p className="text-lg font-serif font-normal text-neutral-800 text-center">
+            <p className="text-base md:text-lg font-serif font-normal text-neutral-800 text-center">
               Once these 3 spots are claimed, this offer will not be extended.
             </p>
           </div>
 
           {/* Who This Is For */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
               Who This Is For
             </h3>
             
-            <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-6">
+            <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-4 md:mb-6">
               This opportunity is designed for couples who:
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <span className="text-xl font-serif">•</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-lg md:text-xl font-serif flex-shrink-0">•</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Value videography as a top priority
                 </p>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="text-xl font-serif">•</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-lg md:text-xl font-serif flex-shrink-0">•</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Want a calm, guided wedding day experience
                 </p>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="text-xl font-serif">•</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-lg md:text-xl font-serif flex-shrink-0">•</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Are ready to secure a trusted professional videographer early
                 </p>
               </div>
@@ -173,57 +173,57 @@ export default function ContactPage() {
           </div>
 
           {/* Wedding Photo */}
-          <div className="mb-8 rounded-2xl overflow-hidden border-2 border-[#E8DED2]">
+          <div className="mb-6 md:mb-8 rounded-2xl overflow-hidden border-2 border-[#E8DED2]">
             <img 
               src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop" 
               alt="Wedding couple" 
-              className="w-full h-[400px] object-cover"
+              className="w-full h-[250px] md:h-[400px] object-cover"
             />
           </div>
 
           {/* The Experience */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
               The Experience You're Securing
             </h3>
             
-            <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-6">
+            <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-4 md:mb-6">
               The couples who book early get more than peace of mind — they get first access to planning support, priority scheduling, and a videographer who knows their vision long before the wedding day.
             </p>
 
-            <p className="text-lg font-serif font-normal text-neutral-800 dark:text-neutral-100 text-center">
+            <p className="text-base md:text-lg font-serif font-normal text-neutral-800 dark:text-neutral-100 text-center">
               That's how wedding days stay calm and intentional.
             </p>
           </div>
 
           {/* What's Included */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
               What's Included
             </h3>
             
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <span className="text-[#8b8370] text-xl font-serif">✔</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-[#8b8370] text-lg md:text-xl font-serif flex-shrink-0">✔</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   $1,000 off my most popular wedding videography collection
                 </p>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="text-[#8b8370] text-xl font-serif">✔</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-[#8b8370] text-lg md:text-xl font-serif flex-shrink-0">✔</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   A complimentary engagement session
                 </p>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="text-[#8b8370] text-xl font-serif">✔</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-[#8b8370] text-lg md:text-xl font-serif flex-shrink-0">✔</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   A personalized, stress-free experience
                 </p>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="text-[#8b8370] text-xl font-serif">✔</span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
+              <div className="flex items-start gap-2 md:gap-3">
+                <span className="text-[#8b8370] text-lg md:text-xl font-serif flex-shrink-0">✔</span>
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Only 3 couples will receive this offer
                 </p>
               </div>
@@ -231,25 +231,25 @@ export default function ContactPage() {
           </div>
 
           {/* How to Claim */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
               How to Claim One of the 3 Spots
             </h3>
             
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#8b8370] text-white flex items-center justify-center font-serif font-normal">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex items-start gap-3 md:gap-4">
+                <span className="flex-shrink-0 w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#8b8370] text-white flex items-center justify-center font-serif font-normal text-sm md:text-base">
                   1
                 </span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-1">
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-0.5 md:pt-1">
                   Complete the short form below
                 </p>
               </div>
-              <div className="flex items-start gap-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#8b8370] text-white flex items-center justify-center font-serif font-normal">
+              <div className="flex items-start gap-3 md:gap-4">
+                <span className="flex-shrink-0 w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#8b8370] text-white flex items-center justify-center font-serif font-normal text-sm md:text-base">
                   2
                 </span>
-                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-1">
+                <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-0.5 md:pt-1">
                   I'll reach out with next steps
                 </p>
               </div>
@@ -257,24 +257,24 @@ export default function ContactPage() {
           </div>
 
           {/* Important Note */}
-          <div className="bg-[#d9d4c8] border-2 border-[#8b8370] rounded-2xl p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-6 text-neutral-800">
+          <div className="bg-[#d9d4c8] border-2 border-[#8b8370] rounded-2xl p-6 md:p-12 mb-6 md:mb-8">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-6 text-neutral-800">
               Important Note
             </h3>
             
-            <p className="text-lg font-serif text-neutral-800 text-center">
+            <p className="text-base md:text-lg font-serif text-neutral-800 text-center">
               2026 dates are over 50% booked already and prime 2027 dates are already filling quickly due to recent engagements. Once these 3 offer spots are taken — or your date is booked by another couple — this opportunity is gone.
             </p>
           </div>
 
           {/* Apply Now Section */}
-          <div ref={formRef} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12">
-            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div ref={formRef} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
               Apply Now to Check Availability
             </h3>
             
             {/* Contact Form */}
-            <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
               <div>
                 <label htmlFor="name" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Name
