@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const loveNotes = [
   {
     names: "jeb and easley",
-    quote: "We both teared up multiple times and are just overwhelmed at how talented Mason is. We could not BELIEVE the beautiful way he made sure each person and part of our life that means the most to us was highlighted."
+    quote: "We both teared up multiple times and are just overwhelmed at how talented YourLoveFilms is. We could not BELIEVE the beautiful way they made sure each person and part of our life that means the most to us was highlighted."
   },
   {
     names: "Emily & Jordan",
