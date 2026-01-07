@@ -117,25 +117,12 @@ export function TimelineDemo() {
           <p className="text-[#5C4033] dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             Watch our latest work and see the quality and creativity we bring to every project.
           </p>
-          <div className="space-y-6 mb-8">
-            {/* Video 1 */}
+          <div className="mb-8">
+            {/* Video */}
             <div className="w-full">
               <div style={{ padding: '56.25% 0 0 0', position: 'relative' }} className="rounded-2xl overflow-hidden shadow-lg border border-[#E8DED2] dark:border-neutral-800">
                 <iframe
                   src="https://player.vimeo.com/video/1151089615?badge=0&autopause=0&player_id=0&app_id=58479"
-                  frameBorder="0"
-                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                  title="Quick Preview 2"
-                />
-              </div>
-            </div>
-
-            {/* Video 2 */}
-            <div className="w-full">
-              <div style={{ padding: '56.25% 0 0 0', position: 'relative' }} className="rounded-2xl overflow-hidden shadow-lg border border-[#E8DED2] dark:border-neutral-800">
-                <iframe
-                  src="https://player.vimeo.com/video/1151089601?badge=0&autopause=0&player_id=0&app_id=58479"
                   frameBorder="0"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
