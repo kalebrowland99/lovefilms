@@ -54,6 +54,7 @@ const testimonials = [
 export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const [showCalendly, setShowCalendly] = useState(false);
   const formRef1 = useRef<HTMLDivElement>(null);
   const formRef2 = useRef<HTMLDivElement>(null);
   const hasTriggeredConfetti1 = useRef(false);
@@ -126,8 +127,25 @@ export default function Home() {
       const result = await response.json();
 
       if (result.success) {
-        setSubmitMessage(result.message);
-        form.reset();
+        // Trigger confetti
+        const isMobile = window.innerWidth < 768;
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 },
+          colors: ['#FFD700', '#FFA500', '#DAA520', '#B8860B', '#F4C430', '#FFDF00'],
+          scalar: isMobile ? 0.6 : 1
+        });
+        
+        setShowCalendly(true);
+        
+        // Load Calendly script if not already loaded
+        if (!document.querySelector('script[src*="calendly"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://assets.calendly.com/assets/external/widget.js';
+          script.async = true;
+          document.body.appendChild(script);
+        }
       } else {
         setSubmitMessage(result.message || 'Something went wrong. Please try again or email us directly at hi@yourlovefilms.com');
       }
@@ -152,17 +170,19 @@ export default function Home() {
       {/* Booking Form Section */}
       <section ref={formRef1} className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-4xl">
-          <div id="booking" className="text-center mb-12">
-            <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
-              Check if the date is available 💍
-            </h2>
-            <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
-              Fill out the form below and we'll discuss your special day!
-            </p>
-          </div>
+          {!showCalendly ? (
+            <>
+              <div id="booking" className="text-center mb-12">
+                <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+                  Check if the date is available 💍
+                </h2>
+                <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
+                  Fill out the form below and we'll discuss your special day!
+                </p>
+              </div>
 
-          {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              {/* Contact Form */}
+              <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                 Name
@@ -275,6 +295,19 @@ export default function Home() {
               </div>
             )}
           </form>
+            </>
+          ) : (
+            <div className="bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-8 text-center text-black dark:text-white">
+                Looks like we have that date available! Pick a time for me to call you.
+              </h2>
+              <div 
+                className="calendly-inline-widget" 
+                data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                style={{ minWidth: '320px', height: '700px' }}
+              />
+            </div>
+          )}
         </div>
       </section>
       
@@ -299,17 +332,19 @@ export default function Home() {
       {/* Second Booking Form Section */}
       <section ref={formRef2} className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
-              Check if the date is available 💍
-            </h2>
-            <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
-              Fill out the form below and we'll discuss your special day!
-            </p>
-          </div>
+          {!showCalendly ? (
+            <>
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+                  Check if the date is available 💍
+                </h2>
+                <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
+                  Fill out the form below and we'll discuss your special day!
+                </p>
+              </div>
 
-          {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              {/* Contact Form */}
+              <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
             <div>
               <label htmlFor="name2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                 Name
@@ -422,6 +457,19 @@ export default function Home() {
               </div>
             )}
           </form>
+            </>
+          ) : (
+            <div className="bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-8 text-center text-black dark:text-white">
+                Looks like we have that date available! Pick a time for me to call you.
+              </h2>
+              <div 
+                className="calendly-inline-widget" 
+                data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                style={{ minWidth: '320px', height: '700px' }}
+              />
+            </div>
+          )}
         </div>
       </section>
 
