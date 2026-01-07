@@ -5,6 +5,7 @@ import { Header } from '@/components/ui/header';
 import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero';
 import { MeetTheCrew } from '@/components/blocks/meet-the-crew';
 import { LoveNotes } from '@/components/blocks/love-notes';
+import { LetsTravel } from '@/components/blocks/lets-travel';
 import { TestimonialsSection } from '@/components/ui/testimonials-with-marquee';
 import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
 import { TimelineDemo } from '@/components/blocks/timeline-demo';
@@ -249,6 +250,8 @@ export default function Home() {
       <MeetTheCrew />
       
       <LoveNotes />
+      
+      <LetsTravel />
       
       <div id="services">
         <TimelineDemo />
