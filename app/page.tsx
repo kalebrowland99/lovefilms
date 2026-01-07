@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/ui/header';
-import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero';
+import { SimpleVideoHero } from '@/components/ui/simple-video-hero';
 import { MeetTheCrew } from '@/components/blocks/meet-the-crew';
 import { LoveNotes } from '@/components/blocks/love-notes';
 import { LetsTravel } from '@/components/blocks/lets-travel';
@@ -11,14 +11,6 @@ import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
 import { TimelineDemo } from '@/components/blocks/timeline-demo';
 import { FeaturedOn } from '@/components/blocks/featured-on';
 import { Footer } from '@/components/ui/footer';
-
-const mediaContent = {
-  src: '',
-  background: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media',
-  title: '',
-  date: '📍 Nashville, Tennessee',
-  scrollToExpand: 'Scroll down to see more',
-};
 
 const testimonials = [
   {
@@ -107,13 +99,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <ScrollExpandMedia
-        mediaType="video"
-        mediaSrc={mediaContent.src}
-        bgImageSrc={mediaContent.background}
-        title={mediaContent.title}
-        date={mediaContent.date}
-        scrollToExpand={mediaContent.scrollToExpand}
+      <SimpleVideoHero
+        videoSrc="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
+        subtitle="📍 Nashville, Tennessee"
       />
 
       <FeaturedOn />
