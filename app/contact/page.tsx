@@ -6,6 +6,7 @@ import confetti from 'canvas-confetti';
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const [showCalendly, setShowCalendly] = useState(false);
   const formRef1 = useRef<HTMLDivElement>(null);
   const formRef2 = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -98,8 +99,15 @@ export default function ContactPage() {
       console.log('Response result:', result);
 
       if (result.success) {
-        setSubmitMessage(result.message);
-        form.reset();
+        setShowCalendly(true);
+        
+        // Load Calendly script if not already loaded
+        if (!document.querySelector('script[src*="calendly"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://assets.calendly.com/assets/external/widget.js';
+          script.async = true;
+          document.body.appendChild(script);
+        }
       } else {
         setSubmitMessage(result.message || 'Something went wrong. Please try again or email us directly at hi@yourlovefilms.com');
       }
@@ -172,12 +180,14 @@ export default function ContactPage() {
 
           {/* Apply Now Section - First Form */}
           <div ref={formRef1} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
-            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
-              Apply Now to Check Availability
-            </h3>
-            
-            {/* Contact Form */}
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+            {!showCalendly ? (
+              <>
+                <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+                  Apply Now to Check Availability
+                </h3>
+                
+                {/* Contact Form */}
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
               <div>
                 <label htmlFor="name-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Name
@@ -290,6 +300,19 @@ export default function ContactPage() {
                 </div>
               )}
             </form>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+                  Looks like we have that date available! Pick a time for me to call you.
+                </h3>
+                <div 
+                  className="calendly-inline-widget" 
+                  data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                  style={{ minWidth: '320px', height: '700px' }}
+                />
+              </>
+            )}
           </div>
 
           {/* Who This Is For */}
@@ -425,12 +448,14 @@ export default function ContactPage() {
 
           {/* Apply Now Section - Second Form */}
           <div ref={formRef2} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12">
-            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
-              Apply Now to Check Availability
-            </h3>
-            
-            {/* Contact Form */}
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+            {!showCalendly ? (
+              <>
+                <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+                  Apply Now to Check Availability
+                </h3>
+                
+                {/* Contact Form */}
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
               <div>
                 <label htmlFor="name-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Name
@@ -543,6 +568,19 @@ export default function ContactPage() {
                 </div>
               )}
             </form>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+                  Looks like we have that date available! Pick a time for me to call you.
+                </h3>
+                <div 
+                  className="calendly-inline-widget" 
+                  data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                  style={{ minWidth: '320px', height: '700px' }}
+                />
+              </>
+            )}
           </div>
 
         </div>
