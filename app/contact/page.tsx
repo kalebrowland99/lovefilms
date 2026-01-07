@@ -52,80 +52,80 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-gradient-to-br from-neutral-900 to-neutral-800">
+      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-[#8b8370]">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40"
+          className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop')"
           }}
         />
         <div className="relative z-10 text-center text-white px-4">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-wider">
+          <h1 className="text-4xl md:text-6xl font-serif font-normal tracking-wide">
             NEWLY ENGAGED?
           </h1>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-16 md:py-24 px-4 bg-neutral-50 dark:bg-neutral-950">
+      <section className="py-16 md:py-24 px-4 bg-white dark:bg-neutral-950">
         <div className="max-w-4xl mx-auto">
           
           {/* Main Offer */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-            <h2 className="text-3xl md:text-4xl font-semibold text-center mb-6 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-[#d9d4c8] rounded-2xl p-8 md:p-12 mb-8">
+            <h2 className="text-3xl md:text-4xl font-serif font-normal text-center mb-6 text-neutral-800">
               A Rare Wedding Videography Opportunity for 2026–2027 Couples!
             </h2>
             
-            <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+            <p className="text-lg font-serif text-neutral-800 mb-6">
               For a very limited time, only 3 newly engaged couples planning weddings in 2026 or 2027 in Tennessee can receive:
             </p>
 
             <div className="space-y-4 mb-8">
               <div className="flex items-start gap-3">
-                <span className="text-2xl">-</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-2xl font-serif">-</span>
+                <p className="text-lg font-serif text-neutral-800">
                   $1,000 off my most popular wedding videography collection
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-2xl">-</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-2xl font-serif">-</span>
+                <p className="text-lg font-serif text-neutral-800">
                   A complimentary engagement session when you book
                 </p>
               </div>
             </div>
 
-            <p className="text-lg font-semibold text-neutral-800 dark:text-neutral-100 text-center">
+            <p className="text-lg font-serif font-normal text-neutral-800 text-center">
               Once these 3 spots are claimed, this offer will not be extended.
             </p>
           </div>
 
           {/* Who This Is For */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
               Who This Is For
             </h3>
             
-            <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+            <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-6">
               This opportunity is designed for couples who:
             </p>
 
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <span className="text-xl">•</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-xl font-serif">•</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Value videography as a top priority
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-xl">•</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-xl font-serif">•</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Want a calm, guided wedding day experience
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-xl">•</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-xl font-serif">•</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Are ready to secure a trusted professional videographer early
                 </p>
               </div>
@@ -133,7 +133,7 @@ export default function ContactPage() {
           </div>
 
           {/* Wedding Photo */}
-          <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
+          <div className="mb-8 rounded-2xl overflow-hidden border-2 border-[#E8DED2]">
             <img 
               src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop" 
               alt="Wedding couple" 
@@ -142,48 +142,48 @@ export default function ContactPage() {
           </div>
 
           {/* The Experience */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
               The Experience You're Securing
             </h3>
             
-            <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+            <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-6">
               The couples who book early get more than peace of mind — they get first access to planning support, priority scheduling, and a videographer who knows their vision long before the wedding day.
             </p>
 
-            <p className="text-lg font-semibold text-neutral-800 dark:text-neutral-100 text-center">
+            <p className="text-lg font-serif font-normal text-neutral-800 dark:text-neutral-100 text-center">
               That's how wedding days stay calm and intentional.
             </p>
           </div>
 
           {/* What's Included */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
               What's Included
             </h3>
             
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-[#8b8370] text-xl font-serif">✔</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   $1,000 off my most popular wedding videography collection
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-[#8b8370] text-xl font-serif">✔</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   A complimentary engagement session
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-[#8b8370] text-xl font-serif">✔</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   A personalized, stress-free experience
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-green-600 dark:text-green-400 text-xl">✔</span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                <span className="text-[#8b8370] text-xl font-serif">✔</span>
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300">
                   Only 3 couples will receive this offer
                 </p>
               </div>
@@ -191,25 +191,25 @@ export default function ContactPage() {
           </div>
 
           {/* How to Claim */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
               How to Claim One of the 3 Spots
             </h3>
             
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#8b8370] text-white flex items-center justify-center font-serif font-normal">
                   1
                 </span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300 pt-1">
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-1">
                   Complete the short form below
                 </p>
               </div>
               <div className="flex items-start gap-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#8b8370] text-white flex items-center justify-center font-serif font-normal">
                   2
                 </span>
-                <p className="text-lg text-neutral-700 dark:text-neutral-300 pt-1">
+                <p className="text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-1">
                   I'll reach out with next steps
                 </p>
               </div>
@@ -217,26 +217,26 @@ export default function ContactPage() {
           </div>
 
           {/* Important Note */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-8 md:p-12 mb-8">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-6 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-[#d9d4c8] border-2 border-[#8b8370] rounded-2xl p-8 md:p-12 mb-8">
+            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-6 text-neutral-800">
               Important Note
             </h3>
             
-            <p className="text-lg text-neutral-700 dark:text-neutral-300 text-center">
+            <p className="text-lg font-serif text-neutral-800 text-center">
               2026 dates are over 50% booked already and prime 2027 dates are already filling quickly due to recent engagements. Once these 3 offer spots are taken — or your date is booked by another couple — this opportunity is gone.
             </p>
           </div>
 
           {/* Apply Now Section */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-12">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-neutral-800 dark:text-neutral-100">
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12">
+            <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
               Apply Now to Check Availability
             </h3>
             
             {/* Contact Form */}
             <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="name" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Name
                 </label>
                 <input
@@ -244,13 +244,13 @@ export default function ContactPage() {
                   id="name"
                   name="name"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="email" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Email Address
                 </label>
                 <input
@@ -258,13 +258,13 @@ export default function ContactPage() {
                   id="email"
                   name="email"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Email Address"
                 />
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="phone" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Cell Phone Number
                 </label>
                 <input
@@ -272,13 +272,13 @@ export default function ContactPage() {
                   id="phone"
                   name="phone"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Cell Phone Number"
                 />
               </div>
 
               <div>
-                <label htmlFor="fianceName" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="fianceName" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Fiance's Full Name
                 </label>
                 <input
@@ -286,13 +286,13 @@ export default function ContactPage() {
                   id="fianceName"
                   name="fianceName"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Fiance's Full Name"
                 />
               </div>
 
               <div>
-                <label htmlFor="weddingDate" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="weddingDate" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Wedding Date (Estimate if Unsure)
                 </label>
                 <input
@@ -300,13 +300,13 @@ export default function ContactPage() {
                   id="weddingDate"
                   name="weddingDate"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Wedding Date (Estimate if Unsure)"
                 />
               </div>
 
               <div>
-                <label htmlFor="venue" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="venue" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Wedding Venue/s
                 </label>
                 <input
@@ -314,13 +314,13 @@ export default function ContactPage() {
                   id="venue"
                   name="venue"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Wedding Venue/s"
                 />
               </div>
 
               <div>
-                <label htmlFor="videographer" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="videographer" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Do You Have A Videographer Booked Yet? (Yes/No)
                 </label>
                 <input
@@ -328,7 +328,7 @@ export default function ContactPage() {
                   id="videographer"
                   name="videographer"
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
                 />
               </div>
@@ -336,13 +336,13 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-300 text-black font-bold text-lg py-4 px-8 rounded-lg transition-colors duration-200 uppercase tracking-wider disabled:cursor-not-allowed"
+                className="w-full bg-[#8b8370] hover:bg-[#756d5f] disabled:bg-[#a39989] text-white font-serif font-normal text-lg py-4 px-8 rounded-lg transition-colors duration-200 uppercase tracking-wider disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
               </button>
 
               {submitMessage && (
-                <div className={`text-center p-4 rounded-lg ${submitMessage.includes('Thank you') ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200'}`}>
+                <div className={`text-center p-4 rounded-lg font-serif ${submitMessage.includes('Thank you') ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200'}`}>
                   {submitMessage}
                 </div>
               )}
