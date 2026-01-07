@@ -286,7 +286,7 @@ export default function ContactPage() {
             </h3>
             
             <p className="text-base md:text-lg font-serif text-neutral-800 text-center">
-              2026 dates are over 50% booked already and prime 2027 dates are already filling quickly due to recent engagements. Once these 3 offer spots are taken — or your date is booked by another couple — this opportunity is gone.
+              Dates are filling fast. Once these 3 spots are claimed, this offer ends.
             </p>
           </div>
 
