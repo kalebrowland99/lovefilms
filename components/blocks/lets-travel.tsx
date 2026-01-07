@@ -10,9 +10,8 @@ export function LetsTravel() {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source src="/travel-video.mp4" type="video/mp4" />
-      </video>
+        src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
+      />
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
