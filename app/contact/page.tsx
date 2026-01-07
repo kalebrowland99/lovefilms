@@ -7,6 +7,7 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const formRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const hasTriggeredConfetti = useRef(false);
 
   useEffect(() => {
@@ -36,6 +37,24 @@ export default function ContactPage() {
     return () => {
       observer.disconnect();
     };
+  }, []);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      const handleLoadedMetadata = () => {
+        if (videoElement.duration) {
+          videoElement.currentTime = videoElement.duration / 2;
+        }
+      };
+
+      videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+      return () => {
+        videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      };
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -175,6 +194,7 @@ export default function ContactPage() {
           {/* Wedding Video */}
           <div className="mb-6 md:mb-8 rounded-2xl overflow-hidden border-2 border-[#E8DED2]">
             <video
+              ref={videoRef}
               src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
               autoPlay
               muted
