@@ -259,6 +259,135 @@ export default function Home() {
         />
       </div>
 
+      {/* Second Booking Form Section */}
+      <section className="py-20 px-4 bg-white dark:bg-neutral-950">
+        <div className="mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+              Limited spots available
+            </h2>
+            <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
+              Fill out the form below and we'll discuss your special day!
+            </p>
+          </div>
+
+          {/* Contact Form */}
+          <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+            <div>
+              <label htmlFor="name2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name2"
+                name="name"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Name"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email2"
+                name="email"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Email Address"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="phone2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Cell Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone2"
+                name="phone"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Cell Phone Number"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="fianceName2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Fiance's Full Name
+              </label>
+              <input
+                type="text"
+                id="fianceName2"
+                name="fianceName"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Fiance's Full Name"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="weddingDate2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Wedding Date (Estimate if Unsure)
+              </label>
+              <input
+                type="text"
+                id="weddingDate2"
+                name="weddingDate"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Wedding Date (Estimate if Unsure)"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="venue2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Wedding Venue/s
+              </label>
+              <input
+                type="text"
+                id="venue2"
+                name="venue"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Wedding Venue/s"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="videographer2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                Do You Have A Videographer Booked Yet? (Yes/No)
+              </label>
+              <input
+                type="text"
+                id="videographer2"
+                name="videographer"
+                required
+                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-300 text-black font-bold text-lg py-4 px-8 rounded-lg transition-colors duration-200 uppercase tracking-wider disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
+            </button>
+
+            {submitMessage && (
+              <div className={`text-center p-4 rounded-lg ${submitMessage.includes('Thank you') ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200'}`}>
+                {submitMessage}
+              </div>
+            )}
+          </form>
+        </div>
+      </section>
+
       <InstagramScrollDemo />
 
       <Footer />
