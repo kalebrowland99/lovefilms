@@ -97,20 +97,14 @@ export function TimelineDemo() {
               ✅ Fast Turnaround Time
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Image
-              src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=600&fit=crop"
-              alt="video editing"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=600&fit=crop"
-              alt="final delivery"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
+          <div className="w-full">
+            <video
+              src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="rounded-2xl object-cover w-full h-48 md:h-64 lg:h-80 shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
           </div>
         </div>
