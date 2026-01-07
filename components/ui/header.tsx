@@ -49,40 +49,6 @@ export function Header() {
             </span>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
-            <a
-              href="#quick-previews"
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors scroll-smooth"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('quick-previews')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Portfolio
-            </a>
-            <a
-              href="#services"
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors scroll-smooth"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Services
-            </a>
-            <a
-              href="#reviews"
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors scroll-smooth"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Reviews
-            </a>
-          </nav>
-
           {/* CTA Button and Mobile Menu */}
           <div className="flex items-center gap-4">
             <a
@@ -116,43 +82,10 @@ export function Header() {
           <div className="lg:hidden border-t border-neutral-200 dark:border-neutral-800 py-4">
             <nav className="flex flex-col gap-4">
               <a
-                href="#quick-previews"
-                className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors py-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMobileMenuOpen(false);
-                  document.getElementById('quick-previews')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Portfolio
-              </a>
-              <a
-                href="#services"
-                className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors py-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMobileMenuOpen(false);
-                  document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Services
-              </a>
-              <a
-                href="#reviews"
-                className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors py-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMobileMenuOpen(false);
-                  document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Reviews
-              </a>
-              <a
                 href="https://form.typeform.com/to/01KE2M3ED7WVGJP9Y25THEN7XJ"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm mt-2"
+                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Book Consultation ✨
