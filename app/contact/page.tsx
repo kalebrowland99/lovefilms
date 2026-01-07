@@ -172,11 +172,14 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Wedding Photo */}
+          {/* Wedding Video */}
           <div className="mb-6 md:mb-8 rounded-2xl overflow-hidden border-2 border-[#E8DED2]">
-            <img 
-              src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop" 
-              alt="Wedding couple" 
+            <video
+              src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
+              autoPlay
+              muted
+              loop
+              playsInline
               className="w-full h-[250px] md:h-[400px] object-cover"
             />
           </div>
