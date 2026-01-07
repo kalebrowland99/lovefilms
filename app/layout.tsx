@@ -6,7 +6,7 @@ import "./globals.css";
 const playfair = Playfair_Display({
   variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} font-serif antialiased`}
+        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} font-serif font-normal antialiased`}
       >
         {/* Google Analytics */}
         <Script 
