@@ -13,8 +13,8 @@ import { FeaturedOn } from '@/components/blocks/featured-on';
 import { Footer } from '@/components/ui/footer';
 
 const mediaContent = {
-  src: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/2.mp4?alt=media',
-  background: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/1.mp4?alt=media',
+  src: '',
+  background: 'https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media',
   title: '',
   date: '📍 Nashville, Tennessee',
   scrollToExpand: 'Scroll down to see more',
