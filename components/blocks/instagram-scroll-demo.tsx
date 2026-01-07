@@ -43,7 +43,7 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-black dark:text-white">@urlovefilms</h3>
+                <h3 className="text-lg font-normal text-black dark:text-white">@urlovefilms</h3>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Your Love Films</p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1">📍 Tennessee • 🎥 Wedding Films</p>
               </div>
@@ -52,15 +52,15 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
             {/* Stats */}
             <div className="flex justify-around mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
               <div className="text-center">
-                <div className="font-semibold text-black dark:text-white">247</div>
+                <div className="font-normal text-black dark:text-white">247</div>
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">Posts</div>
               </div>
               <div className="text-center">
-                <div className="font-semibold text-black dark:text-white">12.5K</div>
+                <div className="font-normal text-black dark:text-white">12.5K</div>
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">Followers</div>
               </div>
               <div className="text-center">
-                <div className="font-semibold text-black dark:text-white">892</div>
+                <div className="font-normal text-black dark:text-white">892</div>
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">Following</div>
               </div>
             </div>
@@ -96,7 +96,7 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
         className="flex items-center justify-center gap-2 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors duration-300 -mt-24 md:-mt-32"
       >
         <IconBrandInstagram className="h-6 w-6" />
-        <span className="text-lg font-medium">Tap to Visit @urlovefilms</span>
+        <span className="text-lg font-normal">Tap to Visit @urlovefilms</span>
       </a>
     </section>
   );
