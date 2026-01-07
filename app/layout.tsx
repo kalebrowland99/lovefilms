@@ -82,10 +82,6 @@ export default function RootLayout({
           src="https://player.vimeo.com/api/player.js" 
           strategy="lazyOnload"
         />
-        <Script 
-          src="//embed.typeform.com/next/embed.js" 
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   );
