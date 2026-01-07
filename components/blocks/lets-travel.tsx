@@ -1,10 +1,31 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
+
 export function LetsTravel() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      const handleLoadedMetadata = () => {
+        // Start video from the middle (50% of duration)
+        video.currentTime = video.duration / 2;
+      };
+      
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      
+      return () => {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      };
+    }
+  }, []);
+
   return (
     <section className="relative h-screen min-h-[600px] flex items-center overflow-hidden">
       {/* Video Background */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
