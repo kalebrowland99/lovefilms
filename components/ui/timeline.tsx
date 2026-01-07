@@ -48,13 +48,13 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
               <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black dark:bg-white flex items-center justify-center shadow-lg">
                 <Heart className="h-5 w-5 text-white dark:text-black fill-white dark:fill-black" />
               </div>
-              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-semibold text-black dark:text-white">
+              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-normal text-black dark:text-white">
                 {item.title}
               </h3>
             </div>
 
             <div className="relative pl-20 pr-4 md:pl-4 w-full">
-              <h3 className="md:hidden block text-2xl mb-4 text-left font-semibold text-black dark:text-white">
+              <h3 className="md:hidden block text-2xl mb-4 text-left font-normal text-black dark:text-white">
                 {item.title}
               </h3>
               {item.content}{" "}

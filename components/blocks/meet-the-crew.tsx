@@ -29,7 +29,7 @@ export function MeetTheCrew() {
     <section className="w-full bg-white dark:bg-neutral-950 pt-8 pb-20">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-5xl font-semibold text-black dark:text-white mb-4">
+          <h2 className="text-3xl md:text-5xl font-normal text-black dark:text-white mb-4">
             Meet the crew 🤵📹
           </h2>
           <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">

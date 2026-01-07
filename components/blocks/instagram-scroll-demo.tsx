@@ -11,9 +11,9 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
       <ContainerScroll
         titleComponent={
           <>
-            <h2 className="text-4xl font-semibold text-black dark:text-white">
+            <h2 className="text-4xl font-normal text-black dark:text-white">
               Follow Our Journey on <br />
-              <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none text-black dark:text-white">
+              <span className="text-4xl md:text-[6rem] font-normal mt-1 leading-none text-black dark:text-white">
                 Instagram
               </span>
             </h2>
