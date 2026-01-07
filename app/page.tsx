@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import { Header } from '@/components/ui/header';
 import { SimpleVideoHero } from '@/components/ui/simple-video-hero';
 import { MeetTheCrew } from '@/components/blocks/meet-the-crew';
@@ -53,9 +54,49 @@ const testimonials = [
 export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const formRef1 = useRef<HTMLDivElement>(null);
+  const formRef2 = useRef<HTMLDivElement>(null);
+  const hasTriggeredConfetti1 = useRef(false);
+  const hasTriggeredConfetti2 = useRef(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const triggerConfetti = () => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FCD34D', '#F59E0B', '#EF4444', '#EC4899', '#8B5CF6']
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === formRef1.current && !hasTriggeredConfetti1.current) {
+              triggerConfetti();
+              hasTriggeredConfetti1.current = true;
+            }
+            if (entry.target === formRef2.current && !hasTriggeredConfetti2.current) {
+              triggerConfetti();
+              hasTriggeredConfetti2.current = true;
+            }
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (formRef1.current) observer.observe(formRef1.current);
+    if (formRef2.current) observer.observe(formRef2.current);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -107,7 +148,7 @@ export default function Home() {
       <FeaturedOn />
 
       {/* Booking Form Section */}
-      <section className="py-20 px-4 bg-white dark:bg-neutral-950">
+      <section ref={formRef1} className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-4xl">
           <div id="booking" className="text-center mb-12">
             <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
@@ -254,7 +295,7 @@ export default function Home() {
       </div>
 
       {/* Second Booking Form Section */}
-      <section className="py-20 px-4 bg-white dark:bg-neutral-950">
+      <section ref={formRef2} className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
