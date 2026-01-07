@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Header } from '@/components/ui/header';
 import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero';
 import { MeetTheCrew } from '@/components/blocks/meet-the-crew';
+import { LoveNotes } from '@/components/blocks/love-notes';
 import { TestimonialsSection } from '@/components/ui/testimonials-with-marquee';
 import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
 import { TimelineDemo } from '@/components/blocks/timeline-demo';
@@ -246,6 +247,8 @@ export default function Home() {
       </section>
       
       <MeetTheCrew />
+      
+      <LoveNotes />
       
       <div id="services">
         <TimelineDemo />
