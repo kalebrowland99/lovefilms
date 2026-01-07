@@ -1,10 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const formRef = useRef<HTMLDivElement>(null);
+  const hasTriggeredConfetti = useRef(false);
+
+  useEffect(() => {
+    const triggerConfetti = () => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FFD700', '#FFA500', '#DAA520', '#B8860B', '#F4C430', '#FFDF00']
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target === formRef.current && !hasTriggeredConfetti.current) {
+            triggerConfetti();
+            hasTriggeredConfetti.current = true;
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (formRef.current) observer.observe(formRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -228,7 +260,7 @@ export default function ContactPage() {
           </div>
 
           {/* Apply Now Section */}
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12">
+          <div ref={formRef} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-8 md:p-12">
             <h3 className="text-2xl md:text-3xl font-serif font-normal text-center mb-8 text-neutral-800 dark:text-neutral-100">
               Apply Now to Check Availability
             </h3>
