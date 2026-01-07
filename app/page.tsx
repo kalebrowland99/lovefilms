@@ -152,7 +152,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl">
           <div id="booking" className="text-center mb-12">
             <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
-              Check if the date is available
+              Check if the date is available 💍
             </h2>
             <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
               Fill out the form below and we'll discuss your special day!
@@ -299,7 +299,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
-              Check if the date is available
+              Check if the date is available 💍
             </h2>
             <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
               Fill out the form below and we'll discuss your special day!
