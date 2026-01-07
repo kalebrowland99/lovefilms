@@ -84,13 +84,21 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-[#8b8370]">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop')"
-          }}
+      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-black overflow-hidden">
+        {/* Background Video */}
+        <video
+          src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
         />
+        
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+        
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl md:text-6xl font-serif font-normal tracking-wide">
             NEWLY ENGAGED?
