@@ -99,6 +99,16 @@ export default function ContactPage() {
       console.log('Response result:', result);
 
       if (result.success) {
+        // Trigger confetti
+        const isMobile = window.innerWidth < 768;
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 },
+          colors: ['#FFD700', '#FFA500', '#DAA520', '#B8860B', '#F4C430', '#FFDF00'],
+          scalar: isMobile ? 0.6 : 1
+        });
+        
         setShowCalendly(true);
         
         // Load Calendly script if not already loaded
