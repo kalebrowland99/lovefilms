@@ -101,7 +101,7 @@ export default function Home() {
       <Header />
       <SimpleVideoHero
         videoSrc="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
-        subtitle="📍 Nashville, Tennessee"
+        subtitle="📍 Tennessee"
       />
 
       <FeaturedOn />
