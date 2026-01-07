@@ -102,8 +102,8 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Hero Section with Video */}
-      <section className="relative h-[50vh] md:h-[60vh] bg-black overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-black overflow-hidden">
         {/* Background Video */}
         <video
           src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
@@ -117,21 +117,20 @@ export default function ContactPage() {
         
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/40" />
+        
+        <div className="relative z-10 text-center text-white px-4">
+          <h1 className="text-4xl md:text-6xl font-serif font-normal tracking-wide">
+            NEWLY ENGAGED?
+          </h1>
+        </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-0 md:py-0 px-4 bg-white dark:bg-neutral-950">
+      <section className="py-12 md:py-24 px-4 bg-white dark:bg-neutral-950">
         <div className="max-w-4xl mx-auto">
           
-          {/* Newly Engaged Box - Overlaying Video */}
-          <div className="bg-[#d9d4c8] rounded-2xl p-6 md:p-12 mb-8 -mt-16 md:-mt-20 relative z-10 mx-4 md:mx-0">
-            <h1 className="text-3xl md:text-5xl font-serif font-normal text-center text-neutral-800">
-              Newly engaged?
-            </h1>
-          </div>
-
           {/* Main Offer */}
-          <div className="bg-[#d9d4c8] rounded-2xl p-6 md:p-12 mb-8 mt-8">
+          <div className="bg-[#d9d4c8] rounded-2xl p-6 md:p-12 mb-8">
             <h2 className="text-2xl md:text-4xl font-serif font-normal text-center mb-4 md:mb-6 text-neutral-800 leading-tight">
               A Rare Wedding Videography Opportunity for 2026–2027 Couples!
             </h2>
@@ -142,13 +141,13 @@ export default function ContactPage() {
 
             <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
               <div className="flex items-start gap-2 md:gap-3">
-                <span className="text-[#8b8370] text-xl md:text-2xl font-serif flex-shrink-0">✓</span>
+                <span className="text-xl md:text-2xl font-serif flex-shrink-0">✓</span>
                 <p className="text-base md:text-lg font-serif text-neutral-800">
                   $1,000 off my most popular wedding videography collection
                 </p>
               </div>
               <div className="flex items-start gap-2 md:gap-3">
-                <span className="text-[#8b8370] text-xl md:text-2xl font-serif flex-shrink-0">✓</span>
+                <span className="text-xl md:text-2xl font-serif flex-shrink-0">✓</span>
                 <p className="text-base md:text-lg font-serif text-neutral-800">
                   A complimentary engagement session when you book
                 </p>
@@ -163,7 +162,7 @@ export default function ContactPage() {
           {/* Who This Is For */}
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
             <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
-              Who This Is For ❓
+              Who This Is For?
             </h3>
             
             <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300 mb-4 md:mb-6">
@@ -223,7 +222,7 @@ export default function ContactPage() {
           {/* What's Included */}
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
             <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
-              What's Included ❓
+              What's Included?
             </h3>
             
             <div className="space-y-3 md:space-y-4">
@@ -257,7 +256,7 @@ export default function ContactPage() {
           {/* How to Claim */}
           <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
             <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-4 md:mb-8 text-neutral-800 dark:text-neutral-100">
-              How to Claim One of the 3 Spots ❓
+              How to Claim One of the 3 Spots?
             </h3>
             
             <div className="space-y-3 md:space-y-4">
