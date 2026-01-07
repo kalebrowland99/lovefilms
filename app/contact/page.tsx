@@ -6,9 +6,11 @@ import confetti from 'canvas-confetti';
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
-  const formRef = useRef<HTMLDivElement>(null);
+  const formRef1 = useRef<HTMLDivElement>(null);
+  const formRef2 = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const hasTriggeredConfetti = useRef(false);
+  const hasTriggeredConfetti1 = useRef(false);
+  const hasTriggeredConfetti2 = useRef(false);
 
   useEffect(() => {
     const triggerConfetti = () => {
@@ -25,16 +27,23 @@ export default function ContactPage() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.target === formRef.current && !hasTriggeredConfetti.current) {
-            triggerConfetti();
-            hasTriggeredConfetti.current = true;
+          if (entry.isIntersecting) {
+            if (entry.target === formRef1.current && !hasTriggeredConfetti1.current) {
+              triggerConfetti();
+              hasTriggeredConfetti1.current = true;
+            }
+            if (entry.target === formRef2.current && !hasTriggeredConfetti2.current) {
+              triggerConfetti();
+              hasTriggeredConfetti2.current = true;
+            }
           }
         });
       },
       { threshold: 0.3 }
     );
 
-    if (formRef.current) observer.observe(formRef.current);
+    if (formRef1.current) observer.observe(formRef1.current);
+    if (formRef2.current) observer.observe(formRef2.current);
 
     return () => {
       observer.disconnect();
@@ -159,6 +168,128 @@ export default function ContactPage() {
             <p className="text-base md:text-lg font-serif font-normal text-neutral-800 text-center">
               Once these 3 spots are claimed, this offer will not be extended.
             </p>
+          </div>
+
+          {/* Apply Now Section - First Form */}
+          <div ref={formRef1} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12 mb-6 md:mb-8">
+            <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+              Apply Now to Check Availability
+            </h3>
+            
+            {/* Contact Form */}
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+              <div>
+                <label htmlFor="name-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name-1"
+                  name="name"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Name"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email-1"
+                  name="email"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Email Address"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Cell Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone-1"
+                  name="phone"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Cell Phone Number"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="fianceName-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Fiance's Full Name
+                </label>
+                <input
+                  type="text"
+                  id="fianceName-1"
+                  name="fianceName"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Fiance's Full Name"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="weddingDate-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Wedding Date (Estimate if Unsure)
+                </label>
+                <input
+                  type="text"
+                  id="weddingDate-1"
+                  name="weddingDate"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Wedding Date (Estimate if Unsure)"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="venue-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Wedding Venue/s
+                </label>
+                <input
+                  type="text"
+                  id="venue-1"
+                  name="venue"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Wedding Venue/s"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="videographer-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                  Do You Have A Videographer Booked Yet? (Yes/No)
+                </label>
+                <input
+                  type="text"
+                  id="videographer-1"
+                  name="videographer"
+                  required
+                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
+                  placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-[#8b8370] hover:bg-[#756d5f] disabled:bg-[#a39989] text-white font-serif font-normal text-lg py-4 px-8 rounded-lg transition-colors duration-200 uppercase tracking-wider disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
+              </button>
+
+              {submitMessage && (
+                <div className={`text-center p-4 rounded-lg font-serif ${submitMessage.includes('Thank you') ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200'}`}>
+                  {submitMessage}
+                </div>
+              )}
+            </form>
           </div>
 
           {/* Who This Is For */}
@@ -292,8 +423,8 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Apply Now Section */}
-          <div ref={formRef} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12">
+          {/* Apply Now Section - Second Form */}
+          <div ref={formRef2} className="bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12">
             <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
               Apply Now to Check Availability
             </h3>
@@ -301,12 +432,12 @@ export default function ContactPage() {
             {/* Contact Form */}
             <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
               <div>
-                <label htmlFor="name" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="name-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="name-2"
                   name="name"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
@@ -315,12 +446,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="email-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Email Address
                 </label>
                 <input
                   type="email"
-                  id="email"
+                  id="email-2"
                   name="email"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
@@ -329,12 +460,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="phone-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Cell Phone Number
                 </label>
                 <input
                   type="tel"
-                  id="phone"
+                  id="phone-2"
                   name="phone"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
@@ -343,12 +474,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="fianceName" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="fianceName-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Fiance's Full Name
                 </label>
                 <input
                   type="text"
-                  id="fianceName"
+                  id="fianceName-2"
                   name="fianceName"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
@@ -357,12 +488,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="weddingDate" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="weddingDate-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Wedding Date (Estimate if Unsure)
                 </label>
                 <input
                   type="text"
-                  id="weddingDate"
+                  id="weddingDate-2"
                   name="weddingDate"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
@@ -371,12 +502,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="venue" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="venue-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Wedding Venue/s
                 </label>
                 <input
                   type="text"
-                  id="venue"
+                  id="venue-2"
                   name="venue"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
@@ -385,12 +516,12 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="videographer" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                <label htmlFor="videographer-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Do You Have A Videographer Booked Yet? (Yes/No)
                 </label>
                 <input
                   type="text"
-                  id="videographer"
+                  id="videographer-2"
                   name="videographer"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
