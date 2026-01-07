@@ -85,7 +85,7 @@ export function TimelineDemo() {
           </div>
           <div className="w-full">
             <video
-              src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/1.mp4?alt=media"
+              src="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/vidextra.mp4?alt=media"
               autoPlay
               muted
               loop
