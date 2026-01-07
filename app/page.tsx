@@ -65,11 +65,13 @@ export default function Home() {
 
   useEffect(() => {
     const triggerConfetti = () => {
+      const isMobile = window.innerWidth < 768;
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#FFD700', '#FFA500', '#DAA520', '#B8860B', '#F4C430', '#FFDF00']
+        colors: ['#FFD700', '#FFA500', '#DAA520', '#B8860B', '#F4C430', '#FFDF00'],
+        scalar: isMobile ? 0.6 : 1
       });
     };
 
