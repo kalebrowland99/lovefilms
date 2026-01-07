@@ -54,20 +54,6 @@ export function TimelineDemo() {
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
-            <Image
-              src="/Silhouettes_Of_Newly_Married_At_Sunset_original_1578465.jpg"
-              alt="silhouettes of newly married couple"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
-            <Image
-              src="/The_Newlywed_Couple_At_The_Sunset_Sky_original_1839920.jpg"
-              alt="newlywed couple at sunset sky"
-              width={500}
-              height={500}
-              className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
-            />
           </div>
         </div>
       ),
