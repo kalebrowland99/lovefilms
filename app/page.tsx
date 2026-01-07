@@ -122,7 +122,7 @@ export default function Home() {
       <section className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-4xl">
           <div id="booking" className="text-center mb-12">
-            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+            <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
               Check if the date is available
             </h2>
             <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
@@ -269,7 +269,7 @@ export default function Home() {
       <section className="py-20 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
+            <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-4 text-black dark:text-white">
               Check if the date is available
             </h2>
             <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
