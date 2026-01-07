@@ -14,15 +14,15 @@ export function TimelineDemo() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=800&h=600&fit=crop"
-              alt="planning consultation"
+              src="/Wedding_Ceremony_Arch_original_342300.jpg"
+              alt="wedding ceremony arch"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
             <Image
-              src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop"
-              alt="wedding planning"
+              src="/Newlywed_Holding_Hands_And_Kissing_original_2835800.jpg"
+              alt="newlywed couple holding hands"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
@@ -41,29 +41,29 @@ export function TimelineDemo() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop"
-              alt="wedding ceremony"
+              src="/Wedding_Couple_Kissing_At_Sunset_original_2436406.jpg"
+              alt="wedding couple kissing at sunset"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
             <Image
-              src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&h=600&fit=crop"
-              alt="wedding reception"
+              src="/Wedding_Couple_Hugging_At_Sunset_original_2436396.jpg"
+              alt="wedding couple hugging at sunset"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
             <Image
-              src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&h=600&fit=crop"
-              alt="wedding couple"
+              src="/Silhouettes_Of_Newly_Married_At_Sunset_original_1578465.jpg"
+              alt="silhouettes of newly married couple"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
             />
             <Image
-              src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&h=600&fit=crop"
-              alt="wedding details"
+              src="/The_Newlywed_Couple_At_The_Sunset_Sky_original_1839920.jpg"
+              alt="newlywed couple at sunset sky"
               width={500}
               height={500}
               className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg border border-[#E8DED2] dark:border-neutral-800"
