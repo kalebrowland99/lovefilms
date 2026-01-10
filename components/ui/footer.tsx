@@ -31,7 +31,6 @@ export const Footer = ({ className }: { className?: string }) => {
         {/* Contact Information */}
         <div className="text-center md:text-left">
           <h4 className="text-lg font-semibold text-black dark:text-white mb-4">Contact</h4>
-          <p className="text-neutral-600 dark:text-neutral-400 mb-2">Phone: (615) 200-0429</p>
           <p className="text-neutral-600 dark:text-neutral-400 mb-2">Email: <a href="mailto:hi@yourlovefilms.com" className="hover:text-black dark:hover:text-white transition-colors">hi@yourlovefilms.com</a></p>
           <p className="text-neutral-600 dark:text-neutral-400 text-sm mt-4">Proudly serving all of Tennessee.</p>
         </div>

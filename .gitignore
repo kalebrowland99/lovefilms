@@ -46,3 +46,8 @@ next-env.d.ts
 *.avi
 *.mkv
 *.docx
+
+# sensitive data and credentials
+data/automation-settings.json
+data/inquiries.json
+data/email-logs.json

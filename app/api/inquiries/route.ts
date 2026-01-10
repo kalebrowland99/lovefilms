@@ -1,0 +1,55 @@
+import { NextResponse } from 'next/server';
+import { getInquiries, updateInquiry } from '@/lib/database';
+
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms2026';
+
+// Helper to check password
+function checkAuth(request: Request): boolean {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader) return false;
+  
+  const password = authHeader.replace('Bearer ', '');
+  return password === ADMIN_PASSWORD;
+}
+
+// GET - Load all inquiries
+export async function GET(request: Request) {
+  if (!checkAuth(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const inquiries = getInquiries();
+    
+    // Sort by most recent first
+    inquiries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    
+    return NextResponse.json(inquiries);
+  } catch (error) {
+    console.error('Error reading inquiries:', error);
+    return NextResponse.json({ error: 'Failed to load inquiries' }, { status: 500 });
+  }
+}
+
+// PATCH - Update inquiry status
+export async function PATCH(request: Request) {
+  if (!checkAuth(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { inquiryId, updates } = await request.json();
+    
+    if (!inquiryId) {
+      return NextResponse.json({ error: 'Inquiry ID required' }, { status: 400 });
+    }
+    
+    updateInquiry(inquiryId, updates);
+    
+    return NextResponse.json({ success: true, message: 'Inquiry updated successfully' });
+  } catch (error) {
+    console.error('Error updating inquiry:', error);
+    return NextResponse.json({ error: 'Failed to update inquiry' }, { status: 500 });
+  }
+}
+

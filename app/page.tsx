@@ -12,6 +12,9 @@ import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
 import { TimelineDemo } from '@/components/blocks/timeline-demo';
 import { FeaturedOn } from '@/components/blocks/featured-on';
 import { Footer } from '@/components/ui/footer';
+import { DateField, DateInput } from '@/components/ui/datefield';
+import { Label } from '@/components/ui/field';
+import { PhoneInput } from '@/components/ui/phone-input';
 
 const testimonials = [
   {
@@ -55,6 +58,10 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [showCalendly, setShowCalendly] = useState(false);
+  const [weddingDate1, setWeddingDate1] = useState<any>(null);
+  const [weddingDate2, setWeddingDate2] = useState<any>(null);
+  const [phone1, setPhone1] = useState("");
+  const [phone2, setPhone2] = useState("");
   const formRef1 = useRef<HTMLDivElement>(null);
   const formRef2 = useRef<HTMLDivElement>(null);
   const hasTriggeredConfetti1 = useRef(false);
@@ -102,7 +109,7 @@ export default function Home() {
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, formNumber: number) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitMessage('');
@@ -110,8 +117,21 @@ export default function Home() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    
+    // Add the wedding date from state
+    const dateValue = formNumber === 1 ? weddingDate1 : weddingDate2;
+    if (dateValue) {
+      // Format as MM/DD/YYYY
+      data.weddingDate = `${String(dateValue.month).padStart(2, '0')}/${String(dateValue.day).padStart(2, '0')}/${dateValue.year}`;
+    }
+    
+    // Add the phone number from state
+    const phoneValue = formNumber === 1 ? phone1 : phone2;
+    if (phoneValue) {
+      data.phone = phoneValue;
+    }
 
-    try {
+    try{
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -182,10 +202,10 @@ export default function Home() {
               </div>
 
               {/* Contact Form */}
-              <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <form onSubmit={(e) => handleSubmit(e, 1)} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Name
+                Your Name
               </label>
               <input
                 type="text"
@@ -213,21 +233,22 @@ export default function Home() {
 
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Cell Phone Number
+                Phone Number
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Cell Phone Number"
-              />
+              <div className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent bg-white dark:bg-neutral-800">
+                <PhoneInput
+                  value={phone1}
+                  onChange={(value, formatted) => setPhone1(formatted)}
+                  defaultCountry="US"
+                  showFlag={true}
+                  className="border-none p-0 bg-transparent text-neutral-900 dark:text-neutral-100"
+                />
+              </div>
             </div>
 
             <div>
               <label htmlFor="fianceName" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Fiance's Full Name
+                Fiance's Name
               </label>
               <input
                 type="text"
@@ -235,22 +256,22 @@ export default function Home() {
                 name="fianceName"
                 required
                 className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Fiance's Full Name"
+                placeholder="Fiance's Name"
               />
             </div>
 
             <div>
-              <label htmlFor="weddingDate" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Wedding Date (Estimate if Unsure)
-              </label>
-              <input
-                type="text"
-                id="weddingDate"
-                name="weddingDate"
-                required
-                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Wedding Date (Estimate if Unsure)"
-              />
+              <DateField 
+                value={weddingDate1} 
+                onChange={setWeddingDate1}
+                isRequired
+                className="w-full"
+              >
+                <Label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Wedding Date (Estimate if Unsure)
+                </Label>
+                <DateInput className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100" />
+              </DateField>
             </div>
 
             <div>
@@ -264,20 +285,6 @@ export default function Home() {
                 required
                 className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
                 placeholder="Wedding Venue/s"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="videographer" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Do You Have A Videographer Booked Yet? (Yes/No)
-              </label>
-              <input
-                type="text"
-                id="videographer"
-                name="videographer"
-                required
-                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
               />
             </div>
 
@@ -344,10 +351,10 @@ export default function Home() {
               </div>
 
               {/* Contact Form */}
-              <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <form onSubmit={(e) => handleSubmit(e, 2)} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
             <div>
               <label htmlFor="name2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Name
+                Your Name
               </label>
               <input
                 type="text"
@@ -375,21 +382,22 @@ export default function Home() {
 
             <div>
               <label htmlFor="phone2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Cell Phone Number
+                Phone Number
               </label>
-              <input
-                type="tel"
-                id="phone2"
-                name="phone"
-                required
-                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Cell Phone Number"
-              />
+              <div className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent bg-white dark:bg-neutral-800">
+                <PhoneInput
+                  value={phone2}
+                  onChange={(value, formatted) => setPhone2(formatted)}
+                  defaultCountry="US"
+                  showFlag={true}
+                  className="border-none p-0 bg-transparent text-neutral-900 dark:text-neutral-100"
+                />
+              </div>
             </div>
 
             <div>
               <label htmlFor="fianceName2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Fiance's Full Name
+                Fiance's Name
               </label>
               <input
                 type="text"
@@ -397,22 +405,22 @@ export default function Home() {
                 name="fianceName"
                 required
                 className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Fiance's Full Name"
+                placeholder="Fiance's Name"
               />
             </div>
 
             <div>
-              <label htmlFor="weddingDate2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Wedding Date (Estimate if Unsure)
-              </label>
-              <input
-                type="text"
-                id="weddingDate2"
-                name="weddingDate"
-                required
-                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Wedding Date (Estimate if Unsure)"
-              />
+              <DateField 
+                value={weddingDate2} 
+                onChange={setWeddingDate2}
+                isRequired
+                className="w-full"
+              >
+                <Label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Wedding Date (Estimate if Unsure)
+                </Label>
+                <DateInput className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100" />
+              </DateField>
             </div>
 
             <div>
@@ -426,20 +434,6 @@ export default function Home() {
                 required
                 className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
                 placeholder="Wedding Venue/s"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="videographer2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Do You Have A Videographer Booked Yet? (Yes/No)
-              </label>
-              <input
-                type="text"
-                id="videographer2"
-                name="videographer"
-                required
-                className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
               />
             </div>
 

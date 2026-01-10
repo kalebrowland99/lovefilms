@@ -2,11 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { DateField, DateInput } from '@/components/ui/datefield';
+import { Label } from '@/components/ui/field';
+import { parseDate, getLocalTimeZone } from '@internationalized/date';
+import { PhoneInput } from '@/components/ui/phone-input';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [showCalendly, setShowCalendly] = useState(false);
+  const [weddingDate1, setWeddingDate1] = useState<any>(null);
+  const [weddingDate2, setWeddingDate2] = useState<any>(null);
+  const [phone1, setPhone1] = useState("");
+  const [phone2, setPhone2] = useState("");
   const formRef1 = useRef<HTMLDivElement>(null);
   const formRef2 = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -69,7 +77,7 @@ export default function ContactPage() {
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, formNumber: number) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitMessage('');
@@ -77,6 +85,19 @@ export default function ContactPage() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    
+    // Add the wedding date from state
+    const dateValue = formNumber === 1 ? weddingDate1 : weddingDate2;
+    if (dateValue) {
+      // Format as MM/DD/YYYY
+      data.weddingDate = `${String(dateValue.month).padStart(2, '0')}/${String(dateValue.day).padStart(2, '0')}/${dateValue.year}`;
+    }
+    
+    // Add the phone number from state
+    const phoneValue = formNumber === 1 ? phone1 : phone2;
+    if (phoneValue) {
+      data.phone = phoneValue;
+    }
 
     console.log('Submitting form data:', data);
 
@@ -197,10 +218,10 @@ export default function ContactPage() {
                 </h3>
                 
                 {/* Contact Form */}
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+                <form onSubmit={(e) => handleSubmit(e, 1)} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
               <div>
                 <label htmlFor="name-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Name
+                  Your Name
                 </label>
                 <input
                   type="text"
@@ -228,21 +249,22 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="phone-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Cell Phone Number
+                  Phone Number
                 </label>
-                <input
-                  type="tel"
-                  id="phone-1"
-                  name="phone"
-                  required
-                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Cell Phone Number"
-                />
+                <div className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus-within:ring-2 focus-within:ring-[#8b8370] focus-within:border-transparent bg-white dark:bg-neutral-800">
+                  <PhoneInput
+                    value={phone1}
+                    onChange={(value, formatted) => setPhone1(formatted)}
+                    defaultCountry="US"
+                    showFlag={true}
+                    className="border-none p-0 bg-transparent text-neutral-900 dark:text-neutral-100"
+                  />
+                </div>
               </div>
 
               <div>
                 <label htmlFor="fianceName-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Fiance's Full Name
+                  Fiance's Name
                 </label>
                 <input
                   type="text"
@@ -250,22 +272,22 @@ export default function ContactPage() {
                   name="fianceName"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Fiance's Full Name"
+                  placeholder="Fiance's Name"
                 />
               </div>
 
               <div>
-                <label htmlFor="weddingDate-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Wedding Date (Estimate if Unsure)
-                </label>
-                <input
-                  type="text"
-                  id="weddingDate-1"
-                  name="weddingDate"
-                  required
-                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Wedding Date (Estimate if Unsure)"
-                />
+                <DateField 
+                  value={weddingDate1} 
+                  onChange={setWeddingDate1}
+                  isRequired
+                  className="w-full"
+                >
+                  <Label className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                    Wedding Date (Estimate if Unsure)
+                  </Label>
+                  <DateInput className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-serif" />
+                </DateField>
               </div>
 
               <div>
@@ -279,20 +301,6 @@ export default function ContactPage() {
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Wedding Venue/s"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="videographer-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Do You Have A Videographer Booked Yet? (Yes/No)
-                </label>
-                <input
-                  type="text"
-                  id="videographer-1"
-                  name="videographer"
-                  required
-                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
                 />
               </div>
 
@@ -465,10 +473,10 @@ export default function ContactPage() {
                 </h3>
                 
                 {/* Contact Form */}
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+                <form onSubmit={(e) => handleSubmit(e, 2)} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
               <div>
                 <label htmlFor="name-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Name
+                  Your Name
                 </label>
                 <input
                   type="text"
@@ -496,21 +504,22 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="phone-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Cell Phone Number
+                  Phone Number
                 </label>
-                <input
-                  type="tel"
-                  id="phone-2"
-                  name="phone"
-                  required
-                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Cell Phone Number"
-                />
+                <div className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus-within:ring-2 focus-within:ring-[#8b8370] focus-within:border-transparent bg-white dark:bg-neutral-800">
+                  <PhoneInput
+                    value={phone2}
+                    onChange={(value, formatted) => setPhone2(formatted)}
+                    defaultCountry="US"
+                    showFlag={true}
+                    className="border-none p-0 bg-transparent text-neutral-900 dark:text-neutral-100"
+                  />
+                </div>
               </div>
 
               <div>
                 <label htmlFor="fianceName-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Fiance's Full Name
+                  Fiance's Name
                 </label>
                 <input
                   type="text"
@@ -518,22 +527,22 @@ export default function ContactPage() {
                   name="fianceName"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Fiance's Full Name"
+                  placeholder="Fiance's Name"
                 />
               </div>
 
               <div>
-                <label htmlFor="weddingDate-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Wedding Date (Estimate if Unsure)
-                </label>
-                <input
-                  type="text"
-                  id="weddingDate-2"
-                  name="weddingDate"
-                  required
-                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Wedding Date (Estimate if Unsure)"
-                />
+                <DateField 
+                  value={weddingDate2} 
+                  onChange={setWeddingDate2}
+                  isRequired
+                  className="w-full"
+                >
+                  <Label className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
+                    Wedding Date (Estimate if Unsure)
+                  </Label>
+                  <DateInput className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-serif" />
+                </DateField>
               </div>
 
               <div>
@@ -547,20 +556,6 @@ export default function ContactPage() {
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Wedding Venue/s"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="videographer-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Do You Have A Videographer Booked Yet? (Yes/No)
-                </label>
-                <input
-                  type="text"
-                  id="videographer-2"
-                  name="videographer"
-                  required
-                  className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Do You Have A Videographer Booked Yet? (Yes/No)"
                 />
               </div>
 
