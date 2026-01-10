@@ -321,6 +321,9 @@ export default function ContactPage() {
               </>
             ) : (
               <>
+                <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+                  Pick a time for me to call you.
+                </h3>
                 <div 
                   className="calendly-inline-widget" 
                   data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
@@ -573,6 +576,9 @@ export default function ContactPage() {
               </>
             ) : (
               <>
+                <h3 className="text-xl md:text-3xl font-serif font-normal text-center mb-6 md:mb-8 text-neutral-800 dark:text-neutral-100">
+                  Pick a time for me to call you.
+                </h3>
                 <div 
                   className="calendly-inline-widget" 
                   data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 

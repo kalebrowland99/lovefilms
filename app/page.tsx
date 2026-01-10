@@ -305,6 +305,9 @@ export default function Home() {
             </>
           ) : (
             <div className="bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-8 text-center text-black dark:text-white">
+                Pick a time for me to call you.
+              </h2>
               <div 
                 className="calendly-inline-widget" 
                 data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
@@ -451,6 +454,9 @@ export default function Home() {
             </>
           ) : (
             <div className="bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <h2 className="text-3xl font-serif tracking-tight sm:text-5xl sm:leading-tight mb-8 text-center text-black dark:text-white">
+                Pick a time for me to call you.
+              </h2>
               <div 
                 className="calendly-inline-widget" 
                 data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
