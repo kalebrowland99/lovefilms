@@ -7,12 +7,20 @@
 Create/edit `.env.local` in your project root:
 
 ```bash
+# Required
 RESEND_API_KEY=re_your_api_key_here
 EMAIL_ADMIN_PASSWORD=yourlovefilms2026
 CRON_SECRET=generate_a_random_secret_here
+
+# Optional: Twilio SMS (can also be set in Vercel or in CRM)
+TWILIO_ACCOUNT_SID=your_account_sid
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_PHONE_NUMBER=+1234567890
 ```
 
 **Generate CRON_SECRET:** Run `openssl rand -base64 32` or use any random string
+
+**Twilio Credentials:** Can be set here, in Vercel environment variables (recommended), or in the CRM UI (fallback)
 
 ### Step 2: Test Locally
 
@@ -37,10 +45,19 @@ git push
 
 Then in Vercel Dashboard:
 1. Go to Settings → Environment Variables
-2. Add all 3 variables from Step 1
-3. Redeploy
+2. Add required variables:
+   - `RESEND_API_KEY`
+   - `EMAIL_ADMIN_PASSWORD`
+   - `CRON_SECRET`
+3. **(Recommended)** Add Twilio SMS variables:
+   - `TWILIO_ACCOUNT_SID`
+   - `TWILIO_AUTH_TOKEN`
+   - `TWILIO_PHONE_NUMBER`
+4. Redeploy
 
 **Done!** 🎉
+
+> **💡 Pro Tip:** Setting Twilio credentials in Vercel environment variables is more secure than entering them in the CRM UI. The system will prioritize environment variables over CRM settings.
 
 ---
 

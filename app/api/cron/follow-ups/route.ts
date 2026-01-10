@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
-import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured } from '@/lib/sms';
+import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured, getSMSConfig } from '@/lib/sms';
 import { 
   getInquiries, 
   updateInquiry, 
@@ -241,14 +241,16 @@ async function sendSMSFollowUp(
     const smsMessage = renderSMSTemplate(smsTemplate.message, smsData);
     const formattedPhone = formatPhoneNumber(inquiry.phone);
     
+    const smsConfig = getSMSConfig(settings);
+    if (!smsConfig) {
+      console.error('SMS config not available');
+      return;
+    }
+    
     const smsResult = await sendSMS(
       formattedPhone,
       smsMessage,
-      {
-        accountSid: settings.sms.twilioAccountSid,
-        authToken: settings.sms.twilioAuthToken,
-        fromNumber: settings.sms.twilioPhoneNumber
-      }
+      smsConfig
     );
     
     // Log SMS

@@ -70,8 +70,45 @@ export async function sendSMS(
   }
 }
 
+// Get SMS config from environment variables or settings
+export function getSMSConfig(settings?: any): SMSConfig | null {
+  // Priority 1: Environment variables (Vercel)
+  const envAccountSid = process.env.TWILIO_ACCOUNT_SID;
+  const envAuthToken = process.env.TWILIO_AUTH_TOKEN;
+  const envFromNumber = process.env.TWILIO_PHONE_NUMBER;
+  
+  if (envAccountSid && envAuthToken && envFromNumber) {
+    return {
+      accountSid: envAccountSid,
+      authToken: envAuthToken,
+      fromNumber: envFromNumber
+    };
+  }
+  
+  // Priority 2: CRM settings (fallback)
+  if (settings?.sms?.twilioAccountSid && settings?.sms?.twilioAuthToken && settings?.sms?.twilioPhoneNumber) {
+    return {
+      accountSid: settings.sms.twilioAccountSid,
+      authToken: settings.sms.twilioAuthToken,
+      fromNumber: settings.sms.twilioPhoneNumber
+    };
+  }
+  
+  return null;
+}
+
 // Check if SMS is configured
 export function isSMSConfigured(settings: any): boolean {
+  // Check environment variables first
+  const hasEnvVars = !!(
+    process.env.TWILIO_ACCOUNT_SID &&
+    process.env.TWILIO_AUTH_TOKEN &&
+    process.env.TWILIO_PHONE_NUMBER
+  );
+  
+  if (hasEnvVars) return true;
+  
+  // Fallback to CRM settings
   return !!(
     settings?.sms?.enabled &&
     settings?.sms?.twilioAccountSid &&

@@ -34,7 +34,26 @@
 
 ---
 
-### Step 4: Add Credentials to Your CRM
+### Step 4: Add Credentials to Your Site
+
+**🔒 Option A: Vercel Environment Variables (Recommended - More Secure)**
+
+1. Go to your Vercel Dashboard
+2. Navigate to: **Project Settings** → **Environment Variables**
+3. Add three new variables:
+   - `TWILIO_ACCOUNT_SID` = your Account SID
+   - `TWILIO_AUTH_TOKEN` = your Auth Token
+   - `TWILIO_PHONE_NUMBER` = +16155551234 (your Twilio number with +1)
+4. Click **Save**
+5. Redeploy your site
+
+**✅ That's it!** Your credentials are now stored securely in Vercel.
+
+---
+
+**Option B: Enter in CRM UI (Fallback)**
+
+If you prefer to manage credentials in the CRM:
 
 1. Go to: `https://yourlovefilms.com/crm`
 2. Login with your password
@@ -45,7 +64,9 @@
    - Auth Token
    - Twilio Phone Number (with +1, like: +16155551234)
 6. Enable SMS (toggle switch)
-7. Click: **Save Settings**
+7. Click: **Manual Save**
+
+> **Note:** The system will prioritize environment variables over CRM settings for better security.
 
 ---
 

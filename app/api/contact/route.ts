@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
 import { saveInquiry, saveEmailLog, generateId, type Inquiry, type EmailLog } from '@/lib/database';
-import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured } from '@/lib/sms';
+import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured, getSMSConfig } from '@/lib/sms';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -246,14 +246,16 @@ export async function POST(request: Request) {
                     const smsMessage = renderSMSTemplate(smsTemplate.message, smsData);
                     const formattedPhone = formatPhoneNumber(formData.phone);
                     
+                    const smsConfig = getSMSConfig(automationSettings);
+                    if (!smsConfig) {
+                      console.error('SMS config not available');
+                      return;
+                    }
+                    
                     const smsResult = await sendSMS(
                       formattedPhone,
                       smsMessage,
-                      {
-                        accountSid: automationSettings.sms.twilioAccountSid,
-                        authToken: automationSettings.sms.twilioAuthToken,
-                        fromNumber: automationSettings.sms.twilioPhoneNumber
-                      }
+                      smsConfig
                     );
                     
                     // Log SMS
@@ -342,14 +344,16 @@ export async function POST(request: Request) {
                       const smsMessage = renderSMSTemplate(smsTemplate.message, smsData);
                       const formattedPhone = formatPhoneNumber(formData.phone);
                       
+                      const smsConfig = getSMSConfig(automationSettings);
+                      if (!smsConfig) {
+                        console.error('SMS config not available');
+                        return;
+                      }
+                      
                       const smsResult = await sendSMS(
                         formattedPhone,
                         smsMessage,
-                        {
-                          accountSid: automationSettings.sms.twilioAccountSid,
-                          authToken: automationSettings.sms.twilioAuthToken,
-                          fromNumber: automationSettings.sms.twilioPhoneNumber
-                        }
+                        smsConfig
                       );
                       
                       // Log SMS
