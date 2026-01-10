@@ -78,6 +78,10 @@ export function getSMSConfig(settings?: any): SMSConfig | null {
   const envFromNumber = process.env.TWILIO_PHONE_NUMBER;
   
   if (envAccountSid && envAuthToken && envFromNumber) {
+    console.log('Using Twilio from env vars:', { 
+      accountSid: envAccountSid.substring(0, 8) + '...', 
+      fromNumber: envFromNumber 
+    });
     return {
       accountSid: envAccountSid,
       authToken: envAuthToken,
@@ -87,6 +91,7 @@ export function getSMSConfig(settings?: any): SMSConfig | null {
   
   // Priority 2: CRM settings (fallback)
   if (settings?.sms?.twilioAccountSid && settings?.sms?.twilioAuthToken && settings?.sms?.twilioPhoneNumber) {
+    console.log('Using Twilio from CRM settings');
     return {
       accountSid: settings.sms.twilioAccountSid,
       authToken: settings.sms.twilioAuthToken,
@@ -94,6 +99,7 @@ export function getSMSConfig(settings?: any): SMSConfig | null {
     };
   }
   
+  console.warn('Twilio SMS not configured - missing credentials');
   return null;
 }
 
