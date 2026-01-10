@@ -180,45 +180,15 @@ export default function EmailAdmin() {
       const response = await fetch('/api/automation-settings', {
         headers: {
           'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
-        }
+        },
+        cache: 'no-store' // Prevent caching issues
       });
 
       if (response.ok) {
         const data = await response.json();
-        
-        // Ensure SMS structure exists with defaults
-        const settingsWithDefaults = {
-          ...data,
-          sms: data.sms || {
-            enabled: true,
-            twilioAccountSid: '',
-            twilioAuthToken: '',
-            twilioPhoneNumber: '',
-            templates: {
-              day0: {
-                enabled: true,
-                delayInSeconds: 45,
-                name: "Day 0: Welcome Text (45 seconds)",
-                message: "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
-              },
-              day2: {
-                enabled: true,
-                delayInDays: 2,
-                name: "Day 2: Call Preference",
-                message: "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
-              },
-              day4: {
-                enabled: true,
-                delayInDays: 4,
-                name: "Day 4: Date Hold Text",
-                message: "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
-              }
-            }
-          },
-          testMode: data.testMode !== undefined ? data.testMode : false
-        };
-        
-        setAutomationSettings(settingsWithDefaults);
+        console.log('Loaded automation settings:', data);
+        // Use the data as-is from the API (which already merges with defaults)
+        setAutomationSettings(data);
       }
     } catch (error) {
       console.error('Error loading automation settings:', error);
@@ -232,6 +202,8 @@ export default function EmailAdmin() {
     setMessage('');
     
     try {
+      console.log('Saving automation settings:', automationSettings);
+      
       const response = await fetch('/api/automation-settings', {
         method: 'POST',
         headers: {
@@ -242,6 +214,8 @@ export default function EmailAdmin() {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        console.log('Save successful:', result);
         setMessage('✅ Automation settings saved successfully!');
         setTimeout(() => setMessage(''), 3000);
       } else {
@@ -258,7 +232,7 @@ export default function EmailAdmin() {
   };
 
 
-  // Load data when switching tabs (only once per mount)
+  // Load data when switching tabs
   useEffect(() => {
     if (activeTab === 'leads' && isAuthenticated && inquiries.length === 0 && !inquiriesLoading) {
       loadInquiries();
@@ -266,7 +240,8 @@ export default function EmailAdmin() {
     if (activeTab === 'logs' && isAuthenticated && emailLogs.length === 0 && !logsLoading) {
       loadEmailLogs();
     }
-    if (activeTab === 'sms' && isAuthenticated && !automationSettings && !settingsLoading) {
+    // Always reload SMS settings when switching to SMS tab to get fresh data
+    if (activeTab === 'sms' && isAuthenticated && !settingsLoading) {
       loadAutomationSettings();
     }
     if (activeTab === 'email' && isAuthenticated && !templates) {
@@ -465,13 +440,22 @@ export default function EmailAdmin() {
                   </button>
                 )}
                 {activeTab === 'sms' && (
-                  <button
-                    onClick={handleSaveSettings}
-                    disabled={savingSettings}
-                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
-                  >
-                    {savingSettings ? 'Saving...' : 'Save Changes'}
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={loadAutomationSettings}
+                      disabled={settingsLoading}
+                      className="px-6 py-2 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors font-semibold disabled:opacity-50"
+                    >
+                      {settingsLoading ? 'Loading...' : 'Reload Settings'}
+                    </button>
+                    <button
+                      onClick={handleSaveSettings}
+                      disabled={savingSettings}
+                      className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
+                    >
+                      {savingSettings ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
                 )}
                 {activeTab === 'logs' && (
                   <button
