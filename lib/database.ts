@@ -60,8 +60,15 @@ export function getInquiries(): Inquiry[] {
     fs.writeFileSync(INQUIRIES_PATH, JSON.stringify([], null, 2));
     return [];
   }
-  const data = fs.readFileSync(INQUIRIES_PATH, 'utf8');
-  return JSON.parse(data);
+  try {
+    const data = fs.readFileSync(INQUIRIES_PATH, 'utf8');
+    const parsed = JSON.parse(data);
+    // Ensure we always return a valid array
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error('Error reading inquiries:', error);
+    return [];
+  }
 }
 
 // Save inquiry
@@ -69,7 +76,15 @@ export function saveInquiry(inquiry: Inquiry): void {
   ensureDataDir();
   const inquiries = getInquiries();
   inquiries.push(inquiry);
-  fs.writeFileSync(INQUIRIES_PATH, JSON.stringify(inquiries, null, 2));
+  try {
+    // Write to temp file first, then rename (atomic operation)
+    const tempPath = INQUIRIES_PATH + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(inquiries, null, 2));
+    fs.renameSync(tempPath, INQUIRIES_PATH);
+  } catch (error) {
+    console.error('Error saving inquiry:', error);
+    throw error;
+  }
 }
 
 // Update inquiry
@@ -79,7 +94,15 @@ export function updateInquiry(id: string, updates: Partial<Inquiry>): void {
   const index = inquiries.findIndex(i => i.id === id);
   if (index !== -1) {
     inquiries[index] = { ...inquiries[index], ...updates };
-    fs.writeFileSync(INQUIRIES_PATH, JSON.stringify(inquiries, null, 2));
+    try {
+      // Write to temp file first, then rename (atomic operation)
+      const tempPath = INQUIRIES_PATH + '.tmp';
+      fs.writeFileSync(tempPath, JSON.stringify(inquiries, null, 2));
+      fs.renameSync(tempPath, INQUIRIES_PATH);
+    } catch (error) {
+      console.error('Error updating inquiry:', error);
+      throw error;
+    }
   }
 }
 

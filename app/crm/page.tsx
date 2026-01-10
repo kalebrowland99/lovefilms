@@ -36,11 +36,12 @@ export default function EmailAdmin() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   
-  // Refs for auto-save timers
+  // Refs for auto-save timers and loading state
   const emailAutoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const smsAutoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const toastTimer = useRef<NodeJS.Timeout | null>(null);
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
+  const isLoadingInquiries = useRef<boolean>(false);
 
   // Check if already authenticated (stored in session)
   useEffect(() => {
@@ -100,23 +101,35 @@ export default function EmailAdmin() {
   };
 
   const loadInquiries = async () => {
+    // Prevent multiple simultaneous requests
+    if (isLoadingInquiries.current) {
+      return;
+    }
+    
+    isLoadingInquiries.current = true;
     setInquiriesLoading(true);
+    
     try {
       const response = await fetch('/api/inquiries', {
         headers: {
           'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
-        }
+        },
+        cache: 'no-store' // Prevent caching issues
       });
 
       if (response.ok) {
         const data = await response.json();
-        setInquiries(data);
-        setLastLeadsRefresh(new Date());
+        // Only update if data is valid
+        if (Array.isArray(data)) {
+          setInquiries(data);
+          setLastLeadsRefresh(new Date());
+        }
       }
     } catch (error) {
       console.error('Error loading inquiries:', error);
     } finally {
       setInquiriesLoading(false);
+      isLoadingInquiries.current = false;
     }
   };
 
@@ -251,15 +264,15 @@ export default function EmailAdmin() {
   };
 
 
-  // Load data when switching tabs
+  // Load data when switching tabs (only once per mount)
   useEffect(() => {
-    if (activeTab === 'leads' && isAuthenticated && inquiries.length === 0) {
+    if (activeTab === 'leads' && isAuthenticated && inquiries.length === 0 && !inquiriesLoading) {
       loadInquiries();
     }
-    if (activeTab === 'logs' && isAuthenticated && emailLogs.length === 0) {
+    if (activeTab === 'logs' && isAuthenticated && emailLogs.length === 0 && !logsLoading) {
       loadEmailLogs();
     }
-    if (activeTab === 'sms' && isAuthenticated && !automationSettings) {
+    if (activeTab === 'sms' && isAuthenticated && !automationSettings && !settingsLoading) {
       loadAutomationSettings();
     }
     if (activeTab === 'email' && isAuthenticated && !templates) {
@@ -272,7 +285,10 @@ export default function EmailAdmin() {
     if (activeTab === 'leads' && isAuthenticated) {
       // Set up interval to refresh every 30 seconds
       leadsAutoRefreshTimer.current = setInterval(() => {
-        loadInquiries();
+        // Only refresh if not currently loading to prevent race conditions
+        if (!inquiriesLoading) {
+          loadInquiries();
+        }
       }, 30000); // 30 seconds
 
       // Cleanup on unmount or tab change
@@ -282,7 +298,7 @@ export default function EmailAdmin() {
         }
       };
     }
-  }, [activeTab, isAuthenticated]);
+  }, [activeTab, isAuthenticated, inquiriesLoading]);
 
 
   const handleSave = async () => {
