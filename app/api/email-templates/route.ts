@@ -161,10 +161,9 @@ export async function GET(request: Request) {
     if (!fs.existsSync(TEMPLATES_PATH)) {
       console.log('Templates file does not exist, creating with defaults...');
       
-      // Ensure data directory exists
-      const dataDir = path.join(process.cwd(), 'data');
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
+      // Ensure data directory exists (use DATA_DIR not hardcoded path)
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
       }
       
       // Create file with defaults
@@ -191,14 +190,15 @@ export async function POST(request: Request) {
   try {
     const templates = await request.json();
     
-    // Ensure data directory exists
-    const dataDir = path.join(process.cwd(), 'data');
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    // Ensure data directory exists (use DATA_DIR not hardcoded path)
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
     }
     
-    // Write templates to file
-    fs.writeFileSync(TEMPLATES_PATH, JSON.stringify(templates, null, 2));
+    // Write templates to file with atomic operation
+    const tempPath = TEMPLATES_PATH + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(templates, null, 2));
+    fs.renameSync(tempPath, TEMPLATES_PATH);
     
     return NextResponse.json({ success: true, message: 'Templates saved successfully' });
   } catch (error) {

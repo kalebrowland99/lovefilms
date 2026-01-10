@@ -9,7 +9,6 @@ export default function EmailAdmin() {
   const [templates, setTemplates] = useState<any>(null);
   const [activeTemplate, setActiveTemplate] = useState<string>('welcome');
   const [saving, setSaving] = useState(false);
-  const [autoSaving, setAutoSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState<'leads' | 'email' | 'sms' | 'logs'>(() => {
     // Load saved tab from localStorage or default to 'leads'
@@ -26,20 +25,12 @@ export default function EmailAdmin() {
   const [automationSettings, setAutomationSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
-  const [autoSavingSettings, setAutoSavingSettings] = useState(false);
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [inquiriesLoading, setInquiriesLoading] = useState(false);
   const [updatingInquiry, setUpdatingInquiry] = useState<string | null>(null);
   const [lastLeadsRefresh, setLastLeadsRefresh] = useState<Date | null>(null);
   
-  // Toast notification for auto-save
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  
-  // Refs for auto-save timers and loading state
-  const emailAutoSaveTimer = useRef<NodeJS.Timeout | null>(null);
-  const smsAutoSaveTimer = useRef<NodeJS.Timeout | null>(null);
-  const toastTimer = useRef<NodeJS.Timeout | null>(null);
+  // Refs for timers and loading state
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
   const isLoadingInquiries = useRef<boolean>(false);
 
@@ -254,10 +245,13 @@ export default function EmailAdmin() {
         setMessage('✅ Automation settings saved successfully!');
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setMessage('❌ Failed to save settings');
+        const errorData = await response.json();
+        setMessage(`❌ Failed to save settings: ${errorData.error || 'Unknown error'}`);
+        console.error('Save error:', errorData);
       }
     } catch (error) {
       setMessage('❌ Error saving settings');
+      console.error('Save error:', error);
     } finally {
       setSavingSettings(false);
     }
@@ -319,29 +313,16 @@ export default function EmailAdmin() {
         setMessage('✅ Templates saved successfully!');
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setMessage('❌ Failed to save templates');
+        const errorData = await response.json();
+        setMessage(`❌ Failed to save templates: ${errorData.error || 'Unknown error'}`);
+        console.error('Save error:', errorData);
       }
     } catch (error) {
       setMessage('❌ Error saving templates');
+      console.error('Save error:', error);
     } finally {
       setSaving(false);
     }
-  };
-
-  // Show toast notification
-  const showToastNotification = (message: string) => {
-    setToastMessage(message);
-    setShowToast(true);
-    
-    // Clear existing timer
-    if (toastTimer.current) {
-      clearTimeout(toastTimer.current);
-    }
-    
-    // Hide after 2 seconds
-    toastTimer.current = setTimeout(() => {
-      setShowToast(false);
-    }, 2000);
   };
 
   const updateTemplateField = (templateKey: string, field: string, value: any) => {
@@ -352,7 +333,6 @@ export default function EmailAdmin() {
         [field]: value
       }
     });
-    showToastNotification('Typing...');
   };
 
   const updateContentField = (templateKey: string, field: string, value: any) => {
@@ -366,93 +346,11 @@ export default function EmailAdmin() {
         }
       }
     });
-    showToastNotification('Typing...');
   };
 
-  const updateAutomationSettingsWithToast = (newSettings: any) => {
+  const updateAutomationSettings = (newSettings: any) => {
     setAutomationSettings(newSettings);
-    showToastNotification('Typing...');
   };
-
-  // Auto-save for email templates (debounced)
-  useEffect(() => {
-    if (!templates || !isAuthenticated) return;
-    
-    // Clear existing timer
-    if (emailAutoSaveTimer.current) {
-      clearTimeout(emailAutoSaveTimer.current);
-    }
-    
-    // Set new timer for 2 seconds after last change
-    emailAutoSaveTimer.current = setTimeout(async () => {
-      setAutoSaving(true);
-      try {
-        const response = await fetch('/api/email-templates', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
-          },
-          body: JSON.stringify(templates)
-        });
-
-        if (response.ok) {
-          showToastNotification('✅ Saved');
-        }
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        showToastNotification('❌ Save failed');
-      } finally {
-        setAutoSaving(false);
-      }
-    }, 2000);
-    
-    return () => {
-      if (emailAutoSaveTimer.current) {
-        clearTimeout(emailAutoSaveTimer.current);
-      }
-    };
-  }, [templates, isAuthenticated]);
-
-  // Auto-save for SMS settings (debounced)
-  useEffect(() => {
-    if (!automationSettings || !isAuthenticated) return;
-    
-    // Clear existing timer
-    if (smsAutoSaveTimer.current) {
-      clearTimeout(smsAutoSaveTimer.current);
-    }
-    
-    // Set new timer for 2 seconds after last change
-    smsAutoSaveTimer.current = setTimeout(async () => {
-      setAutoSavingSettings(true);
-      try {
-        const response = await fetch('/api/automation-settings', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
-          },
-          body: JSON.stringify(automationSettings)
-        });
-
-        if (response.ok) {
-          showToastNotification('✅ Saved');
-        }
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        showToastNotification('❌ Save failed');
-      } finally {
-        setAutoSavingSettings(false);
-      }
-    }, 2000);
-    
-    return () => {
-      if (smsAutoSaveTimer.current) {
-        clearTimeout(smsAutoSaveTimer.current);
-      }
-    };
-  }, [automationSettings, isAuthenticated]);
 
   const getPreviewHtml = () => {
     if (!templates || !activeTemplate) return '';
@@ -563,7 +461,7 @@ export default function EmailAdmin() {
                     disabled={saving}
                     className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
                   >
-                    {saving ? 'Saving...' : 'Manual Save'}
+                    {saving ? 'Saving...' : 'Save Changes'}
                   </button>
                 )}
                 {activeTab === 'sms' && (
@@ -572,7 +470,7 @@ export default function EmailAdmin() {
                     disabled={savingSettings}
                     className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
                   >
-                    {savingSettings ? 'Saving...' : 'Manual Save'}
+                    {savingSettings ? 'Saving...' : 'Save Changes'}
                   </button>
                 )}
                 {activeTab === 'logs' && (
@@ -835,7 +733,7 @@ export default function EmailAdmin() {
                       <input
                         type="checkbox"
                         checked={automationSettings.testMode || false}
-                        onChange={(e) => updateAutomationSettingsWithToast({
+                        onChange={(e) => updateAutomationSettings({
                           ...automationSettings,
                           testMode: e.target.checked
                         })}
@@ -861,7 +759,7 @@ export default function EmailAdmin() {
                       <input
                         type="checkbox"
                         checked={automationSettings.sms.enabled}
-                        onChange={(e) => updateAutomationSettingsWithToast({
+                        onChange={(e) => updateAutomationSettings({
                           ...automationSettings,
                           sms: {
                             ...automationSettings.sms,
@@ -911,7 +809,7 @@ export default function EmailAdmin() {
                               <input
                                 type="checkbox"
                                 checked={template.enabled}
-                                onChange={(e) => updateAutomationSettingsWithToast({
+                                onChange={(e) => updateAutomationSettings({
                                   ...automationSettings,
                                   sms: {
                                     ...automationSettings.sms,
@@ -931,7 +829,7 @@ export default function EmailAdmin() {
                           </div>
                           <textarea
                             value={template.message}
-                            onChange={(e) => updateAutomationSettingsWithToast({
+                            onChange={(e) => updateAutomationSettings({
                               ...automationSettings,
                               sms: {
                                 ...automationSettings.sms,
@@ -1348,15 +1246,6 @@ export default function EmailAdmin() {
           </div>
         )}
       </div>
-
-      {/* Toast Notification - Bottom Right */}
-      {showToast && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2">
-            <span className="text-sm font-medium">{toastMessage}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

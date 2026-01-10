@@ -91,10 +91,9 @@ export async function GET(request: Request) {
     if (!fs.existsSync(SETTINGS_PATH)) {
       console.log('Settings file does not exist, creating with defaults...');
       
-      // Ensure data directory exists
-      const dataDir = path.join(process.cwd(), 'data');
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
+      // Ensure data directory exists (use DATA_DIR not hardcoded path)
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
       }
       
       // Create file with defaults
@@ -132,14 +131,15 @@ export async function POST(request: Request) {
   try {
     const settings = await request.json();
     
-    // Ensure data directory exists
-    const dataDir = path.join(process.cwd(), 'data');
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    // Ensure data directory exists (use DATA_DIR not hardcoded path)
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
     }
     
-    // Write settings to file
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
+    // Write settings to file with atomic operation
+    const tempPath = SETTINGS_PATH + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(settings, null, 2));
+    fs.renameSync(tempPath, SETTINGS_PATH);
     
     return NextResponse.json({ success: true, message: 'Settings saved successfully' });
   } catch (error) {
