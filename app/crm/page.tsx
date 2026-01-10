@@ -860,68 +860,11 @@ export default function EmailAdmin() {
                     </label>
                   </div>
                   
-                  {/* Twilio Credentials */}
-                  <div className="space-y-4 mb-6 pb-6 border-b border-gray-200">
-                    <h4 className="font-medium text-gray-900">Twilio API Credentials</h4>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Account SID
-                      </label>
-                      <input
-                        type="text"
-                        value={automationSettings.sms.twilioAccountSid}
-                        onChange={(e) => updateAutomationSettingsWithToast({
-                          ...automationSettings,
-                          sms: {
-                            ...automationSettings.sms,
-                            twilioAccountSid: e.target.value
-                          }
-                        })}
-                        placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none font-mono text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Auth Token
-                      </label>
-                      <input
-                        type="password"
-                        value={automationSettings.sms.twilioAuthToken}
-                        onChange={(e) => updateAutomationSettingsWithToast({
-                          ...automationSettings,
-                          sms: {
-                            ...automationSettings.sms,
-                            twilioAuthToken: e.target.value
-                          }
-                        })}
-                        placeholder="••••••••••••••••••••••••••••••••"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none font-mono text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Twilio Phone Number
-                      </label>
-                      <input
-                        type="text"
-                        value={automationSettings.sms.twilioPhoneNumber}
-                        onChange={(e) => updateAutomationSettingsWithToast({
-                          ...automationSettings,
-                          sms: {
-                            ...automationSettings.sms,
-                            twilioPhoneNumber: e.target.value
-                          }
-                        })}
-                        placeholder="+1 (555) 123-4567"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        <a href="https://console.twilio.com" target="_blank" rel="noopener" className="text-blue-600 hover:underline">
-                          Get these from your Twilio Console →
-                        </a>
-                      </p>
-                    </div>
+                  {/* SMS Configuration Info */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-blue-800">
+                      <strong>ℹ️ Twilio credentials are set in Vercel environment variables.</strong> No additional configuration needed here.
+                    </p>
                   </div>
                   
                   {/* SMS Templates */}
