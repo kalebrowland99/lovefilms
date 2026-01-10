@@ -99,9 +99,6 @@ export function getSMSConfig(settings?: any): SMSConfig | null {
 
 // Check if SMS is configured
 export function isSMSConfigured(settings: any): boolean {
-  // SMS must be enabled in settings (unless only env vars are set)
-  const isEnabled = settings?.sms?.enabled !== false;
-  
   // Check environment variables first
   const hasEnvVars = !!(
     process.env.TWILIO_ACCOUNT_SID &&
@@ -109,7 +106,15 @@ export function isSMSConfigured(settings: any): boolean {
     process.env.TWILIO_PHONE_NUMBER
   );
   
-  if (hasEnvVars && isEnabled) return true;
+  // If we have env vars, check if SMS is enabled (must be explicitly true or undefined, not false)
+  if (hasEnvVars) {
+    // If SMS settings exist and enabled is explicitly false, return false
+    if (settings?.sms && settings.sms.enabled === false) {
+      return false;
+    }
+    // If no SMS settings or enabled is not false, allow env vars to work
+    return true;
+  }
   
   // Fallback to CRM settings
   return !!(
