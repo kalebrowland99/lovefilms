@@ -181,7 +181,40 @@ export default function EmailAdmin() {
 
       if (response.ok) {
         const data = await response.json();
-        setAutomationSettings(data);
+        
+        // Ensure SMS structure exists with defaults
+        const settingsWithDefaults = {
+          ...data,
+          sms: data.sms || {
+            enabled: true,
+            twilioAccountSid: '',
+            twilioAuthToken: '',
+            twilioPhoneNumber: '',
+            templates: {
+              day0: {
+                enabled: true,
+                delayInSeconds: 45,
+                name: "Day 0: Welcome Text (45 seconds)",
+                message: "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
+              },
+              day2: {
+                enabled: true,
+                delayInDays: 2,
+                name: "Day 2: Call Preference",
+                message: "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
+              },
+              day4: {
+                enabled: true,
+                delayInDays: 4,
+                name: "Day 4: Date Hold Text",
+                message: "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
+              }
+            }
+          },
+          testMode: data.testMode !== undefined ? data.testMode : false
+        };
+        
+        setAutomationSettings(settingsWithDefaults);
       }
     } catch (error) {
       console.error('Error loading automation settings:', error);
@@ -768,7 +801,7 @@ export default function EmailAdmin() {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto mb-4"></div>
                 <p className="text-gray-600">Loading SMS settings...</p>
               </div>
-            ) : automationSettings && automationSettings.sms && (
+            ) : automationSettings && (
               <div className="space-y-6">
                 {/* Test Mode Toggle */}
                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-xl shadow-sm p-6 mb-6">
