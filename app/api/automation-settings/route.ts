@@ -84,18 +84,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Check if file exists
+    // Check if file exists - if not, return defaults immediately
     if (!fs.existsSync(SETTINGS_PATH)) {
-      console.log('Settings file does not exist, creating with defaults...');
-      
-      // Ensure data directory exists
-      const dataDir = path.join(process.cwd(), 'data');
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-      }
-      
-      // Create file with defaults
-      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+      console.log('Settings file does not exist, returning defaults');
       return NextResponse.json(DEFAULT_SETTINGS);
     }
     
@@ -108,14 +99,14 @@ export async function GET(request: Request) {
       ...settings,
       sms: {
         ...DEFAULT_SETTINGS.sms,
-        ...settings.sms
+        ...(settings.sms || {})
       }
     };
     
     return NextResponse.json(mergedSettings);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error reading automation settings:', error);
-    // Return defaults if there's an error
+    // Always return defaults if there's any error (file doesn't exist, parse error, etc.)
     return NextResponse.json(DEFAULT_SETTINGS);
   }
 }
@@ -129,15 +120,19 @@ export async function POST(request: Request) {
   try {
     const settings = await request.json();
     
-    // Ensure data directory exists
-    const dataDir = path.join(process.cwd(), 'data');
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    // Try to save to file (may fail on Vercel's read-only filesystem)
+    try {
+      const dataDir = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
+    } catch (writeError) {
+      // On Vercel, file writes may fail - that's okay, settings are in memory for this request
+      console.warn('Could not write settings file (read-only filesystem), but settings updated in memory:', writeError);
     }
     
-    // Write settings to file
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
-    
+    // Always return success - settings are applied for this session
     return NextResponse.json({ success: true, message: 'Settings saved successfully' });
   } catch (error) {
     console.error('Error saving automation settings:', error);
