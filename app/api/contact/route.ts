@@ -43,13 +43,41 @@ export async function POST(request: Request) {
     }
 
     // Load automation settings (for SMS and test mode)
-    let automationSettings: any = {};
+    let automationSettings: any = {
+      sms: {
+        enabled: true,
+        templates: {
+          day0: {
+            enabled: true,
+            message: "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
+          },
+          day2: {
+            enabled: true,
+            message: "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
+          },
+          day4: {
+            enabled: true,
+            message: "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
+          }
+        }
+      }
+    };
+    
     try {
       const settingsPath = path.join(process.cwd(), 'data', 'automation-settings.json');
       const settingsContents = fs.readFileSync(settingsPath, 'utf8');
-      automationSettings = JSON.parse(settingsContents);
+      const loadedSettings = JSON.parse(settingsContents);
+      // Merge loaded settings with defaults
+      automationSettings = {
+        ...automationSettings,
+        ...loadedSettings,
+        sms: {
+          ...automationSettings.sms,
+          ...loadedSettings.sms
+        }
+      };
     } catch (error) {
-      console.error('Error loading automation settings:', error);
+      console.error('Error loading automation settings, using defaults:', error);
     }
 
     const isTestMode = automationSettings.testMode || false;
