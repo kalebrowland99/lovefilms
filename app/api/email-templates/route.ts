@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const TEMPLATES_PATH = path.join(process.cwd(), 'data', 'email-templates.json');
+// Use /tmp directory on Vercel (serverless), or local data directory in development
+const IS_VERCEL = process.env.VERCEL === '1';
+const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+const TEMPLATES_PATH = path.join(DATA_DIR, 'email-templates.json');
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms2026';
 
 // Helper to check password
@@ -154,18 +157,27 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Check if file exists - if not, return defaults immediately
+    // Check if file exists
     if (!fs.existsSync(TEMPLATES_PATH)) {
-      console.log('Templates file does not exist, returning defaults');
+      console.log('Templates file does not exist, creating with defaults...');
+      
+      // Ensure data directory exists
+      const dataDir = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      
+      // Create file with defaults
+      fs.writeFileSync(TEMPLATES_PATH, JSON.stringify(DEFAULT_TEMPLATES, null, 2));
       return NextResponse.json(DEFAULT_TEMPLATES);
     }
     
     const fileContents = fs.readFileSync(TEMPLATES_PATH, 'utf8');
     const templates = JSON.parse(fileContents);
     return NextResponse.json(templates);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error reading templates:', error);
-    // Always return defaults if there's any error (file doesn't exist, parse error, etc.)
+    // Return defaults if there's an error
     return NextResponse.json(DEFAULT_TEMPLATES);
   }
 }
@@ -179,19 +191,15 @@ export async function POST(request: Request) {
   try {
     const templates = await request.json();
     
-    // Try to save to file (may fail on Vercel's read-only filesystem)
-    try {
-      const dataDir = path.join(process.cwd(), 'data');
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-      }
-      fs.writeFileSync(TEMPLATES_PATH, JSON.stringify(templates, null, 2));
-    } catch (writeError) {
-      // On Vercel, file writes may fail - that's okay, templates are in memory for this request
-      console.warn('Could not write templates file (read-only filesystem), but templates updated in memory:', writeError);
+    // Ensure data directory exists
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
     }
     
-    // Always return success - templates are applied for this session
+    // Write templates to file
+    fs.writeFileSync(TEMPLATES_PATH, JSON.stringify(templates, null, 2));
+    
     return NextResponse.json({ success: true, message: 'Templates saved successfully' });
   } catch (error) {
     console.error('Error saving templates:', error);

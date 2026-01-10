@@ -1,7 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use /tmp directory on Vercel (serverless), or local data directory in development
+const IS_VERCEL = process.env.VERCEL === '1';
+const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
 const INQUIRIES_PATH = path.join(DATA_DIR, 'inquiries.json');
 const EMAIL_LOGS_PATH = path.join(DATA_DIR, 'email-logs.json');
 

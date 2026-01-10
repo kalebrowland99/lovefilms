@@ -32,12 +32,28 @@ export async function POST(request: Request) {
     saveInquiry(inquiry);
     console.log('Inquiry saved to database:', inquiryId);
 
+    // Use /tmp directory on Vercel (serverless), or local data directory in development
+    const IS_VERCEL = process.env.VERCEL === '1';
+    const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+    
     // Load email templates
     let templates: any = {};
     try {
-      const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
-      const fileContents = fs.readFileSync(templatesPath, 'utf8');
-      templates = JSON.parse(fileContents);
+      const templatesPath = path.join(DATA_DIR, 'email-templates.json');
+      
+      // Ensure data directory exists
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+      
+      // If templates file doesn't exist, it will be created by the database functions
+      // For now, just check if it exists and read it
+      if (fs.existsSync(templatesPath)) {
+        const fileContents = fs.readFileSync(templatesPath, 'utf8');
+        templates = JSON.parse(fileContents);
+      } else {
+        console.warn('Email templates file does not exist yet - emails may not send');
+      }
     } catch (error) {
       console.error('Error loading email templates:', error);
     }
@@ -64,7 +80,7 @@ export async function POST(request: Request) {
     };
     
     try {
-      const settingsPath = path.join(process.cwd(), 'data', 'automation-settings.json');
+      const settingsPath = path.join(DATA_DIR, 'automation-settings.json');
       const settingsContents = fs.readFileSync(settingsPath, 'utf8');
       const loadedSettings = JSON.parse(settingsContents);
       // Merge loaded settings with defaults

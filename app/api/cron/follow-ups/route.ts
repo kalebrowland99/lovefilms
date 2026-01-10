@@ -26,13 +26,17 @@ export async function GET(request: Request) {
   console.log('Running follow-up cron job...');
 
   try {
+    // Use /tmp directory on Vercel (serverless), or local data directory in development
+    const IS_VERCEL = process.env.VERCEL === '1';
+    const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+    
     // Load email templates
-    const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
+    const templatesPath = path.join(DATA_DIR, 'email-templates.json');
     const fileContents = fs.readFileSync(templatesPath, 'utf8');
     const templates = JSON.parse(fileContents);
 
     // Load automation settings
-    const settingsPath = path.join(process.cwd(), 'data', 'automation-settings.json');
+    const settingsPath = path.join(DATA_DIR, 'automation-settings.json');
     let settings: any = {
       followUpDelays: {
         day1: { enabled: true, delayInDays: 1 },

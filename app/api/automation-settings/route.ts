@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'automation-settings.json');
+// Use /tmp directory on Vercel (serverless), or local data directory in development
+const IS_VERCEL = process.env.VERCEL === '1';
+const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+const SETTINGS_PATH = path.join(DATA_DIR, 'automation-settings.json');
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms2026';
 
 // Helper to check password
@@ -84,9 +87,18 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Check if file exists - if not, return defaults immediately
+    // Check if file exists
     if (!fs.existsSync(SETTINGS_PATH)) {
-      console.log('Settings file does not exist, returning defaults');
+      console.log('Settings file does not exist, creating with defaults...');
+      
+      // Ensure data directory exists
+      const dataDir = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      
+      // Create file with defaults
+      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(DEFAULT_SETTINGS, null, 2));
       return NextResponse.json(DEFAULT_SETTINGS);
     }
     
@@ -99,14 +111,14 @@ export async function GET(request: Request) {
       ...settings,
       sms: {
         ...DEFAULT_SETTINGS.sms,
-        ...(settings.sms || {})
+        ...settings.sms
       }
     };
     
     return NextResponse.json(mergedSettings);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error reading automation settings:', error);
-    // Always return defaults if there's any error (file doesn't exist, parse error, etc.)
+    // Return defaults if there's an error
     return NextResponse.json(DEFAULT_SETTINGS);
   }
 }
@@ -120,19 +132,15 @@ export async function POST(request: Request) {
   try {
     const settings = await request.json();
     
-    // Try to save to file (may fail on Vercel's read-only filesystem)
-    try {
-      const dataDir = path.join(process.cwd(), 'data');
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-      }
-      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
-    } catch (writeError) {
-      // On Vercel, file writes may fail - that's okay, settings are in memory for this request
-      console.warn('Could not write settings file (read-only filesystem), but settings updated in memory:', writeError);
+    // Ensure data directory exists
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
     }
     
-    // Always return success - settings are applied for this session
+    // Write settings to file
+    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
+    
     return NextResponse.json({ success: true, message: 'Settings saved successfully' });
   } catch (error) {
     console.error('Error saving automation settings:', error);
