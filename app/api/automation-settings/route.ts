@@ -14,6 +14,69 @@ function checkAuth(request: Request): boolean {
   return password === ADMIN_PASSWORD;
 }
 
+// Default settings structure
+const DEFAULT_SETTINGS = {
+  followUpDelays: {
+    day1: {
+      enabled: true,
+      delayInDays: 1,
+      name: "Day 1: Quick Question",
+      description: "Ask about their priorities and biggest concerns"
+    },
+    day3: {
+      enabled: true,
+      delayInDays: 3,
+      name: "Day 3: Social Proof",
+      description: "Share a client success story"
+    },
+    day6: {
+      enabled: true,
+      delayInDays: 6,
+      name: "Day 6: Helpful Guidance",
+      description: "Provide value + soft date hold"
+    },
+    day10: {
+      enabled: true,
+      delayInDays: 10,
+      name: "Day 10: Date Hold",
+      description: "Gentle boundary - hold or release date"
+    },
+    day14: {
+      enabled: true,
+      delayInDays: 14,
+      name: "Day 14: Breakup Email",
+      description: "Final friendly goodbye (option to reconnect later)"
+    }
+  },
+  sms: {
+    enabled: true,
+    twilioAccountSid: "",
+    twilioAuthToken: "",
+    twilioPhoneNumber: "",
+    templates: {
+      day0: {
+        enabled: true,
+        delayInSeconds: 45,
+        name: "Day 0: Welcome Text (45 seconds)",
+        message: "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
+      },
+      day2: {
+        enabled: true,
+        delayInDays: 2,
+        name: "Day 2: Call Preference",
+        message: "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
+      },
+      day4: {
+        enabled: true,
+        delayInDays: 4,
+        name: "Day 4: Date Hold Text",
+        message: "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
+      }
+    }
+  },
+  testMode: false
+};
+
 // GET - Load settings
 export async function GET(request: Request) {
   if (!checkAuth(request)) {
@@ -21,12 +84,39 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Check if file exists
+    if (!fs.existsSync(SETTINGS_PATH)) {
+      console.log('Settings file does not exist, creating with defaults...');
+      
+      // Ensure data directory exists
+      const dataDir = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      
+      // Create file with defaults
+      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+      return NextResponse.json(DEFAULT_SETTINGS);
+    }
+    
     const fileContents = fs.readFileSync(SETTINGS_PATH, 'utf8');
     const settings = JSON.parse(fileContents);
-    return NextResponse.json(settings);
+    
+    // Merge with defaults to ensure all fields exist
+    const mergedSettings = {
+      ...DEFAULT_SETTINGS,
+      ...settings,
+      sms: {
+        ...DEFAULT_SETTINGS.sms,
+        ...settings.sms
+      }
+    };
+    
+    return NextResponse.json(mergedSettings);
   } catch (error) {
     console.error('Error reading automation settings:', error);
-    return NextResponse.json({ error: 'Failed to load settings' }, { status: 500 });
+    // Return defaults if there's an error
+    return NextResponse.json(DEFAULT_SETTINGS);
   }
 }
 

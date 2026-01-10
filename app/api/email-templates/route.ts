@@ -14,6 +14,139 @@ function checkAuth(request: Request): boolean {
   return password === ADMIN_PASSWORD;
 }
 
+// Default templates structure
+const DEFAULT_TEMPLATES = {
+  "welcome": {
+    "name": "Day 0: Welcome Email (Immediate)",
+    "subject": "{{name}}, thanks for reaching out about {{weddingDate}}!",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "immediate",
+    "content": {
+      "greeting": "Hey {{name}}! 🎥",
+      "paragraph1": "Just got your inquiry for {{weddingDate}} at {{venue}} — love it!",
+      "paragraph2": "I'm checking our availability right now. In the meantime, here's what you need to know: we create cinematic films that feel like you, not a template. Vows, toasts, the party — we capture what matters most to you two.",
+      "paragraph3": "Quick question: What's the #1 moment you want on film? (The ceremony? Speeches? Dancing? Family?) Helps me recommend the right package.",
+      "callToAction": "Book a Quick Call",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "I'll reply with pricing + availability in the next 15 minutes. Talk soon!"
+    }
+  },
+  "notification": {
+    "name": "Admin Notification (Sent to You)",
+    "subject": "🚨 NEW INQUIRY: {{name}} - {{weddingDate}}",
+    "enabled": true,
+    "sendTo": "admin",
+    "timing": "immediate",
+    "content": {
+      "heading": "New Wedding Inquiry - Respond in 5-15 minutes!",
+      "showDetails": true,
+      "footer": "Submitted from yourlovefilms.com/contact"
+    }
+  },
+  "prices": {
+    "name": "Day 0: Pricing & Availability (10 minutes after)",
+    "subject": "AWESOME NEWS: {{weddingDate}} is available! 🎉",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "10 minutes after inquiry",
+    "content": {
+      "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
+      "paragraph1": "I'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message me if you need a time outside the available slots:",
+      "callToAction": "Schedule Your Call",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "paragraph2": "If you'd like to review my package and pricing info before our call, you can find my Price and Info Guide attached to this email. We'll also go over it together during our call! I've included both desktop and mobile versions for easy viewing.",
+      "paragraph3": "*A quick note: I cannot hold your date until a contract is signed and the booking is made. I book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films!",
+      "paragraph4": "I'm so excited to get started!",
+      "footer": "Thank you for reaching out, {{name}}, and I can't wait to work with you!\n\nBest,\nYour Love Films",
+      "pdfAttachmentUrl": ""
+    }
+  },
+  "followupDay1": {
+    "name": "Day 1: Quick Question Email",
+    "subject": "Quick Q about your {{weddingDate}} wedding",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "1 day after inquiry",
+    "content": {
+      "greeting": "{{name}} —",
+      "paragraph1": "I wanted to circle back on filming your wedding at {{venue}}.",
+      "paragraph2": "Quick question: What matters most to you two on the day? I ask because some couples care most about the ceremony vows, others want every toast captured, and some just want the party vibes. Helps me recommend the right fit.",
+      "paragraph3": "Also — what's your biggest concern about booking a videographer? (Price? Feeling awkward on camera? Not sure what you'll actually get?) I promise there's no wrong answer.",
+      "callToAction": "Reply or Book a Call",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "P.S. Your date is still open, but I have 2 other couples looking at the same weekend. Want me to hold it for 48 hours while you decide?"
+    }
+  },
+  "followupDay3": {
+    "name": "Day 3: Social Proof Story",
+    "subject": "How Sarah & Mike got their dream wedding film",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "3 days after inquiry",
+    "content": {
+      "greeting": "Hey {{name}},",
+      "paragraph1": "Quick story: Sarah reached out just like you — wasn't sure about video at first. Her biggest worry? Feeling awkward on camera + not knowing if they'd actually watch it.",
+      "paragraph2": "Fast forward: They watch their film every anniversary. Why? Because we didn't just film the ceremony — we captured her dad's toast (he passed away 6 months later), the moment her grandma cried during vows, and the surprise dance Mike's groomsmen did.",
+      "paragraph3": "The stuff they'd have forgotten. The moments photos can't capture.",
+      "paragraph4": "I'm not saying this to sell you — I'm saying it because I don't want you to look back and wish you had video. Especially for {{weddingDate}}.",
+      "callToAction": "See Sarah & Mike's Film",
+      "callToActionUrl": "https://yourlovefilms.com",
+      "footer": "Want to chat about what matters most for your day? I'm here."
+    }
+  },
+  "followupDay6": {
+    "name": "Day 6: Helpful Guidance",
+    "subject": "What makes a wedding film feel cinematic (+ your timeline)",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "6 days after inquiry",
+    "content": {
+      "greeting": "{{name}} —",
+      "paragraph1": "Hey! I know you're still deciding, so I wanted to send something helpful either way:",
+      "paragraph2": "3 things that make a wedding film actually cinematic (not just \"pretty\"): 1) Audio of your vows (we use lapel mics), 2) Toasts in full (not just clips), 3) The in-between moments (your mom fixing your veil, your partner's face when they first see you).",
+      "paragraph3": "Also — quick tip for your timeline: If you want golden hour photos/video, plan your ceremony to end 90 minutes before sunset. That's the magic window.",
+      "paragraph4": "Anyway. I'm still holding {{weddingDate}} for you. Want me to officially pencil it in, or should I release it?",
+      "callToAction": "Hold My Date",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "No pressure — just didn't want you to miss the window if you were still interested."
+    }
+  },
+  "followupDay10": {
+    "name": "Day 10: Date Hold (Gentle Boundary)",
+    "subject": "Should I release {{weddingDate}}?",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "10 days after inquiry",
+    "content": {
+      "greeting": "Hey {{name}},",
+      "paragraph1": "Quick check-in: I've been holding {{weddingDate}} for you, but I have another couple asking about the same weekend.",
+      "paragraph2": "I don't want to pressure you — but I also don't want you to lose the date if you were still planning to book.",
+      "paragraph3": "Can I hold it for another 24 hours? Or should I let it go?",
+      "callToAction": "Yes, Hold It",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "Either way, no worries. Just want to respect your timeline (and theirs)."
+    }
+  },
+  "followupDay14": {
+    "name": "Day 14: Breakup Email",
+    "subject": "Last note from me (no hard feelings!)",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "14-21 days after inquiry",
+    "content": {
+      "greeting": "{{name}} —",
+      "paragraph1": "Hey! I haven't heard back, so I'm guessing you either: 1) Already booked someone (congrats!), 2) Decided video isn't a priority, or 3) Just got busy with life.",
+      "paragraph2": "All totally fine. I'm going to stop emailing so I'm not that annoying vendor.",
+      "paragraph3": "BUT — if you change your mind closer to the wedding, just reply \"later\" and I'll check back in a few months. Sometimes couples don't realize they want video until they see everyone else's films.",
+      "paragraph4": "Either way, I hope your day at {{venue}} is incredible. You two are going to have the best time.",
+      "callToAction": "Reply \"Later\" (Optional)",
+      "callToActionUrl": "mailto:hi@yourlovefilms.com",
+      "footer": "Cheers, and congrats on the engagement! 🎉"
+    }
+  }
+};
+
 // GET - Load templates
 export async function GET(request: Request) {
   if (!checkAuth(request)) {
@@ -21,12 +154,28 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Check if file exists
+    if (!fs.existsSync(TEMPLATES_PATH)) {
+      console.log('Templates file does not exist, creating with defaults...');
+      
+      // Ensure data directory exists
+      const dataDir = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      
+      // Create file with defaults
+      fs.writeFileSync(TEMPLATES_PATH, JSON.stringify(DEFAULT_TEMPLATES, null, 2));
+      return NextResponse.json(DEFAULT_TEMPLATES);
+    }
+    
     const fileContents = fs.readFileSync(TEMPLATES_PATH, 'utf8');
     const templates = JSON.parse(fileContents);
     return NextResponse.json(templates);
   } catch (error) {
     console.error('Error reading templates:', error);
-    return NextResponse.json({ error: 'Failed to load templates' }, { status: 500 });
+    // Return defaults if there's an error
+    return NextResponse.json(DEFAULT_TEMPLATES);
   }
 }
 
