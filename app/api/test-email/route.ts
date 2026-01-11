@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { renderTemplate } from '@/lib/email-renderer';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Helper to check password
 function checkAuth(request: Request): boolean {
@@ -54,20 +55,9 @@ export async function POST(request: Request) {
       .replace(/\{\{name\}\}/g, sampleData.name)
       .replace(/\{\{weddingDate\}\}/g, sampleData.weddingDate);
 
-    // Configure email transporter
-    const transporter = nodemailer.createTransporter({
-      host: process.env.EMAIL_SERVER || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    // Send email
-    await transporter.sendMail({
-      from: `Your Love Films <hi@yourlovefilms.com>`,
+    // Send email via Resend
+    await resend.emails.send({
+      from: 'Your Love Films <hi@yourlovefilms.com>',
       to: testEmail,
       subject: `[TEST] ${subject}`,
       html: emailHtml,
