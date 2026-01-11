@@ -859,16 +859,14 @@ export default function EmailAdmin() {
         )}
 
         {activeTab === 'email' && (
-        <>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Template Selector */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold mb-4">Email Templates</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
+              <h2 className="text-lg font-semibold mb-4">Templates</h2>
               <div className="space-y-2">
                 {Object.entries(templates)
                   .sort(([keyA], [keyB]) => {
-                    // Define custom order - admin notification first, then client emails in sequence
                     const order = ['notification', 'welcome', 'prices', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
                     return order.indexOf(keyA) - order.indexOf(keyB);
                   })
@@ -882,8 +880,8 @@ export default function EmailAdmin() {
                         : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
                     }`}
                   >
-                    <div className="font-medium">{template.name}</div>
-                    <div className={`text-sm mt-1 ${activeTemplate === key ? 'text-gray-300' : 'text-gray-500'}`}>
+                    <div className="font-medium text-sm">{template.name}</div>
+                    <div className={`text-xs mt-1 ${activeTemplate === key ? 'text-gray-300' : 'text-gray-500'}`}>
                       {template.enabled ? '✓ Enabled' : '✗ Disabled'}
                     </div>
                   </button>
@@ -892,8 +890,8 @@ export default function EmailAdmin() {
             </div>
           </div>
 
-          {/* Template Editor */}
-          <div className="lg:col-span-2">
+          {/* Email Editor & Preview */}
+          <div className="lg:col-span-3">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-2">{currentTemplate.name}</h2>
@@ -908,172 +906,165 @@ export default function EmailAdmin() {
                 </label>
               </div>
 
-              <div className="space-y-6">
-                {/* Subject Line */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Subject Line
+              {/* Subject Line */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Subject Line
+                </label>
+                <input
+                  type="text"
+                  value={currentTemplate.subject}
+                  onChange={(e) => updateTemplateField(activeTemplate, 'subject', e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
+                  placeholder="Subject line"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Use {`{{name}}`} and {`{{weddingDate}}`} for dynamic content
+                </p>
+              </div>
+
+              {/* Email Preview with Edit Instructions */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Email Preview
                   </label>
-                  <input
-                    type="text"
-                    value={currentTemplate.subject}
-                    onChange={(e) => updateTemplateField(activeTemplate, 'subject', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                    placeholder="Subject line"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Use {`{{name}}`} and {`{{weddingDate}}`} for dynamic content
-                  </p>
+                  <span className="text-xs text-gray-500">
+                    This is how your email will look to customers
+                  </span>
                 </div>
+                <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
+                  <iframe
+                    srcDoc={getPreviewHtml()}
+                    className="w-full h-[700px]"
+                    title="Email Preview"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  💡 To edit email content, modify the template directly in your CRM settings or use the raw editor below
+                </p>
+              </div>
 
-                {/* Email Content Fields */}
-                {currentTemplate.content.greeting !== undefined && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Greeting
-                    </label>
-                    <input
-                      type="text"
-                      value={currentTemplate.content.greeting}
-                      onChange={(e) => updateContentField(activeTemplate, 'greeting', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                    />
-                  </div>
-                )}
-
-                {currentTemplate.content.heading !== undefined && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Heading
-                    </label>
-                    <input
-                      type="text"
-                      value={currentTemplate.content.heading}
-                      onChange={(e) => updateContentField(activeTemplate, 'heading', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                    />
-                  </div>
-                )}
-
-                {/* Paragraphs */}
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
-                  const key = `paragraph${num}`;
-                  if (currentTemplate.content[key] !== undefined) {
-                    return (
-                      <div key={key}>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Paragraph {num}
-                        </label>
-                        <textarea
-                          value={currentTemplate.content[key]}
-                          onChange={(e) => updateContentField(activeTemplate, key, e.target.value)}
-                          rows={3}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-y"
+              {/* Raw Content Editor (Advanced) */}
+              <div className="mt-6">
+                <details className="group">
+                  <summary className="cursor-pointer list-none">
+                    <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                      <span className="group-open:rotate-90 transition-transform">▶</span>
+                      Advanced: Edit Raw Content
+                    </div>
+                  </summary>
+                  <div className="mt-4 space-y-4">
+                    {/* Show all editable fields */}
+                    {currentTemplate.content.greeting !== undefined && (
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Greeting</label>
+                        <input
+                          type="text"
+                          value={currentTemplate.content.greeting}
+                          onChange={(e) => updateContentField(activeTemplate, 'greeting', e.target.value)}
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
                         />
                       </div>
-                    );
-                  }
-                  return null;
-                })}
+                    )}
+                    
+                    {currentTemplate.content.heading !== undefined && (
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Heading</label>
+                        <input
+                          type="text"
+                          value={currentTemplate.content.heading}
+                          onChange={(e) => updateContentField(activeTemplate, 'heading', e.target.value)}
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
+                        />
+                      </div>
+                    )}
 
-                {/* Call to Action */}
-                {currentTemplate.content.callToAction !== undefined && (
-                  <>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Button Text
-                      </label>
-                      <input
-                        type="text"
-                        value={currentTemplate.content.callToAction}
-                        onChange={(e) => updateContentField(activeTemplate, 'callToAction', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Button URL
-                      </label>
-                      <input
-                        type="url"
-                        value={currentTemplate.content.callToActionUrl}
-                        onChange={(e) => updateContentField(activeTemplate, 'callToActionUrl', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                      />
-                    </div>
-                  </>
-                )}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                      const key = `paragraph${num}`;
+                      if (currentTemplate.content[key] !== undefined) {
+                        return (
+                          <div key={key}>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Paragraph {num}</label>
+                            <textarea
+                              value={currentTemplate.content[key]}
+                              onChange={(e) => updateContentField(activeTemplate, key, e.target.value)}
+                              rows={2}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-y"
+                            />
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
 
-                {/* Footer */}
-                {currentTemplate.content.footer !== undefined && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Footer Text
-                    </label>
-                    <textarea
-                      value={currentTemplate.content.footer}
-                      onChange={(e) => updateContentField(activeTemplate, 'footer', e.target.value)}
-                      rows={2}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-y"
-                    />
+                    {currentTemplate.content.callToAction !== undefined && (
+                      <>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Button Text</label>
+                          <input
+                            type="text"
+                            value={currentTemplate.content.callToAction}
+                            onChange={(e) => updateContentField(activeTemplate, 'callToAction', e.target.value)}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Button URL</label>
+                          <input
+                            type="url"
+                            value={currentTemplate.content.callToActionUrl}
+                            onChange={(e) => updateContentField(activeTemplate, 'callToActionUrl', e.target.value)}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {currentTemplate.content.footer !== undefined && (
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Footer</label>
+                        <textarea
+                          value={currentTemplate.content.footer}
+                          onChange={(e) => updateContentField(activeTemplate, 'footer', e.target.value)}
+                          rows={2}
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-y"
+                        />
+                      </div>
+                    )}
+
+                    {currentTemplate.content.attachmentUrl !== undefined && (
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">PDF Attachment URL</label>
+                        <input
+                          type="url"
+                          value={currentTemplate.content.attachmentUrl}
+                          onChange={(e) => updateContentField(activeTemplate, 'attachmentUrl', e.target.value)}
+                          placeholder="https://example.com/your-pricing-guide.pdf"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
+                        />
+                      </div>
+                    )}
+
+                    {currentTemplate.content.showDetails !== undefined && (
+                      <div>
+                        <label className="flex items-center gap-2 text-xs">
+                          <input
+                            type="checkbox"
+                            checked={currentTemplate.content.showDetails}
+                            onChange={(e) => updateContentField(activeTemplate, 'showDetails', e.target.checked)}
+                            className="rounded"
+                          />
+                          <span className="text-gray-700">Show form submission details</span>
+                        </label>
+                      </div>
+                    )}
                   </div>
-                )}
-
-                {/* Attachment URL (for pricing email) */}
-                {currentTemplate.content.attachmentUrl !== undefined && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      PDF Attachment URL
-                    </label>
-                    <input
-                      type="url"
-                      value={currentTemplate.content.attachmentUrl}
-                      onChange={(e) => updateContentField(activeTemplate, 'attachmentUrl', e.target.value)}
-                      placeholder="https://example.com/your-pricing-guide.pdf"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Public URL to your PDF file (e.g., from Firebase Storage, Dropbox, Google Drive)
-                    </p>
-                  </div>
-                )}
-
-                {/* Show Details Toggle */}
-                {currentTemplate.content.showDetails !== undefined && (
-                  <div>
-                    <label className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={currentTemplate.content.showDetails}
-                        onChange={(e) => updateContentField(activeTemplate, 'showDetails', e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-gray-700">Show form submission details</span>
-                    </label>
-                  </div>
-                )}
+                </details>
               </div>
             </div>
           </div>
         </div>
-
-        
-        {/* Preview - Always Show */}
-        {activeTab === 'email' && (
-          <div className="mt-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold mb-4">Email Preview</h3>
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <iframe
-                  srcDoc={getPreviewHtml()}
-                  className="w-full h-[600px]"
-                  title="Email Preview"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-        </>
         )}
 
         {activeTab === 'logs' && (
