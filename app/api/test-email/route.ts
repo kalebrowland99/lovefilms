@@ -39,28 +39,23 @@ export async function POST(request: Request) {
     // Load templates
     ensureDataDir();
     
-    // Check if file exists, if not use default templates from API
-    let templates;
-    if (fs.existsSync(TEMPLATES_PATH)) {
-      const templatesData = fs.readFileSync(TEMPLATES_PATH, 'utf8');
-      templates = JSON.parse(templatesData);
-    } else {
-      // Fallback: load from email-templates API
-      const templatesResponse = await fetch(`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/email-templates`, {
-        headers: {
-          'Authorization': request.headers.get('authorization') || ''
-        }
-      });
-      if (!templatesResponse.ok) {
-        throw new Error('Could not load templates');
-      }
-      templates = await templatesResponse.json();
+    if (!fs.existsSync(TEMPLATES_PATH)) {
+      return NextResponse.json({ 
+        error: 'Templates file not found. Please save your templates first in the Email Automation tab.' 
+      }, { status: 404 });
     }
+    
+    const templatesData = fs.readFileSync(TEMPLATES_PATH, 'utf8');
+    const templates = JSON.parse(templatesData);
     
     const template = templates[templateKey];
     if (!template) {
-      return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+      return NextResponse.json({ 
+        error: `Template "${templateKey}" not found. Available templates: ${Object.keys(templates).join(', ')}` 
+      }, { status: 404 });
     }
+    
+    console.log('Loaded template:', template.name);
 
     // Sample data for test - covers all possible template variables
     const sampleData = {
