@@ -7,6 +7,11 @@ import path from 'path';
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Use /tmp directory on Vercel (serverless), or local data directory in development
+const IS_VERCEL = process.env.VERCEL === '1';
+const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+const TEMPLATES_PATH = path.join(DATA_DIR, 'email-templates.json');
+
 // Helper to check password
 function checkAuth(request: Request): boolean {
   const authHeader = request.headers.get('authorization');
@@ -14,6 +19,13 @@ function checkAuth(request: Request): boolean {
   
   const password = authHeader.replace('Bearer ', '');
   return password === ADMIN_PASSWORD;
+}
+
+// Ensure data directory exists
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
 }
 
 export async function POST(request: Request) {
@@ -25,9 +37,25 @@ export async function POST(request: Request) {
     const { templateKey, testEmail } = await request.json();
 
     // Load templates
-    const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
-    const templatesData = fs.readFileSync(templatesPath, 'utf8');
-    const templates = JSON.parse(templatesData);
+    ensureDataDir();
+    
+    // Check if file exists, if not use default templates from API
+    let templates;
+    if (fs.existsSync(TEMPLATES_PATH)) {
+      const templatesData = fs.readFileSync(TEMPLATES_PATH, 'utf8');
+      templates = JSON.parse(templatesData);
+    } else {
+      // Fallback: load from email-templates API
+      const templatesResponse = await fetch(`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/email-templates`, {
+        headers: {
+          'Authorization': request.headers.get('authorization') || ''
+        }
+      });
+      if (!templatesResponse.ok) {
+        throw new Error('Could not load templates');
+      }
+      templates = await templatesResponse.json();
+    }
     
     const template = templates[templateKey];
     if (!template) {
