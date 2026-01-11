@@ -29,6 +29,7 @@ export default function EmailAdmin() {
   const [inquiriesLoading, setInquiriesLoading] = useState(false);
   const [updatingInquiry, setUpdatingInquiry] = useState<string | null>(null);
   const [lastLeadsRefresh, setLastLeadsRefresh] = useState<Date | null>(null);
+  const [sendingTest, setSendingTest] = useState(false);
   
   // Refs for timers and loading state
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
@@ -300,6 +301,38 @@ export default function EmailAdmin() {
     }
   };
 
+  const handleSendTestEmail = async () => {
+    setSendingTest(true);
+    setMessage('');
+    
+    try {
+      const response = await fetch('/api/test-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
+        },
+        body: JSON.stringify({
+          templateKey: activeTemplate,
+          testEmail: 'kalebrowland99@gmail.com'
+        })
+      });
+
+      if (response.ok) {
+        setMessage('✅ Test email sent to kalebrowland99@gmail.com! Check your inbox/spam.');
+        setTimeout(() => setMessage(''), 5000);
+      } else {
+        const errorData = await response.json();
+        setMessage(`❌ Failed to send test email: ${errorData.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      setMessage('❌ Error sending test email');
+      console.error('Test email error:', error);
+    } finally {
+      setSendingTest(false);
+    }
+  };
+
   const updateTemplateField = (templateKey: string, field: string, value: any) => {
     setTemplates({
       ...templates,
@@ -528,13 +561,22 @@ export default function EmailAdmin() {
                   </>
                 )}
                 {activeTab === 'email' && (
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
-                  >
-                    {saving ? 'Saving...' : 'Save Changes'}
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleSendTestEmail}
+                      disabled={sendingTest}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
+                    >
+                      {sendingTest ? 'Sending...' : '📧 Send Test Email'}
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
+                    >
+                      {saving ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
                 )}
                 {activeTab === 'sms' && (
                   <div className="flex gap-3">

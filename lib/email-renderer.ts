@@ -40,22 +40,81 @@ export function renderTemplate(template: any, data: any): string {
     content += `${replaceVars(template.content.footer, data)}\n\n`;
   }
   
-  // Convert plain text to simple HTML with line breaks
-  const htmlContent = content
-    .split('\n')
-    .map(line => line.trim() === '' ? '<br>' : line)
-    .join('<br>');
+  // Convert plain text to HTML with proper paragraph formatting
+  const lines = content.split('\n');
+  let htmlParts: string[] = [];
+  let currentParagraph = '';
   
-  // Wrap in minimal HTML
+  for (const line of lines) {
+    if (line.trim() === '') {
+      if (currentParagraph.trim()) {
+        htmlParts.push(`<p style="margin: 0 0 16px 0;">${currentParagraph.trim()}</p>`);
+        currentParagraph = '';
+      }
+    } else {
+      currentParagraph += (currentParagraph ? ' ' : '') + line.trim();
+    }
+  }
+  
+  // Add remaining paragraph
+  if (currentParagraph.trim()) {
+    htmlParts.push(`<p style="margin: 0 0 16px 0;">${currentParagraph.trim()}</p>`);
+  }
+  
+  const htmlContent = htmlParts.join('');
+  
+  // Create call-to-action button if present
+  let buttonHtml = '';
+  if (template.content.callToAction && template.content.callToActionUrl) {
+    buttonHtml = `
+      <table cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0;">
+        <tr>
+          <td style="background-color: #000000; border-radius: 6px; text-align: center;">
+            <a href="${template.content.callToActionUrl}" 
+               style="display: inline-block; padding: 14px 32px; font-family: Arial, sans-serif; font-size: 15px; font-weight: 600; color: #ffffff; text-decoration: none;">
+              ${template.content.callToAction}
+            </a>
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+  
+  // Wrap in Gmail-style HTML
   return `
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       </head>
-      <body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #333;">
-        ${htmlContent}
+      <body style="margin: 0; padding: 0; background-color: #f6f6f6; font-family: Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f6f6f6; padding: 24px 0;">
+          <tr>
+            <td align="center">
+              <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 40px 40px 32px 40px;">
+                    <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #222222;">
+                      ${htmlContent}
+                      ${buttonHtml}
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 40px 40px 40px; border-top: 1px solid #eeeeee;">
+                    <p style="margin: 24px 0 0 0; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5; color: #999999;">
+                      Your Love Films<br>
+                      Wedding Videography<br>
+                      hi@yourlovefilms.com
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
       </body>
     </html>
   `;
