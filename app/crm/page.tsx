@@ -30,6 +30,7 @@ export default function EmailAdmin() {
   const [updatingInquiry, setUpdatingInquiry] = useState<string | null>(null);
   const [lastLeadsRefresh, setLastLeadsRefresh] = useState<Date | null>(null);
   const [sendingTest, setSendingTest] = useState(false);
+  const [testEmail, setTestEmail] = useState('kalebrowland99@gmail.com');
   
   // Refs for timers and loading state
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
@@ -302,6 +303,12 @@ export default function EmailAdmin() {
   };
 
   const handleSendTestEmail = async () => {
+    if (!testEmail || !testEmail.includes('@')) {
+      setMessage('❌ Please enter a valid email address');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
     setSendingTest(true);
     setMessage('');
     
@@ -314,12 +321,12 @@ export default function EmailAdmin() {
         },
         body: JSON.stringify({
           templateKey: activeTemplate,
-          testEmail: 'kalebrowland99@gmail.com'
+          testEmail: testEmail
         })
       });
 
       if (response.ok) {
-        setMessage('✅ Test email sent to kalebrowland99@gmail.com! Check your inbox/spam.');
+        setMessage(`✅ Test email sent to ${testEmail}! Check your inbox/spam.`);
         setTimeout(() => setMessage(''), 5000);
       } else {
         const errorData = await response.json();
@@ -1118,27 +1125,29 @@ export default function EmailAdmin() {
                   </ul>
                 </div>
 
-                {/* Test Email Button */}
-                <div className="mt-4">
-                  <button
-                    onClick={handleSendTestEmail}
-                    disabled={sendingTest}
-                    className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
-                  >
-                    {sendingTest ? (
-                      <>
-                        <span className="animate-spin">⏳</span>
-                        <span>Sending test email...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>📧</span>
-                        <span>Send Test Email to kalebrowland99@gmail.com</span>
-                      </>
-                    )}
-                  </button>
-                  <p className="text-xs text-gray-500 mt-2 text-center">
-                    Test this template with sample data to see how it looks in your inbox
+                {/* Test Email Section */}
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    📧 Send Test Email
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={testEmail}
+                      onChange={(e) => setTestEmail(e.target.value)}
+                      placeholder="Enter email address"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                    />
+                    <button
+                      onClick={handleSendTestEmail}
+                      disabled={sendingTest}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 whitespace-nowrap"
+                    >
+                      {sendingTest ? 'Sending...' : 'Send Test'}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2">
+                    Test this template with sample data (John & Jane wedding at The Hermitage Hotel)
                   </p>
                 </div>
               </div>
