@@ -493,12 +493,13 @@ export default function EmailAdmin() {
     });
   };
 
-  // Load content text when switching templates
+  // Load content text when switching templates or templates first load
   useEffect(() => {
     if (templates && activeTemplate) {
-      setEmailContentText(getEditableContent());
+      const content = getEditableContent();
+      setEmailContentText(content);
     }
-  }, [activeTemplate]);
+  }, [activeTemplate, templates]);
 
   const getPreviewHtml = () => {
     if (!templates || !activeTemplate) return '';
