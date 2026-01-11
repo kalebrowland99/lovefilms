@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getEmailLogs } from '@/lib/database';
 
-const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms2026';
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 
 // Helper to check password
 function checkAuth(request: Request): boolean {

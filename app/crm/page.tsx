@@ -379,12 +379,6 @@ export default function EmailAdmin() {
             Login
           </button>
         </form>
-        
-        <p className="mt-6 text-sm text-gray-500 text-center">
-          Default password: <code className="bg-gray-100 px-2 py-1 rounded">yourlovefilms2026</code>
-          <br />
-          <span className="text-xs">Change via EMAIL_ADMIN_PASSWORD environment variable</span>
-        </p>
       </div>
     </div>
   );

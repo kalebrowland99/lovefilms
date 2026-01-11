@@ -6,7 +6,7 @@ import path from 'path';
 const IS_VERCEL = process.env.VERCEL === '1';
 const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
 const TEMPLATES_PATH = path.join(DATA_DIR, 'email-templates.json');
-const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms2026';
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 
 // Helper to check password
 function checkAuth(request: Request): boolean {
