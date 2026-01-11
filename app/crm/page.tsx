@@ -1113,7 +1113,8 @@ export default function EmailAdmin() {
                 <textarea
                   value={getEditableContent()}
                   onChange={(e) => updateFromEditableContent(e.target.value)}
-                  className="w-full h-[600px] px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none font-mono text-sm resize-none"
+                  className="w-full h-[600px] px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none text-sm resize-none"
+                  style={{ fontFamily: 'Arial, sans-serif' }}
                   placeholder="Start typing your email content here..."
                 />
                 <div className="mt-3 text-xs text-gray-600 bg-gray-50 p-3 rounded">
