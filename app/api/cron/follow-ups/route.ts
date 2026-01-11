@@ -192,7 +192,7 @@ async function sendFollowUp(
 
     // Send email via Resend
     const { data, error } = await resend.emails.send({
-      from: 'Your Love Films <contact@yourlovefilms.com>',
+      from: 'Your Love Films <hi@yourlovefilms.com>',
       to: inquiry.email,
       subject: emailSubject,
       html: emailHtml,

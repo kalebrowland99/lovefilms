@@ -34,7 +34,7 @@ to: 'kalebrowland99@gmail.com',
 
 To:
 ```typescript
-from: 'Wedding Inquiries <contact@yourlovefilms.com>',
+from: 'Wedding Inquiries <hi@yourlovefilms.com>',
 to: 'hi@yourlovefilms.com',
 ```
 

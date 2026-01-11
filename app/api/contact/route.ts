@@ -117,7 +117,7 @@ export async function POST(request: Request) {
           
           try {
             await resend.emails.send({
-              from: 'Wedding Inquiries <contact@yourlovefilms.com>',
+              from: 'Wedding Inquiries <hi@yourlovefilms.com>',
               to: 'hi@yourlovefilms.com',
               subject: notificationSubject,
               html: notificationHtml,
@@ -159,7 +159,7 @@ export async function POST(request: Request) {
           
           try {
             const { data, error } = await resend.emails.send({
-              from: 'Your Love Films <contact@yourlovefilms.com>',
+              from: 'Your Love Films <hi@yourlovefilms.com>',
               to: formData.email,
               subject: welcomeSubject,
               html: welcomeHtml,
@@ -213,7 +213,7 @@ export async function POST(request: Request) {
                   
                   // Prepare email options
                   const emailOptions: any = {
-                    from: 'Your Love Films <contact@yourlovefilms.com>',
+                    from: 'Your Love Films <hi@yourlovefilms.com>',
                     to: formData.email,
                     subject: pricesSubject,
                     html: pricesHtml,
@@ -348,7 +348,7 @@ export async function POST(request: Request) {
                       const followUpSubject = renderSubject(template.subject, emailData);
                       
                       await resend.emails.send({
-                        from: 'Your Love Films <contact@yourlovefilms.com>',
+                        from: 'Your Love Films <hi@yourlovefilms.com>',
                         to: formData.email,
                         subject: followUpSubject,
                         html: followUpHtml,
