@@ -906,6 +906,41 @@ export default function EmailAdmin() {
                 </label>
               </div>
 
+              {/* Available Variables Info Box */}
+              <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">📋 Available Template Variables</h3>
+                <p className="text-xs text-gray-600 mb-3">Copy and paste these into your subject line or email content:</p>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{name}}`}</code>
+                    <span className="text-gray-600 ml-2">Customer's name</span>
+                  </div>
+                  <div>
+                    <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{email}}`}</code>
+                    <span className="text-gray-600 ml-2">Customer's email</span>
+                  </div>
+                  <div>
+                    <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{phone}}`}</code>
+                    <span className="text-gray-600 ml-2">Phone number</span>
+                  </div>
+                  <div>
+                    <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{fianceName}}`}</code>
+                    <span className="text-gray-600 ml-2">Fiancé's name</span>
+                  </div>
+                  <div>
+                    <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{weddingDate}}`}</code>
+                    <span className="text-gray-600 ml-2">Wedding date</span>
+                  </div>
+                  <div>
+                    <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{venue}}`}</code>
+                    <span className="text-gray-600 ml-2">Venue name</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  💡 Example: "Hey {`{{name}}`}! Can't wait to film your wedding at {`{{venue}}`} on {`{{weddingDate}}`}!"
+                </p>
+              </div>
+
               {/* Subject Line */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -918,9 +953,6 @@ export default function EmailAdmin() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
                   placeholder="Subject line"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Use {`{{name}}`} and {`{{weddingDate}}`} for dynamic content
-                </p>
               </div>
 
               {/* Email Preview with Edit Instructions */}
