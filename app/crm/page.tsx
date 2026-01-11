@@ -31,10 +31,13 @@ export default function EmailAdmin() {
   const [lastLeadsRefresh, setLastLeadsRefresh] = useState<Date | null>(null);
   const [sendingTest, setSendingTest] = useState(false);
   const [testEmail, setTestEmail] = useState('kalebrowland99@gmail.com');
+  const [emailContentText, setEmailContentText] = useState<string>('');
   
   // Refs for timers and loading state
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
   const isLoadingInquiries = useRef<boolean>(false);
+  const emailContentRef = useRef<HTMLTextAreaElement>(null);
+  const parseTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Check if already authenticated (stored in session)
   useEffect(() => {
@@ -399,8 +402,23 @@ export default function EmailAdmin() {
     return text.trim();
   };
 
-  // Parse editable text back to template format
-  const updateFromEditableContent = (text: string) => {
+  // Update text state immediately (for typing)
+  const handleEmailContentChange = (text: string) => {
+    setEmailContentText(text);
+    
+    // Clear existing timer
+    if (parseTimer.current) {
+      clearTimeout(parseTimer.current);
+    }
+    
+    // Parse after 1 second of no typing (debounced)
+    parseTimer.current = setTimeout(() => {
+      parseAndSaveContent(text);
+    }, 1000);
+  };
+
+  // Parse editable text back to template format (debounced)
+  const parseAndSaveContent = (text: string) => {
     const lines = text.split('\n');
     const content: any = {};
     
@@ -474,6 +492,13 @@ export default function EmailAdmin() {
       }
     });
   };
+
+  // Load content text when switching templates
+  useEffect(() => {
+    if (templates && activeTemplate) {
+      setEmailContentText(getEditableContent());
+    }
+  }, [activeTemplate]);
 
   const getPreviewHtml = () => {
     if (!templates || !activeTemplate) return '';
@@ -1114,11 +1139,14 @@ export default function EmailAdmin() {
                   </span>
                 </div>
                 <textarea
-                  value={getEditableContent()}
-                  onChange={(e) => updateFromEditableContent(e.target.value)}
+                  ref={emailContentRef}
+                  value={emailContentText}
+                  onChange={(e) => handleEmailContentChange(e.target.value)}
+                  onBlur={(e) => parseAndSaveContent(e.target.value)}
                   className="w-full h-[600px] px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none text-sm resize-none"
                   style={{ fontFamily: 'Arial, sans-serif' }}
                   placeholder="Start typing your email content here..."
+                  spellCheck={true}
                 />
                 <div className="mt-3 text-xs text-gray-600 bg-gray-50 p-3 rounded">
                   <p className="font-medium mb-2">📝 Formatting Guide:</p>
