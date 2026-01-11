@@ -313,6 +313,8 @@ export default function EmailAdmin() {
     setMessage('');
     
     try {
+      console.log('Sending test email for template:', activeTemplate, 'to:', testEmail);
+      
       const response = await fetch('/api/test-email', {
         method: 'POST',
         headers: {
@@ -325,12 +327,15 @@ export default function EmailAdmin() {
         })
       });
 
+      const responseData = await response.json();
+      console.log('Test email response:', responseData);
+
       if (response.ok) {
         setMessage(`✅ Test email sent to ${testEmail}! Check your inbox/spam.`);
         setTimeout(() => setMessage(''), 5000);
       } else {
-        const errorData = await response.json();
-        setMessage(`❌ Failed to send test email: ${errorData.error || 'Unknown error'}`);
+        setMessage(`❌ Failed to send test email: ${responseData.error || 'Unknown error'}`);
+        console.error('Test email error details:', responseData);
       }
     } catch (error) {
       setMessage('❌ Error sending test email');

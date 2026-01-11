@@ -62,10 +62,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Template not found' }, { status: 404 });
     }
 
-    // Sample data for test
+    // Sample data for test - covers all possible template variables
     const sampleData = {
-      name: 'John & Jane',
+      name: 'John Smith',
+      email: testEmail,
+      phone: '(615) 555-1234',
+      fianceName: 'Jane Doe',
       weddingDate: 'June 15, 2026',
+      venue: 'The Hermitage Hotel, Nashville',
+      videographer: 'Not Yet',
       formData: {
         name: 'John Smith',
         email: testEmail,
@@ -78,28 +83,43 @@ export async function POST(request: Request) {
     };
 
     // Render email HTML
+    console.log('Rendering template:', templateKey);
     const emailHtml = renderTemplate(template, sampleData);
-    const subject = template.subject
-      .replace(/\{\{name\}\}/g, sampleData.name)
-      .replace(/\{\{weddingDate\}\}/g, sampleData.weddingDate);
+    
+    // Render subject with all possible variables
+    let subject = template.subject;
+    subject = subject.replace(/\{\{name\}\}/g, sampleData.name);
+    subject = subject.replace(/\{\{email\}\}/g, sampleData.email);
+    subject = subject.replace(/\{\{phone\}\}/g, sampleData.phone);
+    subject = subject.replace(/\{\{fianceName\}\}/g, sampleData.fianceName);
+    subject = subject.replace(/\{\{weddingDate\}\}/g, sampleData.weddingDate);
+    subject = subject.replace(/\{\{venue\}\}/g, sampleData.venue);
+
+    console.log('Sending email to:', testEmail);
+    console.log('Subject:', subject);
 
     // Send email via Resend
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Your Love Films <hi@yourlovefilms.com>',
       to: testEmail,
       subject: `[TEST] ${subject}`,
       html: emailHtml,
     });
 
+    console.log('Email sent successfully:', result);
+
     return NextResponse.json({ 
       success: true, 
-      message: `Test email sent to ${testEmail}` 
+      message: `Test email sent to ${testEmail}`,
+      emailId: result.data?.id 
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error sending test email:', error);
+    console.error('Error stack:', error.stack);
     return NextResponse.json({ 
       error: 'Failed to send test email', 
-      details: String(error) 
+      details: error.message || String(error),
+      stack: error.stack 
     }, { status: 500 });
   }
 }

@@ -65,7 +65,7 @@ Then in Vercel Dashboard:
 
 ✅ **Instant Emails**
 - Welcome email to inquirer (immediate)
-- Notification to you (immediate)
+- Notification to you (immediate)s
 
 ✅ **Automated Follow-Ups**
 - Day 1 follow-up (24 hours later)
