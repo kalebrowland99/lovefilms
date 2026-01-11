@@ -561,22 +561,13 @@ export default function EmailAdmin() {
                   </>
                 )}
                 {activeTab === 'email' && (
-                  <div className="flex gap-3">
-                    <button
-                      onClick={handleSendTestEmail}
-                      disabled={sendingTest}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
-                    >
-                      {sendingTest ? 'Sending...' : '📧 Send Test Email'}
-                    </button>
-                    <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
-                    >
-                      {saving ? 'Saving...' : 'Save Changes'}
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
                 )}
                 {activeTab === 'sms' && (
                   <div className="flex gap-3">
@@ -1125,6 +1116,30 @@ export default function EmailAdmin() {
                     <li>Add buttons with: <code className="bg-white px-1 rounded">[Button: Your Text]</code> and <code className="bg-white px-1 rounded">[URL: https://...]</code></li>
                     <li>Last paragraph becomes the footer automatically</li>
                   </ul>
+                </div>
+
+                {/* Test Email Button */}
+                <div className="mt-4">
+                  <button
+                    onClick={handleSendTestEmail}
+                    disabled={sendingTest}
+                    className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {sendingTest ? (
+                      <>
+                        <span className="animate-spin">⏳</span>
+                        <span>Sending test email...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>📧</span>
+                        <span>Send Test Email to kalebrowland99@gmail.com</span>
+                      </>
+                    )}
+                  </button>
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Test this template with sample data to see how it looks in your inbox
+                  </p>
                 </div>
               </div>
 
