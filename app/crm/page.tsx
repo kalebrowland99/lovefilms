@@ -327,6 +327,109 @@ export default function EmailAdmin() {
     setAutomationSettings(newSettings);
   };
 
+  // Convert template content to editable text format
+  const getEditableContent = () => {
+    if (!templates || !activeTemplate) return '';
+    const template = templates[activeTemplate];
+    const content = template.content;
+    
+    let text = '';
+    
+    if (content.greeting) text += `${content.greeting}\n\n`;
+    if (content.heading) text += `${content.heading}\n\n`;
+    
+    for (let i = 1; i <= 10; i++) {
+      if (content[`paragraph${i}`]) {
+        text += `${content[`paragraph${i}`]}\n\n`;
+      }
+    }
+    
+    if (content.callToAction) {
+      text += `[Button: ${content.callToAction}]\n`;
+      text += `[URL: ${content.callToActionUrl || ''}]\n\n`;
+    }
+    
+    if (content.footer) text += `${content.footer}`;
+    
+    return text.trim();
+  };
+
+  // Parse editable text back to template format
+  const updateFromEditableContent = (text: string) => {
+    const lines = text.split('\n');
+    const content: any = {};
+    
+    let currentParagraph = 0;
+    let tempText = '';
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Check for button markers
+      if (line.startsWith('[Button:')) {
+        if (tempText.trim()) {
+          if (currentParagraph === 0 && !content.greeting) {
+            content.greeting = tempText.trim();
+          } else {
+            currentParagraph++;
+            content[`paragraph${currentParagraph}`] = tempText.trim();
+          }
+          tempText = '';
+        }
+        content.callToAction = line.replace('[Button:', '').replace(']', '').trim();
+        continue;
+      }
+      
+      if (line.startsWith('[URL:')) {
+        content.callToActionUrl = line.replace('[URL:', '').replace(']', '').trim();
+        continue;
+      }
+      
+      // Regular content
+      if (line.trim()) {
+        tempText += (tempText ? '\n' : '') + line;
+      } else if (tempText.trim()) {
+        // Empty line signals end of section
+        if (currentParagraph === 0 && !content.greeting) {
+          content.greeting = tempText.trim();
+        } else {
+          currentParagraph++;
+          content[`paragraph${currentParagraph}`] = tempText.trim();
+        }
+        tempText = '';
+      }
+    }
+    
+    // Handle remaining text as footer
+    if (tempText.trim()) {
+      if (currentParagraph === 0 && !content.greeting) {
+        content.greeting = tempText.trim();
+      } else if (Object.keys(content).some(k => k.startsWith('paragraph'))) {
+        content.footer = tempText.trim();
+      } else {
+        currentParagraph++;
+        content[`paragraph${currentParagraph}`] = tempText.trim();
+      }
+    }
+    
+    // Preserve existing fields not in text
+    const currentContent = templates[activeTemplate].content;
+    if (currentContent.showDetails !== undefined) {
+      content.showDetails = currentContent.showDetails;
+    }
+    if (currentContent.attachmentUrl !== undefined) {
+      content.attachmentUrl = currentContent.attachmentUrl;
+    }
+    
+    setTemplates({
+      ...templates,
+      [activeTemplate]: {
+        ...templates[activeTemplate],
+        content
+      }
+    });
+  };
+
   const getPreviewHtml = () => {
     if (!templates || !activeTemplate) return '';
     
@@ -955,119 +1058,41 @@ export default function EmailAdmin() {
                 />
               </div>
 
-              {/* Email Preview with Edit Instructions */}
+              {/* Email Content Editor */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Email Preview
+                    Email Content
                   </label>
                   <span className="text-xs text-gray-500">
-                    This is how your email will look to customers
+                    Edit your email text directly - separate paragraphs with blank lines
                   </span>
                 </div>
-                <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
-                  <iframe
-                    srcDoc={getPreviewHtml()}
-                    className="w-full h-[700px]"
-                    title="Email Preview"
-                  />
+                <textarea
+                  value={getEditableContent()}
+                  onChange={(e) => updateFromEditableContent(e.target.value)}
+                  className="w-full h-[600px] px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none font-mono text-sm resize-none"
+                  placeholder="Start typing your email content here..."
+                />
+                <div className="mt-3 text-xs text-gray-600 bg-gray-50 p-3 rounded">
+                  <p className="font-medium mb-2">📝 Formatting Guide:</p>
+                  <ul className="space-y-1 list-disc list-inside">
+                    <li>Separate paragraphs with a blank line</li>
+                    <li>Use {`{{name}}`}, {`{{weddingDate}}`}, {`{{venue}}`} for dynamic content</li>
+                    <li>Add buttons with: <code className="bg-white px-1 rounded">[Button: Your Text]</code> and <code className="bg-white px-1 rounded">[URL: https://...]</code></li>
+                    <li>Last paragraph becomes the footer automatically</li>
+                  </ul>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  💡 To edit email content, modify the template directly in your CRM settings or use the raw editor below
-                </p>
               </div>
 
-              {/* Raw Content Editor (Advanced) */}
-              <div className="mt-6">
-                <details className="group">
-                  <summary className="cursor-pointer list-none">
-                    <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                      <span className="group-open:rotate-90 transition-transform">▶</span>
-                      Advanced: Edit Raw Content
-                    </div>
-                  </summary>
-                  <div className="mt-4 space-y-4">
-                    {/* Show all editable fields */}
-                    {currentTemplate.content.greeting !== undefined && (
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Greeting</label>
-                        <input
-                          type="text"
-                          value={currentTemplate.content.greeting}
-                          onChange={(e) => updateContentField(activeTemplate, 'greeting', e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                        />
-                      </div>
-                    )}
-                    
-                    {currentTemplate.content.heading !== undefined && (
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Heading</label>
-                        <input
-                          type="text"
-                          value={currentTemplate.content.heading}
-                          onChange={(e) => updateContentField(activeTemplate, 'heading', e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                        />
-                      </div>
-                    )}
-
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
-                      const key = `paragraph${num}`;
-                      if (currentTemplate.content[key] !== undefined) {
-                        return (
-                          <div key={key}>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Paragraph {num}</label>
-                            <textarea
-                              value={currentTemplate.content[key]}
-                              onChange={(e) => updateContentField(activeTemplate, key, e.target.value)}
-                              rows={2}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-y"
-                            />
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-
-                    {currentTemplate.content.callToAction !== undefined && (
-                      <>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">Button Text</label>
-                          <input
-                            type="text"
-                            value={currentTemplate.content.callToAction}
-                            onChange={(e) => updateContentField(activeTemplate, 'callToAction', e.target.value)}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">Button URL</label>
-                          <input
-                            type="url"
-                            value={currentTemplate.content.callToActionUrl}
-                            onChange={(e) => updateContentField(activeTemplate, 'callToActionUrl', e.target.value)}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-                          />
-                        </div>
-                      </>
-                    )}
-
-                    {currentTemplate.content.footer !== undefined && (
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Footer</label>
-                        <textarea
-                          value={currentTemplate.content.footer}
-                          onChange={(e) => updateContentField(activeTemplate, 'footer', e.target.value)}
-                          rows={2}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none resize-y"
-                        />
-                      </div>
-                    )}
-
+              {/* Additional Settings */}
+              {(currentTemplate.content.attachmentUrl !== undefined || currentTemplate.content.showDetails !== undefined) && (
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <h3 className="text-sm font-medium text-gray-700 mb-4">Additional Settings</h3>
+                  <div className="space-y-4">
                     {currentTemplate.content.attachmentUrl !== undefined && (
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">PDF Attachment URL</label>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">PDF Attachment URL (Optional)</label>
                         <input
                           type="url"
                           value={currentTemplate.content.attachmentUrl}
@@ -1080,20 +1105,20 @@ export default function EmailAdmin() {
 
                     {currentTemplate.content.showDetails !== undefined && (
                       <div>
-                        <label className="flex items-center gap-2 text-xs">
+                        <label className="flex items-center gap-2 text-sm">
                           <input
                             type="checkbox"
                             checked={currentTemplate.content.showDetails}
                             onChange={(e) => updateContentField(activeTemplate, 'showDetails', e.target.checked)}
                             className="rounded"
                           />
-                          <span className="text-gray-700">Show form submission details</span>
+                          <span className="text-gray-700">Show form submission details in email</span>
                         </label>
                       </div>
                     )}
                   </div>
-                </details>
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
