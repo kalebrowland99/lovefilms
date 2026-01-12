@@ -21,8 +21,16 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function GET(request: Request) {
   // Verify the request is from Vercel Cron (security)
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const CRON_SECRET = process.env.CRON_SECRET;
+  
+  // If CRON_SECRET is set, verify it matches
+  if (CRON_SECRET) {
+    if (authHeader !== `Bearer ${CRON_SECRET}`) {
+      console.error('❌ Unauthorized cron request. Auth header:', authHeader);
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  } else {
+    console.warn('⚠️ CRON_SECRET not set - cron endpoint is not secured!');
   }
 
   console.log('Running follow-up cron job...');
