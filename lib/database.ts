@@ -683,20 +683,33 @@ async function getPendingScheduledEmailsFromFirebase(): Promise<ScheduledEmail[]
   }
   try {
     const now = new Date().toISOString();
-    console.log(`🔍 Querying scheduled emails: status='pending', sendAt<='${now}'`);
+    console.log(`🔍 Querying scheduled emails: status='pending'`);
+    console.log(`⏰ Current time: ${now}`);
     
-    // Firestore requires composite index for multiple where clauses
-    // Try querying all pending first, then filter by date in code
+    // Query ONLY by status to avoid Firestore composite index requirement
+    // Then filter by sendAt in JavaScript
     const snapshot = await db.collection(COLLECTIONS.SCHEDULED_EMAILS)
       .where('status', '==', 'pending')
       .get();
     
     console.log(`📋 Found ${snapshot.docs.length} pending emails total`);
     
-    // Filter by sendAt in code (more reliable than Firestore date comparison)
+    // Filter by sendAt in code (avoids Firestore index requirement)
     const readyEmails = snapshot.docs
-      .map(doc => ({ id: doc.id, ...doc.data() } as ScheduledEmail))
-      .filter(email => email.sendAt <= now);
+      .map(doc => {
+        const data = doc.data();
+        return { 
+          id: doc.id, 
+          ...data 
+        } as ScheduledEmail;
+      })
+      .filter(email => {
+        const isReady = email.sendAt <= now;
+        if (!isReady) {
+          console.log(`⏳ Email ${email.id} not ready yet. sendAt: ${email.sendAt}, now: ${now}`);
+        }
+        return isReady;
+      });
     
     console.log(`✅ Found ${readyEmails.length} emails ready to send (sendAt <= now)`);
     
@@ -710,8 +723,12 @@ async function getPendingScheduledEmailsFromFirebase(): Promise<ScheduledEmail[]
     }
     
     return readyEmails;
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error fetching scheduled emails from Firebase:', error);
+    // If it's an index error, provide helpful message
+    if (error.code === 9 && error.details?.includes('index')) {
+      console.error('💡 Firestore index error - make sure query only uses status field');
+    }
     return [];
   }
 }
