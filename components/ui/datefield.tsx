@@ -30,7 +30,7 @@ function DateSegment({ className, ...props }: AriaDateSegmentProps) {
     <AriaDateSegment
       className={composeRenderProps(className, (className) =>
         cn(
-          "type-literal:px-0 inline rounded p-0.5 caret-transparent outline outline-0",
+          "type-literal:px-0 inline rounded p-0.5 caret-transparent outline outline-0 tabular-nums",
           /* Placeholder */
           "data-[placeholder]:text-muted-foreground",
           /* Disabled */
@@ -43,7 +43,15 @@ function DateSegment({ className, ...props }: AriaDateSegmentProps) {
         )
       )}
       {...props}
-    />
+    >
+      {(segment) => {
+        // Pad month and day with leading zeros for display
+        if (segment.type === 'month' || segment.type === 'day') {
+          return segment.text.padStart(2, '0');
+        }
+        return segment.text;
+      }}
+    </AriaDateSegment>
   )
 }
 
