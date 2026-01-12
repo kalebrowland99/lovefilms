@@ -7,7 +7,7 @@ export default function EmailAdmin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [templates, setTemplates] = useState<any>(null);
-  const [activeTemplate, setActiveTemplate] = useState<string>('welcome');
+  const [activeTemplate, setActiveTemplate] = useState<string>('prices'); // Default to pricing email since welcome is disabled
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState<'leads' | 'email' | 'sms' | 'logs'>(() => {
@@ -1040,8 +1040,9 @@ export default function EmailAdmin() {
               <h2 className="text-lg font-semibold mb-4">Templates</h2>
               <div className="space-y-2">
                 {Object.entries(templates)
+                  .filter(([key]) => key !== 'welcome') // Hide welcome email template
                   .sort(([keyA], [keyB]) => {
-                    const order = ['notification', 'welcome', 'prices', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
+                    const order = ['notification', 'prices', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
                     return order.indexOf(keyA) - order.indexOf(keyB);
                   })
                   .map(([key, template]: [string, any]) => (
