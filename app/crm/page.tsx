@@ -181,6 +181,36 @@ export default function EmailAdmin() {
     }
   };
 
+  const deleteInquiry = async (inquiryId: string, inquiryName: string) => {
+    if (!confirm(`Are you sure you want to delete ${inquiryName}'s inquiry? This action cannot be undone.`)) {
+      return;
+    }
+
+    setUpdatingInquiry(inquiryId);
+    try {
+      const response = await fetch(`/api/inquiries?id=${inquiryId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
+        }
+      });
+
+      if (response.ok) {
+        // Remove from local state
+        setInquiries(inquiries.filter(inq => inq.id !== inquiryId));
+        setMessage(`✅ Lead deleted successfully`);
+        setTimeout(() => setMessage(''), 3000);
+      } else {
+        setMessage('❌ Failed to delete lead');
+      }
+    } catch (error) {
+      console.error('Error deleting inquiry:', error);
+      setMessage('❌ Error deleting lead');
+    } finally {
+      setUpdatingInquiry(null);
+    }
+  };
+
   const loadEmailLogs = async () => {
     setLogsLoading(true);
     try {
@@ -864,17 +894,29 @@ export default function EmailAdmin() {
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <select
-                              value={inquiry.status}
-                              onChange={(e) => updateInquiryStatus(inquiry.id, e.target.value)}
-                              disabled={updatingInquiry === inquiry.id}
-                              className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-black focus:border-transparent outline-none disabled:opacity-50"
-                            >
-                              <option value="new">New</option>
-                              <option value="contacted">Contacted</option>
-                              <option value="booked">Booked</option>
-                              <option value="dead">Dead</option>
-                            </select>
+                            <div className="flex items-center gap-2">
+                              <select
+                                value={inquiry.status}
+                                onChange={(e) => updateInquiryStatus(inquiry.id, e.target.value)}
+                                disabled={updatingInquiry === inquiry.id}
+                                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-black focus:border-transparent outline-none disabled:opacity-50"
+                              >
+                                <option value="new">New</option>
+                                <option value="contacted">Contacted</option>
+                                <option value="booked">Booked</option>
+                                <option value="dead">Dead</option>
+                              </select>
+                              <button
+                                onClick={() => deleteInquiry(inquiry.id, inquiry.name)}
+                                disabled={updatingInquiry === inquiry.id}
+                                className="text-red-600 hover:text-red-800 disabled:opacity-50 p-1.5 hover:bg-red-50 rounded transition-colors"
+                                title="Delete lead"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -896,6 +938,7 @@ export default function EmailAdmin() {
                     <li>• <strong>Booked:</strong> They officially booked - <strong>automation STOPS</strong> (no more follow-ups)</li>
                     <li>• <strong>Dead:</strong> Not interested - automation STOPS</li>
                     <li>• Change status to "Booked" as soon as they sign contract to stop all emails/texts</li>
+                    <li>• You can delete leads using the trash icon in the Actions column</li>
                   </ul>
                 </div>
               </div>

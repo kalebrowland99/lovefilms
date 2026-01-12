@@ -151,6 +151,17 @@ async function updateInquiryInFirebase(id: string, updates: Partial<Inquiry>): P
   }
 }
 
+async function deleteInquiryFromFirebase(id: string): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.INQUIRIES).doc(id).delete();
+    console.log(`🗑️ Deleted inquiry: ${id}`);
+  } catch (error) {
+    console.error('Error deleting inquiry from Firebase:', error);
+    throw error;
+  }
+}
+
 async function getInquiryByIdFromFirebase(id: string): Promise<Inquiry | undefined> {
   if (!db) return undefined;
   try {
@@ -249,6 +260,21 @@ function updateInquiryInFile(id: string, updates: Partial<Inquiry>): void {
       console.error('Error updating inquiry:', error);
       throw error;
     }
+  }
+}
+
+function deleteInquiryFromFile(id: string): void {
+  ensureDataDir();
+  const inquiries = getInquiriesFromFile();
+  const filtered = inquiries.filter(i => i.id !== id);
+  try {
+    const tempPath = INQUIRIES_PATH + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(filtered, null, 2));
+    fs.renameSync(tempPath, INQUIRIES_PATH);
+    console.log(`🗑️ Deleted inquiry: ${id}`);
+  } catch (error) {
+    console.error('Error deleting inquiry:', error);
+    throw error;
   }
 }
 
@@ -563,6 +589,13 @@ export function updateInquiry(id: string, updates: Partial<Inquiry>): void | Pro
     return updateInquiryInFirebase(id, updates);
   }
   return updateInquiryInFile(id, updates);
+}
+
+export function deleteInquiry(id: string): void | Promise<void> {
+  if (USE_FIREBASE) {
+    return deleteInquiryFromFirebase(id);
+  }
+  return deleteInquiryFromFile(id);
 }
 
 export function getInquiryById(id: string): Inquiry | undefined | Promise<Inquiry | undefined> {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getInquiries, updateInquiry } from '@/lib/database';
+import { getInquiries, updateInquiry, deleteInquiry } from '@/lib/database';
 
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 
@@ -50,6 +50,29 @@ export async function PATCH(request: Request) {
   } catch (error) {
     console.error('Error updating inquiry:', error);
     return NextResponse.json({ error: 'Failed to update inquiry' }, { status: 500 });
+  }
+}
+
+// DELETE - Delete inquiry
+export async function DELETE(request: Request) {
+  if (!checkAuth(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const inquiryId = searchParams.get('id');
+    
+    if (!inquiryId) {
+      return NextResponse.json({ error: 'Inquiry ID required' }, { status: 400 });
+    }
+    
+    await deleteInquiry(inquiryId);
+    
+    return NextResponse.json({ success: true, message: 'Inquiry deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting inquiry:', error);
+    return NextResponse.json({ error: 'Failed to delete inquiry' }, { status: 500 });
   }
 }
 
