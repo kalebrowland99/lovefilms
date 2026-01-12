@@ -7,7 +7,7 @@ export default function EmailAdmin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [templates, setTemplates] = useState<any>(null);
-  const [activeTemplate, setActiveTemplate] = useState<string>('prices'); // Default to pricing email since welcome is disabled
+  const [activeTemplate, setActiveTemplate] = useState<string>(''); // Will be set when templates load
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState<'leads' | 'email' | 'sms' | 'logs'>(() => {
@@ -93,7 +93,16 @@ export default function EmailAdmin() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Loaded templates:', Object.keys(data));
         setTemplates(data);
+        
+        // Set activeTemplate to first available template if not set or if current doesn't exist
+        if (!activeTemplate || !data[activeTemplate]) {
+          const templateKeys = Object.keys(data).filter(key => key !== 'welcome');
+          const firstTemplate = templateKeys.includes('prices') ? 'prices' : templateKeys[0];
+          console.log('Setting active template to:', firstTemplate);
+          setActiveTemplate(firstTemplate);
+        }
       } else if (response.status === 401) {
         // Authentication failed - clear session and show login
         console.error('Authentication failed - clearing session');
@@ -583,10 +592,28 @@ export default function EmailAdmin() {
     );
   }
 
+  // If no activeTemplate is set yet, wait for templates to load
+  if (!activeTemplate) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+          <p className="text-gray-600">Initializing...</p>
+        </div>
+      </div>
+    );
+  }
+
   const currentTemplate = templates[activeTemplate];
 
-  // Safety check - if template is undefined, show loading state
+  // Safety check - if template is undefined, show error and reset
   if (!currentTemplate) {
+    console.error(`Template ${activeTemplate} not found in:`, Object.keys(templates || {}));
+    // Reset to first available template
+    const availableTemplates = Object.keys(templates || {}).filter(k => k !== 'welcome');
+    if (availableTemplates.length > 0) {
+      setActiveTemplate(availableTemplates[0]);
+    }
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
