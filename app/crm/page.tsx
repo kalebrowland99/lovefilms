@@ -42,9 +42,10 @@ export default function EmailAdmin() {
   // Check if already authenticated (stored in session)
   useEffect(() => {
     const auth = sessionStorage.getItem('emailAdminAuth');
-    if (auth === 'true') {
+    const pwd = sessionStorage.getItem('emailAdminPassword');
+    if (auth === 'true' && pwd) {
       setIsAuthenticated(true);
-      loadTemplates(sessionStorage.getItem('emailAdminPassword') || '');
+      loadTemplates(pwd);
     }
   }, []);
 
@@ -90,6 +91,15 @@ export default function EmailAdmin() {
       if (response.ok) {
         const data = await response.json();
         setTemplates(data);
+      } else if (response.status === 401) {
+        // Authentication failed - clear session and show login
+        console.error('Authentication failed - clearing session');
+        sessionStorage.removeItem('emailAdminAuth');
+        sessionStorage.removeItem('emailAdminPassword');
+        setIsAuthenticated(false);
+        setTemplates(null);
+      } else {
+        console.error('Failed to load templates:', response.status);
       }
     } catch (error) {
       console.error('Error loading templates:', error);
