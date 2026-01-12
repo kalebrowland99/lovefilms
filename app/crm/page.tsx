@@ -799,7 +799,7 @@ export default function EmailAdmin() {
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="text-sm text-gray-600 mb-1">Booked</div>
+                <div className="text-sm text-gray-600 mb-1">Call booked</div>
                 <div className="text-3xl font-bold text-green-600">
                   {inquiries.filter(inq => inq.status === 'booked').length}
                 </div>
@@ -889,7 +889,7 @@ export default function EmailAdmin() {
                             }`}>
                               {inquiry.status === 'new' && '🆕 New'}
                               {inquiry.status === 'contacted' && '💬 Contacted'}
-                              {inquiry.status === 'booked' && '✅ Booked'}
+                              {inquiry.status === 'booked' && '✅ Call booked'}
                               {inquiry.status === 'dead' && '❌ Dead'}
                             </span>
                           </td>
@@ -903,7 +903,7 @@ export default function EmailAdmin() {
                               >
                                 <option value="new">New</option>
                                 <option value="contacted">Contacted</option>
-                                <option value="booked">Booked</option>
+                                <option value="booked">Call booked</option>
                                 <option value="dead">Dead</option>
                               </select>
                               <button
@@ -935,9 +935,9 @@ export default function EmailAdmin() {
                   <ul className="text-sm text-gray-700 space-y-2">
                     <li>• <strong>New:</strong> Automation active - will receive all follow-up emails/SMS</li>
                     <li>• <strong>Contacted:</strong> You've replied - automation continues (good for warm leads)</li>
-                    <li>• <strong>Booked:</strong> They officially booked - <strong>automation STOPS</strong> (no more follow-ups)</li>
+                    <li>• <strong>Call booked:</strong> They officially booked - <strong>automation STOPS</strong> (no more follow-ups)</li>
                     <li>• <strong>Dead:</strong> Not interested - automation STOPS</li>
-                    <li>• Change status to "Booked" as soon as they sign contract to stop all emails/texts</li>
+                    <li>• Change status to "Call booked" as soon as they sign contract to stop all emails/texts</li>
                     <li>• You can delete leads using the trash icon in the Actions column</li>
                   </ul>
                 </div>
@@ -1118,7 +1118,7 @@ export default function EmailAdmin() {
                         <li>• <strong>Day 4 Text:</strong> Sends on Day 4 at 9:00 AM UTC via Vercel Cron</li>
                         <li>• <strong>Timing is hardcoded:</strong> You can only enable/disable and edit message content</li>
                         <li>• Only sends to inquiries with <strong>"new"</strong> or <strong>"contacted"</strong> status</li>
-                        <li>• Change lead status to <strong>"booked"</strong> to stop all automation</li>
+                        <li>• Change lead status to <strong>"Call booked"</strong> to stop all automation</li>
                         <li>• Once a text is sent, it won't send again (tracked automatically)</li>
                         <li>• <strong>Best practice:</strong> Keep texts short (under 160 chars) and friendly</li>
                       </ul>
