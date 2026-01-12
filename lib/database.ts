@@ -336,6 +336,23 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
       }
     });
     
+    // Helper function to remove undefined values from an object
+    const removeUndefined = (obj: any): any => {
+      if (obj === null || typeof obj !== 'object') {
+        return obj;
+      }
+      if (Array.isArray(obj)) {
+        return obj.map(removeUndefined);
+      }
+      const cleaned: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        if (value !== undefined) {
+          cleaned[key] = removeUndefined(value);
+        }
+      }
+      return cleaned;
+    };
+    
     // Update or create each template as its own document
     for (const [templateId, template] of Object.entries(templates)) {
       if (!db) {
@@ -354,8 +371,11 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
         template.content = String(template.content || '');
       }
       
+      // Remove undefined values (Firestore doesn't allow undefined)
+      const cleanedTemplate = removeUndefined(template);
+      
       const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
-      batch.set(templateRef, template, { merge: true });
+      batch.set(templateRef, cleanedTemplate, { merge: true });
       hasOperations = true;
     }
     
