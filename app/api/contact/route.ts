@@ -101,24 +101,35 @@ export async function POST(request: Request) {
 
             // Schedule availability/pricing email to be sent after 3 minutes (or 10 seconds in test mode)
             if (templates.availabilityday0 && templates.availabilityday0.enabled) {
-              const availabilityDelayMs = isTestMode ? 10000 : 180000; // 10 seconds vs 3 minutes
-              const sendAt = new Date(Date.now() + availabilityDelayMs).toISOString();
-              
-              const scheduledEmail: ScheduledEmail = {
-                id: generateId(),
-                inquiryId: inquiryId,
-                recipientEmail: formData.email,
-                recipientName: formData.name,
-                templateKey: 'availabilityday0',
-                sendAt: sendAt,
-                emailData: emailData,
-                attachmentUrl: templates.availabilityday0.attachmentUrl || undefined,
-                status: 'pending',
-                createdAt: new Date().toISOString()
-              };
-              
-              await saveScheduledEmail(scheduledEmail);
-              console.log(`📅 Availability email queued to send in ${isTestMode ? '10 seconds' : '3 minutes'} at ${sendAt}`);
+              try {
+                const availabilityDelayMs = isTestMode ? 10000 : 180000; // 10 seconds vs 3 minutes
+                const sendAt = new Date(Date.now() + availabilityDelayMs).toISOString();
+                
+                const scheduledEmail: ScheduledEmail = {
+                  id: generateId(),
+                  inquiryId: inquiryId,
+                  recipientEmail: formData.email,
+                  recipientName: formData.name,
+                  templateKey: 'availabilityday0',
+                  sendAt: sendAt,
+                  emailData: emailData,
+                  attachmentUrl: templates.availabilityday0.attachmentUrl || undefined,
+                  status: 'pending',
+                  createdAt: new Date().toISOString()
+                };
+                
+                await saveScheduledEmail(scheduledEmail);
+                console.log(`✅ Availability email queued to send in ${isTestMode ? '10 seconds' : '3 minutes'} at ${sendAt}`);
+              } catch (scheduleError) {
+                console.error('❌ Failed to schedule availability email:', scheduleError);
+                // Don't fail the whole request if scheduling fails
+              }
+            } else {
+              console.warn('⚠️ availabilityday0 template not found or disabled:', {
+                exists: !!templates.availabilityday0,
+                enabled: templates.availabilityday0?.enabled,
+                templateKeys: Object.keys(templates)
+              });
             }
 
             // Send welcome SMS after 45 seconds (or 20 seconds in test mode) if enabled and phone provided
