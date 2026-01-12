@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const inquiries = getInquiries();
+    const inquiries = await getInquiries();
     
     // Sort by most recent first
     inquiries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -44,7 +44,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Inquiry ID required' }, { status: 400 });
     }
     
-    updateInquiry(inquiryId, updates);
+    await updateInquiry(inquiryId, updates);
     
     return NextResponse.json({ success: true, message: 'Inquiry updated successfully' });
   } catch (error) {

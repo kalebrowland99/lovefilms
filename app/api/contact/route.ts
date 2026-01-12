@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       status: 'new',
       createdAt: new Date().toISOString(),
     };
-    saveInquiry(inquiry);
+    await saveInquiry(inquiry);
     console.log('Inquiry saved to database:', inquiryId);
 
     // Use /tmp directory on Vercel for ephemeral data (inquiries, logs, settings)
@@ -130,7 +130,7 @@ export async function POST(request: Request) {
               sentAt: new Date().toISOString(),
               status: 'sent',
             };
-            saveEmailLog(log);
+            await saveEmailLog(log);
           } catch (error) {
             console.error('Failed to send notification:', error);
             const log: EmailLog = {
@@ -144,7 +144,7 @@ export async function POST(request: Request) {
               status: 'failed',
               error: String(error),
             };
-            saveEmailLog(log);
+            await saveEmailLog(log);
           }
         }
 
@@ -253,7 +253,7 @@ export async function POST(request: Request) {
                     status: pricesError ? 'failed' : 'sent',
                     error: pricesError ? String(pricesError) : undefined,
                   };
-                  saveEmailLog(pricesLog);
+                  await saveEmailLog(pricesLog);
 
                   if (pricesData) {
                     console.log('Pricing email sent after 10 minutes:', pricesData);
@@ -314,7 +314,7 @@ export async function POST(request: Request) {
                       error: smsResult.error,
                       messageType: 'sms'
                     };
-                    saveEmailLog(smsLog);
+                    await saveEmailLog(smsLog);
                     
                     if (smsResult.success) {
                       console.log('Welcome SMS sent after 45 seconds:', smsResult.sid);
@@ -364,7 +364,7 @@ export async function POST(request: Request) {
                         sentAt: new Date().toISOString(),
                         status: 'sent',
                       };
-                      saveEmailLog(log);
+                      await saveEmailLog(log);
                       
                       console.log(`✅ TEST MODE: Sent ${templateKey}`);
                     } catch (error) {
@@ -415,7 +415,7 @@ export async function POST(request: Request) {
                         error: smsResult.error,
                         messageType: 'sms'
                       };
-                      saveEmailLog(smsLog);
+                      await saveEmailLog(smsLog);
                       
                       console.log(`✅ TEST MODE: Sent SMS ${smsKey}`);
                     } catch (error) {

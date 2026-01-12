@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const logs = getEmailLogs();
+    const logs = await getEmailLogs();
     
     // Sort by most recent first
     logs.sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());

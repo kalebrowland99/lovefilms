@@ -74,7 +74,7 @@ export async function GET(request: Request) {
     }
 
     // Get all inquiries
-    const inquiries = getInquiries();
+    const inquiries = await getInquiries();
     const now = new Date();
     
     const emailsSent: Record<string, number> = {
@@ -214,7 +214,7 @@ async function sendFollowUp(
         status: 'failed',
         error: String(error),
       };
-      saveEmailLog(log);
+      await saveEmailLog(log);
       
       return;
     }
@@ -230,7 +230,7 @@ async function sendFollowUp(
       sentAt: new Date().toISOString(),
       status: 'sent',
     };
-    saveEmailLog(log);
+    await saveEmailLog(log);
 
     // Update inquiry with follow-up timestamp
     const updates: Partial<Inquiry> = {
@@ -239,7 +239,7 @@ async function sendFollowUp(
         [followUpDay]: new Date().toISOString()
       }
     };
-    updateInquiry(inquiry.id, updates);
+    await updateInquiry(inquiry.id, updates);
 
     console.log(`Sent ${followUpDay} follow-up to ${inquiry.email}`);
 
@@ -292,7 +292,7 @@ async function sendSMSFollowUp(
       error: smsResult.error,
       messageType: 'sms'
     };
-    saveEmailLog(smsLog);
+    await saveEmailLog(smsLog);
     
     if (smsResult.success) {
       // Update inquiry with SMS timestamp
@@ -302,7 +302,7 @@ async function sendSMSFollowUp(
           [smsDay]: new Date().toISOString()
         }
       };
-      updateInquiry(inquiry.id, updates);
+      await updateInquiry(inquiry.id, updates);
       console.log(`Sent ${smsDay} SMS to ${inquiry.phone}`);
     } else {
       console.error(`SMS ${smsDay} failed for ${inquiry.phone}:`, smsResult.error);

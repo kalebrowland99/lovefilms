@@ -53,3 +53,7 @@ data/inquiries.json
 data/email-logs.json
 # NOTE: email-templates.json is now tracked in Git so customizations persist across deployments
 # data/email-templates.json
+
+# Firebase service account credentials
+firebase-service-account.json
+**/firebase-service-account*.json

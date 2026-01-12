@@ -1,13 +1,17 @@
 import fs from 'fs';
 import path from 'path';
+import { db, COLLECTIONS } from './firebase';
 
-// Use /tmp directory on Vercel (serverless), or local data directory in development
+// Fallback: Use /tmp directory on Vercel (serverless), or local data directory in development
 const IS_VERCEL = process.env.VERCEL === '1';
 const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
 const INQUIRIES_PATH = path.join(DATA_DIR, 'inquiries.json');
 const EMAIL_LOGS_PATH = path.join(DATA_DIR, 'email-logs.json');
 
-// Ensure data directory exists
+// Check if Firebase is available
+const USE_FIREBASE = db !== null;
+
+// Ensure data directory exists (for fallback)
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -53,8 +57,96 @@ export interface EmailLog {
   messageType?: 'email' | 'sms';
 }
 
-// Read inquiries
-export function getInquiries(): Inquiry[] {
+// ============================================================================
+// FIREBASE IMPLEMENTATIONS
+// ============================================================================
+
+async function getInquiriesFromFirebase(): Promise<Inquiry[]> {
+  if (!db) return [];
+  try {
+    const snapshot = await db.collection(COLLECTIONS.INQUIRIES).get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Inquiry));
+  } catch (error) {
+    console.error('Error fetching inquiries from Firebase:', error);
+    return [];
+  }
+}
+
+async function saveInquiryToFirebase(inquiry: Inquiry): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.INQUIRIES).doc(inquiry.id).set(inquiry);
+  } catch (error) {
+    console.error('Error saving inquiry to Firebase:', error);
+    throw error;
+  }
+}
+
+async function updateInquiryInFirebase(id: string, updates: Partial<Inquiry>): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.INQUIRIES).doc(id).update(updates);
+  } catch (error) {
+    console.error('Error updating inquiry in Firebase:', error);
+    throw error;
+  }
+}
+
+async function getInquiryByIdFromFirebase(id: string): Promise<Inquiry | undefined> {
+  if (!db) return undefined;
+  try {
+    const doc = await db.collection(COLLECTIONS.INQUIRIES).doc(id).get();
+    if (!doc.exists) return undefined;
+    return { id: doc.id, ...doc.data() } as Inquiry;
+  } catch (error) {
+    console.error('Error fetching inquiry from Firebase:', error);
+    return undefined;
+  }
+}
+
+async function getEmailLogsFromFirebase(): Promise<EmailLog[]> {
+  if (!db) return [];
+  try {
+    const snapshot = await db.collection(COLLECTIONS.EMAIL_LOGS)
+      .orderBy('sentAt', 'desc')
+      .limit(1000)
+      .get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as EmailLog));
+  } catch (error) {
+    console.error('Error fetching email logs from Firebase:', error);
+    return [];
+  }
+}
+
+async function saveEmailLogToFirebase(log: EmailLog): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.EMAIL_LOGS).doc(log.id).set(log);
+  } catch (error) {
+    console.error('Error saving email log to Firebase:', error);
+    throw error;
+  }
+}
+
+async function getLogsForInquiryFromFirebase(inquiryId: string): Promise<EmailLog[]> {
+  if (!db) return [];
+  try {
+    const snapshot = await db.collection(COLLECTIONS.EMAIL_LOGS)
+      .where('inquiryId', '==', inquiryId)
+      .orderBy('sentAt', 'desc')
+      .get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as EmailLog));
+  } catch (error) {
+    console.error('Error fetching logs for inquiry from Firebase:', error);
+    return [];
+  }
+}
+
+// ============================================================================
+// JSON FILE FALLBACK IMPLEMENTATIONS
+// ============================================================================
+
+function getInquiriesFromFile(): Inquiry[] {
   ensureDataDir();
   if (!fs.existsSync(INQUIRIES_PATH)) {
     fs.writeFileSync(INQUIRIES_PATH, JSON.stringify([], null, 2));
@@ -63,7 +155,6 @@ export function getInquiries(): Inquiry[] {
   try {
     const data = fs.readFileSync(INQUIRIES_PATH, 'utf8');
     const parsed = JSON.parse(data);
-    // Ensure we always return a valid array
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
     console.error('Error reading inquiries:', error);
@@ -71,13 +162,11 @@ export function getInquiries(): Inquiry[] {
   }
 }
 
-// Save inquiry
-export function saveInquiry(inquiry: Inquiry): void {
+function saveInquiryToFile(inquiry: Inquiry): void {
   ensureDataDir();
-  const inquiries = getInquiries();
+  const inquiries = getInquiriesFromFile();
   inquiries.push(inquiry);
   try {
-    // Write to temp file first, then rename (atomic operation)
     const tempPath = INQUIRIES_PATH + '.tmp';
     fs.writeFileSync(tempPath, JSON.stringify(inquiries, null, 2));
     fs.renameSync(tempPath, INQUIRIES_PATH);
@@ -87,15 +176,13 @@ export function saveInquiry(inquiry: Inquiry): void {
   }
 }
 
-// Update inquiry
-export function updateInquiry(id: string, updates: Partial<Inquiry>): void {
+function updateInquiryInFile(id: string, updates: Partial<Inquiry>): void {
   ensureDataDir();
-  const inquiries = getInquiries();
+  const inquiries = getInquiriesFromFile();
   const index = inquiries.findIndex(i => i.id === id);
   if (index !== -1) {
     inquiries[index] = { ...inquiries[index], ...updates };
     try {
-      // Write to temp file first, then rename (atomic operation)
       const tempPath = INQUIRIES_PATH + '.tmp';
       fs.writeFileSync(tempPath, JSON.stringify(inquiries, null, 2));
       fs.renameSync(tempPath, INQUIRIES_PATH);
@@ -106,14 +193,12 @@ export function updateInquiry(id: string, updates: Partial<Inquiry>): void {
   }
 }
 
-// Get inquiry by ID
-export function getInquiryById(id: string): Inquiry | undefined {
-  const inquiries = getInquiries();
+function getInquiryByIdFromFile(id: string): Inquiry | undefined {
+  const inquiries = getInquiriesFromFile();
   return inquiries.find(i => i.id === id);
 }
 
-// Read email logs
-export function getEmailLogs(): EmailLog[] {
+function getEmailLogsFromFile(): EmailLog[] {
   ensureDataDir();
   if (!fs.existsSync(EMAIL_LOGS_PATH)) {
     fs.writeFileSync(EMAIL_LOGS_PATH, JSON.stringify([], null, 2));
@@ -123,20 +208,70 @@ export function getEmailLogs(): EmailLog[] {
   return JSON.parse(data);
 }
 
-// Save email log
-export function saveEmailLog(log: EmailLog): void {
+function saveEmailLogToFile(log: EmailLog): void {
   ensureDataDir();
-  const logs = getEmailLogs();
+  const logs = getEmailLogsFromFile();
   logs.push(log);
-  // Keep only last 1000 logs to prevent file from getting too large
   const trimmedLogs = logs.slice(-1000);
   fs.writeFileSync(EMAIL_LOGS_PATH, JSON.stringify(trimmedLogs, null, 2));
 }
 
-// Get logs for specific inquiry
-export function getLogsForInquiry(inquiryId: string): EmailLog[] {
-  const logs = getEmailLogs();
+function getLogsForInquiryFromFile(inquiryId: string): EmailLog[] {
+  const logs = getEmailLogsFromFile();
   return logs.filter(log => log.inquiryId === inquiryId);
+}
+
+// ============================================================================
+// PUBLIC API - Routes to Firebase or File based on configuration
+// ============================================================================
+
+export function getInquiries(): Inquiry[] | Promise<Inquiry[]> {
+  if (USE_FIREBASE) {
+    return getInquiriesFromFirebase();
+  }
+  return getInquiriesFromFile();
+}
+
+export function saveInquiry(inquiry: Inquiry): void | Promise<void> {
+  if (USE_FIREBASE) {
+    return saveInquiryToFirebase(inquiry);
+  }
+  return saveInquiryToFile(inquiry);
+}
+
+export function updateInquiry(id: string, updates: Partial<Inquiry>): void | Promise<void> {
+  if (USE_FIREBASE) {
+    return updateInquiryInFirebase(id, updates);
+  }
+  return updateInquiryInFile(id, updates);
+}
+
+export function getInquiryById(id: string): Inquiry | undefined | Promise<Inquiry | undefined> {
+  if (USE_FIREBASE) {
+    return getInquiryByIdFromFirebase(id);
+  }
+  return getInquiryByIdFromFile(id);
+}
+
+export function getEmailLogs(): EmailLog[] | Promise<EmailLog[]> {
+  if (USE_FIREBASE) {
+    return getEmailLogsFromFirebase();
+  }
+  return getEmailLogsFromFile();
+}
+
+export function saveEmailLog(log: EmailLog): void | Promise<void> {
+  if (USE_FIREBASE) {
+    return saveEmailLogToFirebase(log);
+  }
+  return saveEmailLogToFile(log);
+}
+
+export function getLogsForInquiry(inquiryId: string): EmailLog[] | Promise<EmailLog[]> {
+  if (USE_FIREBASE) {
+    return getLogsForInquiryFromFirebase(inquiryId);
+  }
+  return getLogsForInquiryFromFile(inquiryId);
 }
 
 // Generate unique ID
@@ -144,3 +279,9 @@ export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
+// Log which storage method is being used
+if (USE_FIREBASE) {
+  console.log('✅ Using Firebase Firestore for data storage');
+} else {
+  console.log('⚠️ Firebase not configured - using local JSON files (data will be lost on deployment)');
+}
