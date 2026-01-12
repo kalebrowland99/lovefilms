@@ -302,24 +302,26 @@ async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
     
     // If collection is empty, check for old global_templates document and migrate
     if (snapshot.empty) {
-      console.log('Email templates collection is empty, checking for old global_templates document...');
+      console.log('📦 Email templates collection is empty, checking for old global_templates document...');
       try {
         const oldDoc = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc('global_templates').get();
         if (oldDoc.exists) {
-          console.log('Found old global_templates document, migrating to individual documents...');
+          console.log('✅ Found old global_templates document!');
           const oldData = oldDoc.data();
-          if (oldData) {
+          console.log('📄 Templates in global_templates:', Object.keys(oldData || {}));
+          if (oldData && Object.keys(oldData).length > 0) {
             // The old format had templates as nested objects
             // Save them as individual documents
             const batch = db.batch();
             for (const [templateId, templateData] of Object.entries(oldData)) {
+              console.log(`  → Migrating template: ${templateId}`);
               const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
               batch.set(templateRef, templateData as any);
             }
             // Delete the old global_templates document
             batch.delete(oldDoc.ref);
             await batch.commit();
-            console.log('Migration complete!');
+            console.log(`✅ Migration complete! Migrated ${Object.keys(oldData).length} templates`);
             
             // Now fetch the newly migrated templates
             const newSnapshot = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).get();
@@ -327,14 +329,21 @@ async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
             newSnapshot.docs.forEach(doc => {
               templates[doc.id] = doc.data() as EmailTemplate;
             });
+            console.log('📥 Loaded migrated templates:', Object.keys(templates));
             return templates;
+          } else {
+            console.log('⚠️ global_templates document exists but is empty');
           }
+        } else {
+          console.log('❌ No global_templates document found');
         }
       } catch (migrationError) {
-        console.error('Error during migration:', migrationError);
+        console.error('❌ Error during migration:', migrationError);
       }
       return null;
     }
+    
+    console.log(`📥 Loaded ${snapshot.docs.length} templates from individual documents:`, snapshot.docs.map(d => d.id));
     
     const templates: EmailTemplates = {};
     snapshot.docs.forEach(doc => {
