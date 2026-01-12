@@ -137,11 +137,18 @@ Every day at 9:00 AM UTC, Vercel runs `/api/cron/follow-ups` which:
 
 All data is stored in JSON files (no external database needed):
 
-- **Inquiries:** `/data/inquiries.json`
-- **Email Logs:** `/data/crm-logs.json`
-- **Templates:** `/data/crm-templates.json`
+- **Inquiries:** `/data/inquiries.json` (gitignored - not tracked)
+- **Email Logs:** `/data/email-logs.json` (gitignored - not tracked)
+- **Automation Settings:** `/data/automation-settings.json` (gitignored - not tracked)
+- **Email Templates:** `/data/email-templates.json` ⚠️ **TRACKED IN GIT** - commit changes to persist!
 
-These files are tracked in Git, so data persists across deployments.
+**Important:** Email templates are tracked in Git so your customizations persist across deployments. After editing templates in the CRM, commit and push:
+
+```bash
+git add data/email-templates.json
+git commit -m "Update email templates"
+git push
+```
 
 ---
 

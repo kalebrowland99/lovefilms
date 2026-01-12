@@ -51,4 +51,5 @@ next-env.d.ts
 data/automation-settings.json
 data/inquiries.json
 data/email-logs.json
-data/email-templates.json
+# NOTE: email-templates.json is now tracked in Git so customizations persist across deployments
+# data/email-templates.json

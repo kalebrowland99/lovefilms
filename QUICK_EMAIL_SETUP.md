@@ -99,7 +99,13 @@ Then in Vercel Dashboard:
 3. Click on any email template
 4. Edit text, subject, buttons, etc.
 5. Click "Save Changes"
-6. Done! Next email uses your changes
+6. **Important:** Commit and push your changes to Git so they persist across deployments:
+   ```bash
+   git add data/email-templates.json
+   git commit -m "Update email templates"
+   git push
+   ```
+7. Done! Your customizations are now permanent
 
 ---
 
