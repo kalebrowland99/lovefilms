@@ -84,17 +84,21 @@ export interface AutomationSettings {
   testMode: boolean;
 }
 
-export interface EmailTemplates {
-  [key: string]: {
+export interface EmailTemplate {
     name: string;
     subject: string;
     enabled: boolean;
     sendTo: string;
     timing: string;
-    content: {
-      [key: string]: any;
-    };
-  };
+  content: string; // Single text field instead of multiple paragraphs
+  callToAction?: string;
+  callToActionUrl?: string;
+  attachmentUrl?: string;
+  showDetails?: boolean;
+}
+
+export interface EmailTemplates {
+  [key: string]: EmailTemplate;
 }
 
 // ============================================================================
@@ -294,9 +298,14 @@ async function saveAutomationSettingsToFirebase(settings: AutomationSettings): P
 async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
   if (!db) return null;
   try {
-    const doc = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(EMAIL_TEMPLATES_DOC_ID).get();
-    if (!doc.exists) return null;
-    return doc.data() as EmailTemplates;
+    const snapshot = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).get();
+    if (snapshot.empty) return null;
+    
+    const templates: EmailTemplates = {};
+    snapshot.docs.forEach(doc => {
+      templates[doc.id] = doc.data() as EmailTemplate;
+    });
+    return templates;
   } catch (error) {
     console.error('Error fetching email templates from Firebase:', error);
     return null;
@@ -306,7 +315,27 @@ async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
 async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<void> {
   if (!db) throw new Error('Firebase not initialized');
   try {
-    await db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(EMAIL_TEMPLATES_DOC_ID).set(templates);
+    const batch = db.batch();
+    
+    // Get existing templates to delete ones that are no longer in the new templates
+    const existingSnapshot = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).get();
+    const existingIds = new Set(existingSnapshot.docs.map(doc => doc.id));
+    const newIds = new Set(Object.keys(templates));
+    
+    // Delete templates that were removed
+    existingSnapshot.docs.forEach(doc => {
+      if (!newIds.has(doc.id)) {
+        batch.delete(doc.ref);
+      }
+    });
+    
+    // Update or create each template as its own document
+    Object.entries(templates).forEach(([templateId, template]) => {
+      const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
+      batch.set(templateRef, template);
+    });
+    
+    await batch.commit();
   } catch (error) {
     console.error('Error saving email templates to Firebase:', error);
     throw error;

@@ -379,25 +379,40 @@ export default function EmailAdmin() {
   const getEditableContent = () => {
     if (!templates || !activeTemplate) return '';
     const template = templates[activeTemplate];
-    const content = template.content;
     
     let text = '';
     
-    if (content.greeting) text += `${content.greeting}\n\n`;
-    if (content.heading) text += `${content.heading}\n\n`;
-    
-    for (let i = 1; i <= 10; i++) {
-      if (content[`paragraph${i}`]) {
-        text += `${content[`paragraph${i}`]}\n\n`;
+    // If content is a string (new format), use it directly
+    if (typeof template.content === 'string') {
+      text = template.content;
+      
+      // Add button/URL markers if they exist
+      if (template.callToAction) {
+        text += `\n\n[Button: ${template.callToAction}]`;
+        if (template.callToActionUrl) {
+          text += `\n[URL: ${template.callToActionUrl}]`;
+        }
       }
+    } else {
+      // Legacy format: convert from paragraph structure
+      const content = template.content;
+      
+      if (content.greeting) text += `${content.greeting}\n\n`;
+      if (content.heading) text += `${content.heading}\n\n`;
+      
+      for (let i = 1; i <= 10; i++) {
+        if (content[`paragraph${i}`]) {
+          text += `${content[`paragraph${i}`]}\n\n`;
+        }
+      }
+      
+      if (content.callToAction) {
+        text += `[Button: ${content.callToAction}]\n`;
+        text += `[URL: ${content.callToActionUrl || ''}]\n\n`;
+      }
+      
+      if (content.footer) text += `${content.footer}`;
     }
-    
-    if (content.callToAction) {
-      text += `[Button: ${content.callToAction}]\n`;
-      text += `[URL: ${content.callToActionUrl || ''}]\n\n`;
-    }
-    
-    if (content.footer) text += `${content.footer}`;
     
     return text.trim();
   };
@@ -420,75 +435,44 @@ export default function EmailAdmin() {
   // Parse editable text back to template format (debounced)
   const parseAndSaveContent = (text: string) => {
     const lines = text.split('\n');
-    const content: any = {};
+    let contentText = '';
+    let callToAction = '';
+    let callToActionUrl = '';
     
-    let currentParagraph = 0;
-    let tempText = '';
-    
+    // Extract button and URL markers from the text
+    const processedLines: string[] = [];
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       
-      // Check for button markers
       if (line.startsWith('[Button:')) {
-        if (tempText.trim()) {
-          if (currentParagraph === 0 && !content.greeting) {
-            content.greeting = tempText.trim();
-          } else {
-            currentParagraph++;
-            content[`paragraph${currentParagraph}`] = tempText.trim();
-          }
-          tempText = '';
-        }
-        content.callToAction = line.replace('[Button:', '').replace(']', '').trim();
+        callToAction = line.replace('[Button:', '').replace(']', '').trim();
         continue;
       }
       
       if (line.startsWith('[URL:')) {
-        content.callToActionUrl = line.replace('[URL:', '').replace(']', '').trim();
+        callToActionUrl = line.replace('[URL:', '').replace(']', '').trim();
         continue;
       }
       
-      // Regular content
-      if (line.trim()) {
-        tempText += (tempText ? '\n' : '') + line;
-      } else if (tempText.trim()) {
-        // Empty line signals end of section
-        if (currentParagraph === 0 && !content.greeting) {
-          content.greeting = tempText.trim();
-        } else {
-          currentParagraph++;
-          content[`paragraph${currentParagraph}`] = tempText.trim();
-        }
-        tempText = '';
-      }
+      processedLines.push(line);
     }
     
-    // Handle remaining text as footer
-    if (tempText.trim()) {
-      if (currentParagraph === 0 && !content.greeting) {
-        content.greeting = tempText.trim();
-      } else if (Object.keys(content).some(k => k.startsWith('paragraph'))) {
-        content.footer = tempText.trim();
-      } else {
-        currentParagraph++;
-        content[`paragraph${currentParagraph}`] = tempText.trim();
-      }
-    }
+    // Join remaining lines as the content
+    contentText = processedLines.join('\n').trim();
     
-    // Preserve existing fields not in text
-    const currentContent = templates[activeTemplate].content;
-    if (currentContent.showDetails !== undefined) {
-      content.showDetails = currentContent.showDetails;
-    }
-    if (currentContent.attachmentUrl !== undefined) {
-      content.attachmentUrl = currentContent.attachmentUrl;
-    }
+    // Get current template to preserve other fields
+    const currentTemplate = templates[activeTemplate];
     
     setTemplates({
       ...templates,
       [activeTemplate]: {
-        ...templates[activeTemplate],
-        content
+        ...currentTemplate,
+        content: contentText,
+        callToAction: callToAction || currentTemplate.callToAction,
+        callToActionUrl: callToActionUrl || currentTemplate.callToActionUrl,
+        // Preserve other fields
+        attachmentUrl: currentTemplate.attachmentUrl,
+        showDetails: currentTemplate.showDetails,
       }
     });
   };
@@ -1188,30 +1172,30 @@ export default function EmailAdmin() {
               </div>
 
               {/* Additional Settings */}
-              {(currentTemplate.content.attachmentUrl !== undefined || currentTemplate.content.showDetails !== undefined) && (
+              {(currentTemplate.attachmentUrl !== undefined || currentTemplate.showDetails !== undefined) && (
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   <h3 className="text-sm font-medium text-gray-700 mb-4">Additional Settings</h3>
                   <div className="space-y-4">
-                    {currentTemplate.content.attachmentUrl !== undefined && (
+                    {currentTemplate.attachmentUrl !== undefined && (
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">PDF Attachment URL (Optional)</label>
                         <input
                           type="url"
-                          value={currentTemplate.content.attachmentUrl}
-                          onChange={(e) => updateContentField(activeTemplate, 'attachmentUrl', e.target.value)}
+                          value={currentTemplate.attachmentUrl || ''}
+                          onChange={(e) => updateTemplateField(activeTemplate, 'attachmentUrl', e.target.value)}
                           placeholder="https://example.com/your-pricing-guide.pdf"
                           className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent outline-none"
                         />
                       </div>
                     )}
 
-                    {currentTemplate.content.showDetails !== undefined && (
+                    {currentTemplate.showDetails !== undefined && (
                       <div>
                         <label className="flex items-center gap-2 text-sm">
                           <input
                             type="checkbox"
-                            checked={currentTemplate.content.showDetails}
-                            onChange={(e) => updateContentField(activeTemplate, 'showDetails', e.target.checked)}
+                            checked={currentTemplate.showDetails || false}
+                            onChange={(e) => updateTemplateField(activeTemplate, 'showDetails', e.target.checked)}
                             className="rounded"
                           />
                           <span className="text-gray-700">Show form submission details in email</span>

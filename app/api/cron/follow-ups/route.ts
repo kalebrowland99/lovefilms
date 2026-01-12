@@ -152,8 +152,8 @@ export async function GET(request: Request) {
 async function sendFollowUp(
   inquiry: Inquiry,
   template: any,
-  templateType: 'followup-day1' | 'followup-day3',
-  followUpDay: 'day1' | 'day3'
+  templateType: 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14',
+  followUpDay: 'day1' | 'day3' | 'day6' | 'day10' | 'day14'
 ) {
   try {
     const emailData = {

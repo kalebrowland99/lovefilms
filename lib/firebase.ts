@@ -55,5 +55,5 @@ export const COLLECTIONS = {
 
 // Single document IDs for global settings
 export const AUTOMATION_SETTINGS_DOC_ID = 'global_settings';
-export const EMAIL_TEMPLATES_DOC_ID = 'global_templates';
+// Note: Email templates are now stored as individual documents, not a single global document
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getEmailTemplates, saveEmailTemplates, type EmailTemplates } from '@/lib/database';
+import { getEmailTemplates, saveEmailTemplates, type EmailTemplates, type EmailTemplate } from '@/lib/database';
 import fs from 'fs';
 import path from 'path';
 
@@ -12,6 +12,68 @@ function checkAuth(request: Request): boolean {
   
   const password = authHeader.replace('Bearer ', '');
   return password === ADMIN_PASSWORD;
+}
+
+// Convert old format (with paragraph1, paragraph2, etc.) to new format (single content string)
+function convertToNewFormat(templates: any): EmailTemplates {
+  const converted: EmailTemplates = {};
+  
+  for (const [key, template] of Object.entries(templates)) {
+    const t = template as any;
+    let contentText = '';
+    
+    // Handle old format with paragraphs
+    if (t.content && typeof t.content === 'object') {
+      if (t.content.greeting) contentText += `${t.content.greeting}\n\n`;
+      if (t.content.heading) contentText += `${t.content.heading}\n\n`;
+      
+      for (let i = 1; i <= 10; i++) {
+        if (t.content[`paragraph${i}`]) {
+          contentText += `${t.content[`paragraph${i}`]}\n\n`;
+        }
+      }
+      
+      if (t.content.footer) contentText += t.content.footer;
+      
+      // Add button/URL markers if they exist in old format
+      if (t.content.callToAction) {
+        contentText += `\n\n[Button: ${t.content.callToAction}]`;
+        if (t.content.callToActionUrl) {
+          contentText += `\n[URL: ${t.content.callToActionUrl}]`;
+        }
+      }
+      
+      contentText = contentText.trim();
+    } else if (typeof t.content === 'string') {
+      // Already in new format - check if button markers need to be added
+      contentText = t.content;
+      if (!contentText.includes('[Button:') && (t.callToAction || t.content?.callToAction)) {
+        const button = t.callToAction || t.content?.callToAction;
+        const url = t.callToActionUrl || t.content?.callToActionUrl;
+        if (button) {
+          contentText += `\n\n[Button: ${button}]`;
+          if (url) {
+            contentText += `\n[URL: ${url}]`;
+          }
+        }
+      }
+    }
+    
+    converted[key] = {
+      name: t.name,
+      subject: t.subject,
+      enabled: t.enabled ?? true,
+      sendTo: t.sendTo || 'inquirer',
+      timing: t.timing || '',
+      content: contentText,
+      callToAction: t.content?.callToAction || t.callToAction,
+      callToActionUrl: t.content?.callToActionUrl || t.callToActionUrl,
+      attachmentUrl: t.content?.attachmentUrl || t.attachmentUrl,
+      showDetails: t.content?.showDetails || t.showDetails,
+    };
+  }
+  
+  return converted;
 }
 
 // Default templates structure (loaded from example file as fallback)
@@ -28,39 +90,39 @@ function getDefaultTemplates(): EmailTemplates {
   
   // Fallback if example file doesn't exist
   return {
-    "welcome": {
-      "name": "Day 0: Welcome Email (Immediate)",
-      "subject": "{{name}}, thanks for reaching out about {{weddingDate}}!",
-      "enabled": true,
-      "sendTo": "inquirer",
-      "timing": "immediate",
-      "content": {
-        "greeting": "Hey {{name}}! 🎥",
-        "paragraph1": "Just got your inquiry for {{weddingDate}} at {{venue}} — love it!",
-        "paragraph2": "I'm checking our availability right now. In the meantime, here's what you need to know: we create cinematic films that feel like you, not a template. Vows, toasts, the party — we capture what matters most to you two.",
-        "paragraph3": "Quick question: What's the #1 moment you want on film? (The ceremony? Speeches? Dancing? Family?) Helps me recommend the right package.",
-        "callToAction": "Book a Quick Call",
-        "callToActionUrl": "https://yourlovefilms.com/contact",
-        "footer": "I'll reply with pricing + availability in the next 15 minutes. Talk soon!"
-      }
-    },
-    "prices": {
-      "name": "Day 0: Pricing & Availability (5 minutes after)",
-      "subject": "AWESOME NEWS: {{weddingDate}} is available! 🎉",
-      "enabled": true,
-      "sendTo": "inquirer",
-      "timing": "5 minutes after inquiry",
-      "content": {
-        "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
-        "paragraph1": "I'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message me if you need a time outside the available slots:",
-        "callToAction": "Schedule Your Call",
-        "callToActionUrl": "https://yourlovefilms.com/contact",
-        "paragraph2": "If you'd like to review my package and pricing info before our call, you can find my Price and Info Guide attached to this email. We'll also go over it together during our call! I've included both desktop and mobile versions for easy viewing.",
-        "paragraph3": "*A quick note: I cannot hold your date until a contract is signed and the booking is made. I book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films!",
-        "paragraph4": "I'm so excited to get started!",
-        "footer": "Thank you for reaching out, {{name}}, and I can't wait to work with you!\n\nBest,\nYour Love Films",
+  "welcome": {
+    "name": "Day 0: Welcome Email (Immediate)",
+    "subject": "{{name}}, thanks for reaching out about {{weddingDate}}!",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "immediate",
+    "content": {
+      "greeting": "Hey {{name}}! 🎥",
+      "paragraph1": "Just got your inquiry for {{weddingDate}} at {{venue}} — love it!",
+      "paragraph2": "I'm checking our availability right now. In the meantime, here's what you need to know: we create cinematic films that feel like you, not a template. Vows, toasts, the party — we capture what matters most to you two.",
+      "paragraph3": "Quick question: What's the #1 moment you want on film? (The ceremony? Speeches? Dancing? Family?) Helps me recommend the right package.",
+      "callToAction": "Book a Quick Call",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "I'll reply with pricing + availability in the next 15 minutes. Talk soon!"
+    }
+  },
+  "prices": {
+    "name": "Day 0: Pricing & Availability (5 minutes after)",
+    "subject": "AWESOME NEWS: {{weddingDate}} is available! 🎉",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "5 minutes after inquiry",
+    "content": {
+      "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
+      "paragraph1": "I'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message me if you need a time outside the available slots:",
+      "callToAction": "Schedule Your Call",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "paragraph2": "If you'd like to review my package and pricing info before our call, you can find my Price and Info Guide attached to this email. We'll also go over it together during our call! I've included both desktop and mobile versions for easy viewing.",
+      "paragraph3": "*A quick note: I cannot hold your date until a contract is signed and the booking is made. I book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films!",
+      "paragraph4": "I'm so excited to get started!",
+      "footer": "Thank you for reaching out, {{name}}, and I can't wait to work with you!\n\nBest,\nYour Love Films",
         "attachmentUrl": ""
-      }
+    }
     }
   };
 }
@@ -72,21 +134,32 @@ export async function GET(request: Request) {
   }
 
   try {
-    const templates = await getEmailTemplates();
+    let templates = await getEmailTemplates();
     
     if (!templates) {
       // No templates exist yet, save defaults and return them
       console.log('No email templates found, creating defaults...');
       const defaultTemplates = getDefaultTemplates();
-      await saveEmailTemplates(defaultTemplates);
-      return NextResponse.json(defaultTemplates);
+      const converted = convertToNewFormat(defaultTemplates);
+      await saveEmailTemplates(converted);
+      return NextResponse.json(converted);
     }
     
-    return NextResponse.json(templates);
+    // Convert to new format if needed (for backward compatibility)
+    const converted = convertToNewFormat(templates);
+    
+    // If conversion changed anything, save the converted version
+    if (JSON.stringify(templates) !== JSON.stringify(converted)) {
+      await saveEmailTemplates(converted);
+      return NextResponse.json(converted);
+    }
+    
+    return NextResponse.json(converted);
   } catch (error) {
     console.error('Error reading templates:', error);
     // Return defaults if there's an error
-    return NextResponse.json(getDefaultTemplates());
+    const defaultTemplates = getDefaultTemplates();
+    return NextResponse.json(convertToNewFormat(defaultTemplates));
   }
 }
 
@@ -98,7 +171,9 @@ export async function POST(request: Request) {
 
   try {
     const templates = await request.json();
-    await saveEmailTemplates(templates);
+    // Ensure templates are in new format before saving
+    const converted = convertToNewFormat(templates);
+    await saveEmailTemplates(converted);
     
     return NextResponse.json({ success: true, message: 'Templates saved successfully' });
   } catch (error) {

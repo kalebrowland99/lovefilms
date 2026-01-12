@@ -2,24 +2,18 @@
 export function renderTemplate(template: any, data: any): string {
   let content = '';
   
-  if (template.content.greeting) {
-    content += `${replaceVars(template.content.greeting, data)}\n\n`;
-  }
-  
-  if (template.content.heading) {
-    content += `${replaceVars(template.content.heading, data)}\n\n`;
-  }
-  
-  // Add paragraph content (support up to 10 paragraphs)
-  for (let i = 1; i <= 10; i++) {
-    const key = `paragraph${i}`;
-    if (template.content[key]) {
-      content += `${replaceVars(template.content[key], data)}\n\n`;
-    }
+  // Use single content text field
+  if (template.content) {
+    // Remove button/URL markers from content text (they're extracted separately)
+    let contentText = template.content;
+    contentText = contentText.replace(/\[Button:[^\]]+\]/g, '').trim();
+    contentText = contentText.replace(/\[URL:[^\]]+\]/g, '').trim();
+    
+    content += `${replaceVars(contentText, data)}\n\n`;
   }
   
   // Show form details if enabled (for admin notification)
-  if (template.content.showDetails && data.formData) {
+  if (template.showDetails && data.formData) {
     content += `---\n`;
     content += `Name: ${data.formData.name || 'N/A'}\n`;
     content += `Email: ${data.formData.email || 'N/A'}\n`;
@@ -28,16 +22,6 @@ export function renderTemplate(template: any, data: any): string {
     content += `Wedding Date: ${data.formData.weddingDate || 'N/A'}\n`;
     content += `Wedding Venue: ${data.formData.venue || 'N/A'}\n`;
     content += `---\n\n`;
-  }
-  
-  // Call to action as plain link
-  if (template.content.callToAction && template.content.callToActionUrl) {
-    content += `${template.content.callToAction}: ${template.content.callToActionUrl}\n\n`;
-  }
-  
-  // Footer
-  if (template.content.footer) {
-    content += `${replaceVars(template.content.footer, data)}\n\n`;
   }
   
   // Convert plain text to HTML with proper paragraph formatting
@@ -65,14 +49,14 @@ export function renderTemplate(template: any, data: any): string {
   
   // Create call-to-action button if present
   let buttonHtml = '';
-  if (template.content.callToAction && template.content.callToActionUrl) {
+  if (template.callToAction && template.callToActionUrl) {
     buttonHtml = `
       <table cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0;">
         <tr>
           <td style="background-color: #000000; border-radius: 6px; text-align: center;">
-            <a href="${template.content.callToActionUrl}" 
+            <a href="${template.callToActionUrl}" 
                style="display: inline-block; padding: 14px 32px; font-family: Arial, sans-serif; font-size: 15px; font-weight: 600; color: #ffffff; text-decoration: none;">
-              ${template.content.callToAction}
+              ${template.callToAction}
             </a>
           </td>
         </tr>
