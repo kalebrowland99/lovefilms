@@ -337,17 +337,27 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
     });
     
     // Helper function to remove undefined values from an object
+    // Firestore doesn't allow undefined values, so we must remove them
     const removeUndefined = (obj: any): any => {
-      if (obj === null || typeof obj !== 'object') {
-        return obj;
+      // Handle primitives and null
+      if (obj === null || obj === undefined || typeof obj !== 'object') {
+        return obj === undefined ? null : obj;
       }
+      
+      // Handle arrays
       if (Array.isArray(obj)) {
-        return obj.map(removeUndefined);
+        return obj.map(item => removeUndefined(item)).filter(item => item !== undefined);
       }
+      
+      // Handle objects - create a new object without undefined values
       const cleaned: any = {};
       for (const [key, value] of Object.entries(obj)) {
         if (value !== undefined) {
-          cleaned[key] = removeUndefined(value);
+          const cleanedValue = removeUndefined(value);
+          // Only add if the cleaned value is not undefined
+          if (cleanedValue !== undefined) {
+            cleaned[key] = cleanedValue;
+          }
         }
       }
       return cleaned;
@@ -372,7 +382,21 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
       }
       
       // Remove undefined values (Firestore doesn't allow undefined)
-      const cleanedTemplate = removeUndefined(template);
+      // Create a clean object with only defined properties
+      const cleanedTemplate: any = {
+        name: template.name || '',
+        subject: template.subject || '',
+        enabled: template.enabled ?? true,
+        sendTo: template.sendTo || 'inquirer',
+        timing: template.timing || '',
+        content: typeof template.content === 'string' ? template.content : '',
+      };
+      
+      // Only add optional fields if they have values
+      if (template.callToAction) cleanedTemplate.callToAction = template.callToAction;
+      if (template.callToActionUrl) cleanedTemplate.callToActionUrl = template.callToActionUrl;
+      if (template.attachmentUrl) cleanedTemplate.attachmentUrl = template.attachmentUrl;
+      if (template.showDetails !== undefined) cleanedTemplate.showDetails = template.showDetails;
       
       const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
       batch.set(templateRef, cleanedTemplate, { merge: true });
