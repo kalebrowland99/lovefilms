@@ -380,6 +380,11 @@ export default function EmailAdmin() {
     if (!templates || !activeTemplate) return '';
     const template = templates[activeTemplate];
     
+    if (!template) {
+      console.warn(`Template ${activeTemplate} not found`);
+      return '';
+    }
+    
     let text = '';
     
     // If content is a string (new format), use it directly
@@ -434,6 +439,8 @@ export default function EmailAdmin() {
 
   // Parse editable text back to template format (debounced)
   const parseAndSaveContent = (text: string) => {
+    if (!templates || !activeTemplate) return;
+    
     const lines = text.split('\n');
     let contentText = '';
     let callToAction = '';
@@ -463,6 +470,11 @@ export default function EmailAdmin() {
     // Get current template to preserve other fields
     const currentTemplate = templates[activeTemplate];
     
+    if (!currentTemplate) {
+      console.warn(`Template ${activeTemplate} not found, cannot save content`);
+      return;
+    }
+    
     setTemplates({
       ...templates,
       [activeTemplate]: {
@@ -489,6 +501,11 @@ export default function EmailAdmin() {
     if (!templates || !activeTemplate) return '';
     
     const template = templates[activeTemplate];
+    
+    if (!template) {
+      console.warn(`Template ${activeTemplate} not found for preview`);
+      return '<p>Template not found</p>';
+    }
     const sampleData = {
       name: 'John & Jane',
       weddingDate: 'June 15, 2026',
@@ -554,6 +571,18 @@ export default function EmailAdmin() {
   }
 
   const currentTemplate = templates[activeTemplate];
+
+  // Safety check - if template is undefined, show loading state
+  if (!currentTemplate) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading template...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
