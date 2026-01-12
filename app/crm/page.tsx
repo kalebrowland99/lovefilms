@@ -32,12 +32,15 @@ export default function EmailAdmin() {
   const [sendingTest, setSendingTest] = useState(false);
   const [testEmail, setTestEmail] = useState('kalebrowland99@gmail.com');
   const [emailContentText, setEmailContentText] = useState<string>('');
+  const [templatesLoading, setTemplatesLoading] = useState(false);
+  const [templatesError, setTemplatesError] = useState<string>('');
   
   // Refs for timers and loading state
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
   const isLoadingInquiries = useRef<boolean>(false);
   const emailContentRef = useRef<HTMLTextAreaElement>(null);
   const parseTimer = useRef<NodeJS.Timeout | null>(null);
+  const loadTemplatesTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Check if already authenticated (stored in session)
   useEffect(() => {

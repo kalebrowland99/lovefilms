@@ -299,7 +299,42 @@ async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
   if (!db) return null;
   try {
     const snapshot = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).get();
-    if (snapshot.empty) return null;
+    
+    // If collection is empty, check for old global_templates document and migrate
+    if (snapshot.empty) {
+      console.log('Email templates collection is empty, checking for old global_templates document...');
+      try {
+        const oldDoc = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc('global_templates').get();
+        if (oldDoc.exists) {
+          console.log('Found old global_templates document, migrating to individual documents...');
+          const oldData = oldDoc.data();
+          if (oldData) {
+            // The old format had templates as nested objects
+            // Save them as individual documents
+            const batch = db.batch();
+            for (const [templateId, templateData] of Object.entries(oldData)) {
+              const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
+              batch.set(templateRef, templateData as any);
+            }
+            // Delete the old global_templates document
+            batch.delete(oldDoc.ref);
+            await batch.commit();
+            console.log('Migration complete!');
+            
+            // Now fetch the newly migrated templates
+            const newSnapshot = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).get();
+            const templates: EmailTemplates = {};
+            newSnapshot.docs.forEach(doc => {
+              templates[doc.id] = doc.data() as EmailTemplate;
+            });
+            return templates;
+          }
+        }
+      } catch (migrationError) {
+        console.error('Error during migration:', migrationError);
+      }
+      return null;
+    }
     
     const templates: EmailTemplates = {};
     snapshot.docs.forEach(doc => {
