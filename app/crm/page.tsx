@@ -327,51 +327,6 @@ export default function EmailAdmin() {
     }
   };
 
-  const handleClearAllButtons = async () => {
-    if (!confirm('This will remove ALL buttons from ALL email templates. Are you sure?')) {
-      return;
-    }
-    
-    setSaving(true);
-    setMessage('');
-    
-    try {
-      // Clear all button values from all templates
-      const clearedTemplates = { ...templates };
-      Object.keys(clearedTemplates).forEach(key => {
-        clearedTemplates[key] = {
-          ...clearedTemplates[key],
-          callToAction: '',
-          callToActionUrl: ''
-        };
-      });
-      
-      // Save to Firebase
-      const response = await fetch('/api/email-templates', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('emailAdminPassword')}`
-        },
-        body: JSON.stringify(clearedTemplates)
-      });
-
-      if (response.ok) {
-        setTemplates(clearedTemplates);
-        setMessage('✅ All buttons cleared from all templates!');
-        setTimeout(() => setMessage(''), 3000);
-      } else {
-        const errorData = await response.json();
-        setMessage(`❌ Failed to clear buttons: ${errorData.error || 'Unknown error'}`);
-      }
-    } catch (error) {
-      setMessage('❌ Error clearing buttons');
-      console.error('Error:', error);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleSendTestEmail = async () => {
     if (!testEmail || !testEmail.includes('@')) {
       setMessage('❌ Please enter a valid email address');
@@ -699,22 +654,13 @@ export default function EmailAdmin() {
                   </>
                 )}
                 {activeTab === 'email' && (
-                  <div className="flex gap-3">
-                    <button
-                      onClick={handleClearAllButtons}
-                      disabled={saving}
-                      className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold disabled:opacity-50"
-                    >
-                      Clear All Buttons
-                    </button>
-                    <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
-                    >
-                      {saving ? 'Saving...' : 'Save Changes'}
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
                 )}
                 {activeTab === 'sms' && (
                   <div className="flex gap-3">
