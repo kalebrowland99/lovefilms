@@ -1,22 +1,6 @@
 {
-  "welcome": {
-    "name": "Day 0: Welcome Email (Immediate)",
-    "subject": "{{name}}, thanks for reaching out about {{weddingDate}}!",
-    "enabled": true,
-    "sendTo": "inquirer",
-    "timing": "immediate",
-    "content": {
-      "greeting": "Hey {{name}}! 🎥",
-      "paragraph1": "Just got your inquiry for {{weddingDate}} at {{venue}} — love it!",
-      "paragraph2": "I'm checking our availability right now. In the meantime, here's what you need to know: we create cinematic films that feel like you, not a template. Vows, toasts, the party — we capture what matters most to you two.",
-      "paragraph3": "Quick question: What's the #1 moment you want on film? (The ceremony? Speeches? Dancing? Family?) Helps me recommend the right package.",
-      "callToAction": "Book a Quick Call",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
-      "footer": "I'll reply with pricing + availability in the next 15 minutes. Talk soon!"
-    }
-  },
-  "notification": {
-    "name": "Admin Notification (Sent to You)",
+  "inquiry": {
+    "name": "New Inquiry Notification (Admin)",
     "subject": "🚨 NEW INQUIRY: {{name}} - {{weddingDate}}",
     "enabled": true,
     "sendTo": "admin",
@@ -27,7 +11,7 @@
       "footer": "Submitted from yourlovefilms.com/contact"
     }
   },
-  "prices": {
+  "availabilityday0": {
     "name": "Day 0: Pricing & Availability (5 minutes after)",
     "subject": "AWESOME NEWS: {{weddingDate}} is available! 🎉",
     "enabled": true,

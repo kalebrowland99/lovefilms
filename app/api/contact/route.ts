@@ -57,17 +57,17 @@ export async function POST(request: Request) {
           formData: formData
         };
 
-        // Send notification email to admin
-        if (templates.notification && templates.notification.enabled) {
-          const notificationHtml = renderTemplate(templates.notification, emailData);
-          const notificationSubject = renderSubject(templates.notification.subject, emailData);
+        // Send inquiry notification email to admin
+        if (templates.inquiry && templates.inquiry.enabled) {
+          const inquiryHtml = renderTemplate(templates.inquiry, emailData);
+          const inquirySubject = renderSubject(templates.inquiry.subject, emailData);
           
           try {
             await resend.emails.send({
               from: 'Wedding Inquiries <hi@yourlovefilms.com>',
               to: 'hi@yourlovefilms.com',
-              subject: notificationSubject,
-              html: notificationHtml,
+              subject: inquirySubject,
+              html: inquiryHtml,
             });
 
             // Log email
@@ -76,21 +76,21 @@ export async function POST(request: Request) {
               inquiryId: inquiryId,
               recipientEmail: 'hi@yourlovefilms.com',
               recipientName: 'Admin',
-              templateType: 'notification',
-              subject: notificationSubject,
+              templateType: 'inquiry',
+              subject: inquirySubject,
               sentAt: new Date().toISOString(),
               status: 'sent',
             };
             await saveEmailLog(log);
           } catch (error) {
-            console.error('Failed to send notification:', error);
+            console.error('Failed to send inquiry notification:', error);
             const log: EmailLog = {
               id: generateId(),
               inquiryId: inquiryId,
               recipientEmail: 'hi@yourlovefilms.com',
               recipientName: 'Admin',
-              templateType: 'notification',
-              subject: notificationSubject,
+              templateType: 'inquiry',
+              subject: inquirySubject,
               sentAt: new Date().toISOString(),
               status: 'failed',
               error: String(error),
@@ -99,77 +99,26 @@ export async function POST(request: Request) {
           }
         }
 
-        // Send welcome email to inquirer - DISABLED (sending pricing email first)
-        // if (templates.welcome && templates.welcome.enabled) {
-        //   const welcomeHtml = renderTemplate(templates.welcome, emailData);
-        //   const welcomeSubject = renderSubject(templates.welcome.subject, emailData);
-        //   
-        //   try {
-        //     const { data, error } = await resend.emails.send({
-        //       from: 'Your Love Films <hi@yourlovefilms.com>',
-        //       to: formData.email,
-        //       subject: welcomeSubject,
-        //       html: welcomeHtml,
-        //     });
-        //
-        //     if (error) {
-        //       console.error('Resend error:', error);
-        //       
-        //       // Log failed email
-        //       const log: EmailLog = {
-        //         id: generateId(),
-        //         inquiryId: inquiryId,
-        //         recipientEmail: formData.email,
-        //         recipientName: formData.name,
-        //         templateType: 'welcome',
-        //         subject: welcomeSubject,
-        //         sentAt: new Date().toISOString(),
-        //         status: 'failed',
-        //         error: String(error),
-        //       };
-        //       saveEmailLog(log);
-        //
-        //       return NextResponse.json({ 
-        //         success: false, 
-        //         message: 'Failed to send email. Please email us directly at hi@yourlovefilms.com' 
-        //       }, { status: 500 });
-        //     }
-        //
-        //     // Log successful email
-        //     const log: EmailLog = {
-        //       id: generateId(),
-        //       inquiryId: inquiryId,
-        //       recipientEmail: formData.email,
-        //       recipientName: formData.name,
-        //       templateType: 'welcome',
-        //       subject: welcomeSubject,
-        //       sentAt: new Date().toISOString(),
-        //       status: 'sent',
-        //     };
-        //     saveEmailLog(log);
-        //
-        //     console.log('Emails sent successfully:', data);
-
-            // Send pricing email after 5 minutes (or 10 seconds in test mode)
-            if (templates.prices && templates.prices.enabled) {
-              const pricingDelay = isTestMode ? 10000 : 300000; // 10 seconds vs 5 minutes
+            // Send availability/pricing email after 5 minutes (or 10 seconds in test mode)
+            if (templates.availabilityday0 && templates.availabilityday0.enabled) {
+              const availabilityDelay = isTestMode ? 10000 : 300000; // 10 seconds vs 5 minutes
               setTimeout(async () => {
                 try {
-                  const pricesHtml = renderTemplate(templates.prices, emailData);
-                  const pricesSubject = renderSubject(templates.prices.subject, emailData);
+                  const availabilityHtml = renderTemplate(templates.availabilityday0, emailData);
+                  const availabilitySubject = renderSubject(templates.availabilityday0.subject, emailData);
                   
                   // Prepare email options
                   const emailOptions: any = {
                     from: 'Your Love Films <hi@yourlovefilms.com>',
                     to: formData.email,
-                    subject: pricesSubject,
-                    html: pricesHtml,
+                    subject: availabilitySubject,
+                    html: availabilityHtml,
                   };
 
                   // Add attachment if URL is provided
-                  if (templates.prices.attachmentUrl && templates.prices.attachmentUrl.trim()) {
+                  if (templates.availabilityday0.attachmentUrl && templates.availabilityday0.attachmentUrl.trim()) {
                     try {
-                      const attachmentUrl = templates.prices.attachmentUrl.trim();
+                      const attachmentUrl = templates.availabilityday0.attachmentUrl.trim();
                       const response = await fetch(attachmentUrl);
                       const buffer = await response.arrayBuffer();
                       const base64 = Buffer.from(buffer).toString('base64');
@@ -183,40 +132,40 @@ export async function POST(request: Request) {
                         content: base64,
                       }];
                       
-                      console.log('PDF attachment added to pricing email');
+                      console.log('PDF attachment added to availability email');
                     } catch (attachError) {
                       console.error('Failed to fetch PDF attachment:', attachError);
                       // Continue sending email without attachment
                     }
                   }
                   
-                  const { data: pricesData, error: pricesError } = await resend.emails.send(emailOptions);
+                  const { data: availabilityData, error: availabilityError } = await resend.emails.send(emailOptions);
 
-                  // Log pricing email
-                  const pricesLog: EmailLog = {
+                  // Log availability email
+                  const availabilityLog: EmailLog = {
                     id: generateId(),
                     inquiryId: inquiryId,
                     recipientEmail: formData.email,
                     recipientName: formData.name,
-                    templateType: 'prices' as any,
-                    subject: pricesSubject,
+                    templateType: 'availabilityday0' as any,
+                    subject: availabilitySubject,
                     sentAt: new Date().toISOString(),
-                    status: pricesError ? 'failed' : 'sent',
-                    error: pricesError ? String(pricesError) : undefined,
+                    status: availabilityError ? 'failed' : 'sent',
+                    error: availabilityError ? String(availabilityError) : undefined,
                   };
-                  await saveEmailLog(pricesLog);
+                  await saveEmailLog(availabilityLog);
 
-                  if (pricesData) {
-                    console.log('Pricing email sent after 10 minutes:', pricesData);
+                  if (availabilityData) {
+                    console.log('Availability email sent:', availabilityData);
                   } else {
-                    console.error('Pricing email failed:', pricesError);
+                    console.error('Availability email failed:', availabilityError);
                   }
-                } catch (pricesEmailError) {
-                  console.error('Pricing email error:', pricesEmailError);
+                } catch (availabilityEmailError) {
+                  console.error('Availability email error:', availabilityEmailError);
                 }
-              }, pricingDelay);
+              }, availabilityDelay);
               
-              console.log(`Pricing email scheduled to send in ${isTestMode ? '10 seconds' : '5 minutes'}`);
+              console.log(`Availability email scheduled to send in ${isTestMode ? '10 seconds' : '5 minutes'}`);
             }
 
             // Send welcome SMS after 45 seconds (or 20 seconds in test mode) if enabled and phone provided
@@ -389,25 +338,6 @@ export async function POST(request: Request) {
               
               console.log('🧪 TEST MODE: All messages scheduled (0-90 seconds)');
             }
-        // Closing brace for commented welcome email section
-        // } catch (emailError) {
-        //   console.error('Email sending error:', emailError);
-        //   
-        //   // Log failed email
-        //   const log: EmailLog = {
-        //     id: generateId(),
-        //     inquiryId: inquiryId,
-        //     recipientEmail: formData.email,
-        //     recipientName: formData.name,
-        //     templateType: 'welcome',
-        //     subject: welcomeSubject,
-        //     sentAt: new Date().toISOString(),
-        //     status: 'failed',
-        //     error: String(emailError),
-        //   };
-        //   saveEmailLog(log);
-        // }
-        // }
       } catch (emailError) {
         console.error('Email sending error:', emailError);
         // Continue even if email fails

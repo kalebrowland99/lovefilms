@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server';
 import { renderTemplate } from '@/lib/email-renderer';
 import { Resend } from 'resend';
-import fs from 'fs';
-import path from 'path';
+import { getEmailTemplates } from '@/lib/database';
 
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Always use project directory for templates (Git-tracked)
-const TEMPLATES_PATH = path.join(process.cwd(), 'data', 'email-templates.json');
 
 // Helper to check password
 function checkAuth(request: Request): boolean {
@@ -27,15 +23,14 @@ export async function POST(request: Request) {
   try {
     const { templateKey, testEmail } = await request.json();
 
-    // Load templates from project directory (Git-tracked)
-    if (!fs.existsSync(TEMPLATES_PATH)) {
+    // Load templates from Firebase
+    const templates = await getEmailTemplates();
+    
+    if (!templates) {
       return NextResponse.json({ 
-        error: 'Templates file not found. Please save your templates first in the Email Automation tab.' 
+        error: 'Templates not found. Please save your templates first in the Email Automation tab.' 
       }, { status: 404 });
     }
-    
-    const templatesData = fs.readFileSync(TEMPLATES_PATH, 'utf8');
-    const templates = JSON.parse(templatesData);
     
     const template = templates[templateKey];
     if (!template) {
@@ -90,7 +85,17 @@ export async function POST(request: Request) {
       html: emailHtml,
     });
 
-    console.log('Email sent successfully:', result);
+    console.log('Resend API response:', result);
+
+    // Check if the result has an error
+    if (result.error) {
+      console.error('Resend API error:', result.error);
+      return NextResponse.json({ 
+        error: 'Failed to send test email',
+        details: result.error.message || 'Unknown Resend API error',
+        hint: result.error.message?.includes('invalid') ? 'Your RESEND_API_KEY may be invalid or expired. Please check your .env.local file or Vercel environment variables.' : undefined
+      }, { status: 500 });
+    }
 
     return NextResponse.json({ 
       success: true, 
@@ -103,7 +108,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       error: 'Failed to send test email', 
       details: error.message || String(error),
-      stack: error.stack 
+      hint: 'Check your RESEND_API_KEY in .env.local or Vercel environment variables'
     }, { status: 500 });
   }
 }

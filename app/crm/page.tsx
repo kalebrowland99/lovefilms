@@ -98,8 +98,8 @@ export default function EmailAdmin() {
         
         // Set activeTemplate to first available template if not set or if current doesn't exist
         if (!activeTemplate || !data[activeTemplate]) {
-          const templateKeys = Object.keys(data).filter(key => key !== 'welcome');
-          const firstTemplate = templateKeys.includes('prices') ? 'prices' : templateKeys[0];
+          const templateKeys = Object.keys(data);
+          const firstTemplate = templateKeys.includes('inquiry') ? 'inquiry' : templateKeys[0];
           console.log('Setting active template to:', firstTemplate);
           setActiveTemplate(firstTemplate);
         }
@@ -359,7 +359,9 @@ export default function EmailAdmin() {
         setMessage(`✅ Test email sent to ${testEmail}! Check your inbox/spam.`);
         setTimeout(() => setMessage(''), 5000);
       } else {
-        setMessage(`❌ Failed to send test email: ${responseData.error || 'Unknown error'}`);
+        const errorMsg = responseData.details || responseData.error || 'Unknown error';
+        const hint = responseData.hint ? `\n\n💡 ${responseData.hint}` : '';
+        setMessage(`❌ Failed: ${errorMsg}${hint}`);
         console.error('Test email error details:', responseData);
       }
     } catch (error) {
@@ -413,10 +415,10 @@ export default function EmailAdmin() {
     if (typeof template.content === 'string') {
       text = template.content;
       
-      // Add button/URL markers if they exist
-      if (template.callToAction) {
+      // Add button/URL markers if they exist and are not empty
+      if (template.callToAction && template.callToAction.trim() !== '') {
         text += `\n\n[Button: ${template.callToAction}]`;
-        if (template.callToActionUrl) {
+        if (template.callToActionUrl && template.callToActionUrl.trim() !== '') {
           text += `\n[URL: ${template.callToActionUrl}]`;
         }
       }
@@ -502,8 +504,8 @@ export default function EmailAdmin() {
       [activeTemplate]: {
         ...currentTemplate,
         content: contentText,
-        callToAction: callToAction || currentTemplate.callToAction,
-        callToActionUrl: callToActionUrl || currentTemplate.callToActionUrl,
+        callToAction: callToAction,
+        callToActionUrl: callToActionUrl,
         // Preserve other fields
         attachmentUrl: currentTemplate.attachmentUrl,
         showDetails: currentTemplate.showDetails,
@@ -610,7 +612,7 @@ export default function EmailAdmin() {
   if (!currentTemplate) {
     console.error(`Template ${activeTemplate} not found in:`, Object.keys(templates || {}));
     // Reset to first available template
-    const availableTemplates = Object.keys(templates || {}).filter(k => k !== 'welcome');
+    const availableTemplates = Object.keys(templates || {});
     if (availableTemplates.length > 0) {
       setActiveTemplate(availableTemplates[0]);
     }
@@ -1093,9 +1095,8 @@ export default function EmailAdmin() {
               <h2 className="text-lg font-semibold mb-4">Templates</h2>
               <div className="space-y-2">
                 {Object.entries(templates)
-                  .filter(([key]) => key !== 'welcome') // Hide welcome email template
                   .sort(([keyA], [keyB]) => {
-                    const order = ['notification', 'prices', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
+                    const order = ['inquiry', 'availabilityday0', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
                     return order.indexOf(keyA) - order.indexOf(keyB);
                   })
                   .map(([key, template]: [string, any]) => (
@@ -1361,9 +1362,8 @@ export default function EmailAdmin() {
                         const isSMS = log.messageType === 'sms';
                         const getTemplateLabel = () => {
                           if (isSMS) return log.subject.replace('SMS: ', '');
-                          if (log.templateType === 'welcome') return 'Welcome Email';
-                          if (log.templateType === 'prices') return 'Pricing & Availability';
-                          if (log.templateType === 'notification') return 'Admin Alert';
+                          if (log.templateType === 'availabilityday0') return 'Availability Day 0';
+                          if (log.templateType === 'inquiry') return 'Inquiry Notification';
                           if (log.templateType === 'followup-day1') return 'Day 1 Follow-Up';
                           if (log.templateType === 'followup-day3') return 'Day 3 Follow-Up';
                           if (log.templateType === 'followup-day6') return 'Day 6 Follow-Up';
@@ -1395,8 +1395,8 @@ export default function EmailAdmin() {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
                                 isSMS ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                log.templateType === 'welcome' ? 'bg-green-100 text-green-800' :
-                                log.templateType === 'notification' ? 'bg-purple-100 text-purple-800' :
+                                log.templateType === 'availabilityday0' ? 'bg-green-100 text-green-800' :
+                                log.templateType === 'inquiry' ? 'bg-purple-100 text-purple-800' :
                                 'bg-yellow-100 text-yellow-800'
                               }`}>
                                 {getTemplateLabel()}

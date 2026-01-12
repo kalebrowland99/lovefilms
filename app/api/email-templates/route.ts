@@ -45,29 +45,13 @@ function convertToNewFormat(templates: any): EmailTemplates {
       
       contentText = contentText.trim();
     } else if (typeof t.content === 'string') {
-      // Already in new format - check if button markers need to be added
+      // Already in new format - use as-is without adding button markers
       contentText = t.content;
-      if (!contentText.includes('[Button:') && (t.callToAction || t.content?.callToAction)) {
-        const button = t.callToAction || t.content?.callToAction;
-        const url = t.callToActionUrl || t.content?.callToActionUrl;
-        if (button) {
-          contentText += `\n\n[Button: ${button}]`;
-          if (url) {
-            contentText += `\n[URL: ${url}]`;
-          }
-        }
-      }
     }
     
-    // Extract callToAction and callToActionUrl from content if they're in markers
-    let callToAction = t.callToAction;
-    let callToActionUrl = t.callToActionUrl;
-    
-    // If content is an object (old format), get from there
-    if (t.content && typeof t.content === 'object') {
-      callToAction = t.content.callToAction || callToAction;
-      callToActionUrl = t.content.callToActionUrl || callToActionUrl;
-    }
+    // Extract callToAction and callToActionUrl ONLY from content markers
+    let callToAction = '';
+    let callToActionUrl = '';
     
     // Extract from content text if present in markers
     if (contentText.includes('[Button:')) {
@@ -82,6 +66,10 @@ function convertToNewFormat(templates: any): EmailTemplates {
         callToActionUrl = urlMatch[1].trim();
       }
     }
+    
+    // Remove button/URL markers from content text - they're stored separately
+    contentText = contentText.replace(/\[Button:[^\]]+\]/g, '').trim();
+    contentText = contentText.replace(/\[URL:[^\]]+\]/g, '').trim();
     
     converted[key] = {
       name: t.name || '',
@@ -114,23 +102,24 @@ function getDefaultTemplates(): any {
   
   // Fallback if example file doesn't exist (old format - will be converted)
   return {
-  "welcome": {
-    "name": "Day 0: Welcome Email (Immediate)",
-    "subject": "{{name}}, thanks for reaching out about {{weddingDate}}!",
+  "inquiry": {
+    "name": "New Inquiry Notification (Admin)",
+    "subject": "New Wedding Inquiry: {{name}} & {{fianceName}} - {{weddingDate}}",
     "enabled": true,
-    "sendTo": "inquirer",
+    "sendTo": "admin",
     "timing": "immediate",
     "content": {
-      "greeting": "Hey {{name}}! 🎥",
-      "paragraph1": "Just got your inquiry for {{weddingDate}} at {{venue}} — love it!",
-      "paragraph2": "I'm checking our availability right now. In the meantime, here's what you need to know: we create cinematic films that feel like you, not a template. Vows, toasts, the party — we capture what matters most to you two.",
-      "paragraph3": "Quick question: What's the #1 moment you want on film? (The ceremony? Speeches? Dancing? Family?) Helps me recommend the right package.",
-      "callToAction": "Book a Quick Call",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
-      "footer": "I'll reply with pricing + availability in the next 15 minutes. Talk soon!"
+      "greeting": "New inquiry received!",
+      "paragraph1": "Name: {{name}}",
+      "paragraph2": "Email: {{formData.email}}",
+      "paragraph3": "Phone: {{formData.phone}}",
+      "paragraph4": "Fiance: {{fianceName}}",
+      "paragraph5": "Wedding Date: {{weddingDate}}",
+      "paragraph6": "Venue: {{venue}}",
+      "footer": "Log in to CRM to respond."
     }
   },
-  "prices": {
+  "availabilityday0": {
     "name": "Day 0: Pricing & Availability (5 minutes after)",
     "subject": "AWESOME NEWS: {{weddingDate}} is available! 🎉",
     "enabled": true,

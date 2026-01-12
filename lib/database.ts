@@ -49,7 +49,7 @@ export interface EmailLog {
   inquiryId: string;
   recipientEmail: string;
   recipientName: string;
-  templateType: 'welcome' | 'prices' | 'notification' | 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'sms';
+  templateType: 'availabilityday0' | 'inquiry' | 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'sms';
   subject: string;
   sentAt: string;
   status: 'sent' | 'failed';
