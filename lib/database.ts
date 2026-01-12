@@ -661,25 +661,57 @@ export function saveEmailTemplates(templates: EmailTemplates): void | Promise<vo
 async function saveScheduledEmailToFirebase(email: ScheduledEmail): Promise<void> {
   if (!db) throw new Error('Firebase not initialized');
   try {
+    console.log(`💾 Saving scheduled email to Firebase:`, {
+      id: email.id,
+      recipient: email.recipientEmail,
+      template: email.templateKey,
+      sendAt: email.sendAt,
+      status: email.status
+    });
     await db.collection(COLLECTIONS.SCHEDULED_EMAILS).doc(email.id).set(email);
-    console.log(`📅 Scheduled email ${email.id} to be sent at ${email.sendAt}`);
+    console.log(`✅ Successfully saved scheduled email ${email.id} to be sent at ${email.sendAt}`);
   } catch (error) {
-    console.error('Error saving scheduled email to Firebase:', error);
+    console.error('❌ Error saving scheduled email to Firebase:', error);
     throw error;
   }
 }
 
 async function getPendingScheduledEmailsFromFirebase(): Promise<ScheduledEmail[]> {
-  if (!db) return [];
+  if (!db) {
+    console.error('❌ Firebase db not initialized');
+    return [];
+  }
   try {
     const now = new Date().toISOString();
+    console.log(`🔍 Querying scheduled emails: status='pending', sendAt<='${now}'`);
+    
+    // Firestore requires composite index for multiple where clauses
+    // Try querying all pending first, then filter by date in code
     const snapshot = await db.collection(COLLECTIONS.SCHEDULED_EMAILS)
       .where('status', '==', 'pending')
-      .where('sendAt', '<=', now)
       .get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ScheduledEmail));
+    
+    console.log(`📋 Found ${snapshot.docs.length} pending emails total`);
+    
+    // Filter by sendAt in code (more reliable than Firestore date comparison)
+    const readyEmails = snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() } as ScheduledEmail))
+      .filter(email => email.sendAt <= now);
+    
+    console.log(`✅ Found ${readyEmails.length} emails ready to send (sendAt <= now)`);
+    
+    if (readyEmails.length > 0) {
+      console.log('📧 Ready emails:', readyEmails.map(e => ({
+        id: e.id,
+        recipient: e.recipientEmail,
+        sendAt: e.sendAt,
+        template: e.templateKey
+      })));
+    }
+    
+    return readyEmails;
   } catch (error) {
-    console.error('Error fetching scheduled emails from Firebase:', error);
+    console.error('❌ Error fetching scheduled emails from Firebase:', error);
     return [];
   }
 }

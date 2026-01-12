@@ -21,6 +21,7 @@ export async function GET(request: Request) {
   }
 
   console.log('🔄 Running scheduled emails cron job...');
+  console.log(`⏰ Current time: ${new Date().toISOString()}`);
 
   try {
     // Get all scheduled emails that are ready to send
