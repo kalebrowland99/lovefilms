@@ -57,6 +57,21 @@ export interface EmailLog {
   messageType?: 'email' | 'sms';
 }
 
+export interface ScheduledEmail {
+  id: string;
+  inquiryId: string;
+  recipientEmail: string;
+  recipientName: string;
+  templateKey: string;
+  sendAt: string; // ISO timestamp when email should be sent
+  emailData: any; // Data for template rendering
+  attachmentUrl?: string;
+  status: 'pending' | 'sent' | 'failed';
+  createdAt: string;
+  sentAt?: string;
+  error?: string;
+}
+
 export interface AutomationSettings {
   followUpDelays: {
     [key: string]: {
@@ -604,6 +619,72 @@ export function saveEmailTemplates(templates: EmailTemplates): void | Promise<vo
     return saveEmailTemplatesToFirebase(templates);
   }
   return saveEmailTemplatesToFile(templates);
+}
+
+// ============================================================================
+// Scheduled Emails (Firebase only - for delayed email sending)
+// ============================================================================
+
+async function saveScheduledEmailToFirebase(email: ScheduledEmail): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.SCHEDULED_EMAILS).doc(email.id).set(email);
+    console.log(`📅 Scheduled email ${email.id} to be sent at ${email.sendAt}`);
+  } catch (error) {
+    console.error('Error saving scheduled email to Firebase:', error);
+    throw error;
+  }
+}
+
+async function getPendingScheduledEmailsFromFirebase(): Promise<ScheduledEmail[]> {
+  if (!db) return [];
+  try {
+    const now = new Date().toISOString();
+    const snapshot = await db.collection(COLLECTIONS.SCHEDULED_EMAILS)
+      .where('status', '==', 'pending')
+      .where('sendAt', '<=', now)
+      .get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ScheduledEmail));
+  } catch (error) {
+    console.error('Error fetching scheduled emails from Firebase:', error);
+    return [];
+  }
+}
+
+async function updateScheduledEmailStatusInFirebase(id: string, status: 'sent' | 'failed', error?: string): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    const updates: any = {
+      status,
+      sentAt: new Date().toISOString()
+    };
+    if (error) updates.error = error;
+    await db.collection(COLLECTIONS.SCHEDULED_EMAILS).doc(id).update(updates);
+  } catch (error) {
+    console.error('Error updating scheduled email status:', error);
+    throw error;
+  }
+}
+
+export function saveScheduledEmail(email: ScheduledEmail): Promise<void> | void {
+  if (USE_FIREBASE) {
+    return saveScheduledEmailToFirebase(email);
+  }
+  // No fallback for scheduled emails - they require Firebase
+  console.warn('Scheduled emails require Firebase - email will not be queued');
+}
+
+export function getPendingScheduledEmails(): Promise<ScheduledEmail[]> | ScheduledEmail[] {
+  if (USE_FIREBASE) {
+    return getPendingScheduledEmailsFromFirebase();
+  }
+  return [];
+}
+
+export function updateScheduledEmailStatus(id: string, status: 'sent' | 'failed', error?: string): Promise<void> | void {
+  if (USE_FIREBASE) {
+    return updateScheduledEmailStatusInFirebase(id, status, error);
+  }
 }
 
 // Generate unique ID

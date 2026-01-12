@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
-import { saveInquiry, saveEmailLog, generateId, getAutomationSettings, getEmailTemplates, type Inquiry, type EmailLog } from '@/lib/database';
+import { saveInquiry, saveEmailLog, generateId, getAutomationSettings, getEmailTemplates, saveScheduledEmail, type Inquiry, type EmailLog, type ScheduledEmail } from '@/lib/database';
 import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured, getSMSConfig } from '@/lib/sms';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -99,73 +99,26 @@ export async function POST(request: Request) {
           }
         }
 
-            // Send availability/pricing email after 5 minutes (or 10 seconds in test mode)
+            // Schedule availability/pricing email to be sent after 3 minutes (or 10 seconds in test mode)
             if (templates.availabilityday0 && templates.availabilityday0.enabled) {
-              const availabilityDelay = isTestMode ? 10000 : 300000; // 10 seconds vs 5 minutes
-              setTimeout(async () => {
-                try {
-                  const availabilityHtml = renderTemplate(templates.availabilityday0, emailData);
-                  const availabilitySubject = renderSubject(templates.availabilityday0.subject, emailData);
-                  
-                  // Prepare email options
-                  const emailOptions: any = {
-                    from: 'Your Love Films <hi@yourlovefilms.com>',
-                    to: formData.email,
-                    subject: availabilitySubject,
-                    html: availabilityHtml,
-                  };
-
-                  // Add attachment if URL is provided
-                  if (templates.availabilityday0.attachmentUrl && templates.availabilityday0.attachmentUrl.trim()) {
-                    try {
-                      const attachmentUrl = templates.availabilityday0.attachmentUrl.trim();
-                      const response = await fetch(attachmentUrl);
-                      const buffer = await response.arrayBuffer();
-                      const base64 = Buffer.from(buffer).toString('base64');
-                      
-                      // Extract filename from URL or use default
-                      const urlParts = attachmentUrl.split('/');
-                      const filename = urlParts[urlParts.length - 1] || 'Pricing-Guide.pdf';
-                      
-                      emailOptions.attachments = [{
-                        filename: filename,
-                        content: base64,
-                      }];
-                      
-                      console.log('PDF attachment added to availability email');
-                    } catch (attachError) {
-                      console.error('Failed to fetch PDF attachment:', attachError);
-                      // Continue sending email without attachment
-                    }
-                  }
-                  
-                  const { data: availabilityData, error: availabilityError } = await resend.emails.send(emailOptions);
-
-                  // Log availability email
-                  const availabilityLog: EmailLog = {
-                    id: generateId(),
-                    inquiryId: inquiryId,
-                    recipientEmail: formData.email,
-                    recipientName: formData.name,
-                    templateType: 'availabilityday0' as any,
-                    subject: availabilitySubject,
-                    sentAt: new Date().toISOString(),
-                    status: availabilityError ? 'failed' : 'sent',
-                    error: availabilityError ? String(availabilityError) : undefined,
-                  };
-                  await saveEmailLog(availabilityLog);
-
-                  if (availabilityData) {
-                    console.log('Availability email sent:', availabilityData);
-                  } else {
-                    console.error('Availability email failed:', availabilityError);
-                  }
-                } catch (availabilityEmailError) {
-                  console.error('Availability email error:', availabilityEmailError);
-                }
-              }, availabilityDelay);
+              const availabilityDelayMs = isTestMode ? 10000 : 180000; // 10 seconds vs 3 minutes
+              const sendAt = new Date(Date.now() + availabilityDelayMs).toISOString();
               
-              console.log(`Availability email scheduled to send in ${isTestMode ? '10 seconds' : '5 minutes'}`);
+              const scheduledEmail: ScheduledEmail = {
+                id: generateId(),
+                inquiryId: inquiryId,
+                recipientEmail: formData.email,
+                recipientName: formData.name,
+                templateKey: 'availabilityday0',
+                sendAt: sendAt,
+                emailData: emailData,
+                attachmentUrl: templates.availabilityday0.attachmentUrl || undefined,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+              };
+              
+              await saveScheduledEmail(scheduledEmail);
+              console.log(`📅 Availability email queued to send in ${isTestMode ? '10 seconds' : '3 minutes'} at ${sendAt}`);
             }
 
             // Send welcome SMS after 45 seconds (or 20 seconds in test mode) if enabled and phone provided
