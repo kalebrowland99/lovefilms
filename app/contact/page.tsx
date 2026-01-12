@@ -326,7 +326,7 @@ export default function ContactPage() {
                 </h3>
                 <div 
                   className="calendly-inline-widget" 
-                  data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                  data-url="https://calendly.com/kalebrowland99/personal-wedding-call" 
                   style={{ minWidth: '320px', height: '700px' }}
                 />
               </>
@@ -581,7 +581,7 @@ export default function ContactPage() {
                 </h3>
                 <div 
                   className="calendly-inline-widget" 
-                  data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                  data-url="https://calendly.com/kalebrowland99/personal-wedding-call" 
                   style={{ minWidth: '320px', height: '700px' }}
                 />
               </>

@@ -310,7 +310,7 @@ export default function Home() {
               </h2>
               <div 
                 className="calendly-inline-widget" 
-                data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                data-url="https://calendly.com/kalebrowland99/personal-wedding-call" 
                 style={{ minWidth: '320px', height: '700px' }}
               />
             </div>
@@ -459,7 +459,7 @@ export default function Home() {
               </h2>
               <div 
                 className="calendly-inline-widget" 
-                data-url="https://calendly.com/kalebrowland99/wedding-inquiry" 
+                data-url="https://calendly.com/kalebrowland99/personal-wedding-call" 
                 style={{ minWidth: '320px', height: '700px' }}
               />
             </div>
