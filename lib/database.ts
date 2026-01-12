@@ -315,7 +315,13 @@ async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
 async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<void> {
   if (!db) throw new Error('Firebase not initialized');
   try {
+    // Validate templates structure
+    if (!templates || typeof templates !== 'object') {
+      throw new Error('Invalid templates structure: must be an object');
+    }
+    
     const batch = db.batch();
+    let hasOperations = false;
     
     // Get existing templates to delete ones that are no longer in the new templates
     const existingSnapshot = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).get();
@@ -326,19 +332,42 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
     existingSnapshot.docs.forEach(doc => {
       if (!newIds.has(doc.id)) {
         batch.delete(doc.ref);
+        hasOperations = true;
       }
     });
     
     // Update or create each template as its own document
-    Object.entries(templates).forEach(([templateId, template]) => {
-      if (!db) return; // TypeScript guard
+    for (const [templateId, template] of Object.entries(templates)) {
+      if (!db) {
+        throw new Error('db became null during template save');
+      }
+      
+      // Validate template structure
+      if (!template || typeof template !== 'object') {
+        console.warn(`Skipping invalid template: ${templateId}`);
+        continue;
+      }
+      
+      // Ensure content is a string
+      if (typeof template.content !== 'string') {
+        console.warn(`Template ${templateId} has invalid content type, converting...`);
+        template.content = String(template.content || '');
+      }
+      
       const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
-      batch.set(templateRef, template);
-    });
+      batch.set(templateRef, template, { merge: true });
+      hasOperations = true;
+    }
     
-    await batch.commit();
-  } catch (error) {
+    if (hasOperations) {
+      await batch.commit();
+      console.log(`Successfully saved ${Object.keys(templates).length} templates to Firebase`);
+    } else {
+      console.log('No operations to commit');
+    }
+  } catch (error: any) {
     console.error('Error saving email templates to Firebase:', error);
+    console.error('Error details:', error?.message, error?.code, error?.stack);
     throw error;
   }
 }

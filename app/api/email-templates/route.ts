@@ -59,17 +59,41 @@ function convertToNewFormat(templates: any): EmailTemplates {
       }
     }
     
+    // Extract callToAction and callToActionUrl from content if they're in markers
+    let callToAction = t.callToAction;
+    let callToActionUrl = t.callToActionUrl;
+    
+    // If content is an object (old format), get from there
+    if (t.content && typeof t.content === 'object') {
+      callToAction = t.content.callToAction || callToAction;
+      callToActionUrl = t.content.callToActionUrl || callToActionUrl;
+    }
+    
+    // Extract from content text if present in markers
+    if (contentText.includes('[Button:')) {
+      const buttonMatch = contentText.match(/\[Button:([^\]]+)\]/);
+      if (buttonMatch) {
+        callToAction = buttonMatch[1].trim();
+      }
+    }
+    if (contentText.includes('[URL:')) {
+      const urlMatch = contentText.match(/\[URL:([^\]]+)\]/);
+      if (urlMatch) {
+        callToActionUrl = urlMatch[1].trim();
+      }
+    }
+    
     converted[key] = {
-      name: t.name,
-      subject: t.subject,
+      name: t.name || '',
+      subject: t.subject || '',
       enabled: t.enabled ?? true,
       sendTo: t.sendTo || 'inquirer',
       timing: t.timing || '',
       content: contentText,
-      callToAction: t.content?.callToAction || t.callToAction,
-      callToActionUrl: t.content?.callToActionUrl || t.callToActionUrl,
-      attachmentUrl: t.content?.attachmentUrl || t.attachmentUrl,
-      showDetails: t.content?.showDetails || t.showDetails,
+      callToAction: callToAction,
+      callToActionUrl: callToActionUrl,
+      attachmentUrl: (t.content && typeof t.content === 'object' ? t.content.attachmentUrl : undefined) || t.attachmentUrl,
+      showDetails: (t.content && typeof t.content === 'object' ? t.content.showDetails : undefined) || t.showDetails,
     };
   }
   
@@ -171,13 +195,21 @@ export async function POST(request: Request) {
 
   try {
     const templates = await request.json();
+    console.log('Received templates to save:', Object.keys(templates));
+    
     // Ensure templates are in new format before saving
     const converted = convertToNewFormat(templates);
+    console.log('Converted templates:', Object.keys(converted));
+    
     await saveEmailTemplates(converted);
     
     return NextResponse.json({ success: true, message: 'Templates saved successfully' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error saving templates:', error);
-    return NextResponse.json({ error: 'Failed to save templates' }, { status: 500 });
+    console.error('Error stack:', error?.stack);
+    return NextResponse.json({ 
+      error: 'Failed to save templates',
+      details: error?.message || String(error)
+    }, { status: 500 });
   }
 }
