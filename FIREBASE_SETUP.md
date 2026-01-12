@@ -15,7 +15,15 @@ Your customer inquiries and email logs were being stored in `/tmp` on Vercel, wh
 
 ## 🚀 Step-by-Step Setup
 
-### Step 1: Create Firebase Project
+### Step 1: Create or Select Firebase Project
+
+#### Option A: Use Existing Project (Recommended if you have one)
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Click on your existing project (e.g., `lovefilms`)
+3. Skip to **Step 2** below
+
+#### Option B: Create New Project
 
 1. Go to [Firebase Console](https://console.firebase.google.com/)
 2. Click **"Add project"**
@@ -23,13 +31,19 @@ Your customer inquiries and email logs were being stored in `/tmp` on Vercel, wh
 4. Disable Google Analytics (optional, not needed)
 5. Click **"Create project"**
 
-### Step 2: Create Firestore Database
+### Step 2: Enable Firestore Database
 
-1. In Firebase Console, click **"Firestore Database"** in left sidebar
+1. In Firebase Console (with your project open), click **"Firestore Database"** in left sidebar
+
+#### If Firestore Doesn't Exist Yet:
 2. Click **"Create database"**
 3. Choose **"Start in production mode"**
 4. Select location closest to your users (e.g., `us-central` for USA)
 5. Click **"Enable"**
+
+#### If Firestore Already Exists:
+2. Great! You'll see your existing database
+3. Skip to **Step 3** below
 
 ### Step 3: Set Up Security Rules
 
