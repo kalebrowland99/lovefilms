@@ -49,7 +49,14 @@ export function renderTemplate(template: any, data: any): string {
   
   // Create call-to-action button if present
   let buttonHtml = '';
-  if (template.callToAction && template.callToActionUrl) {
+  console.log('📧 Email Renderer - Button values:', {
+    callToAction: template.callToAction,
+    callToActionUrl: template.callToActionUrl,
+    hasButton: !!(template.callToAction && template.callToActionUrl)
+  });
+  
+  if (template.callToAction && template.callToAction.trim() !== '' && 
+      template.callToActionUrl && template.callToActionUrl.trim() !== '') {
     buttonHtml = `
       <table cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0;">
         <tr>
