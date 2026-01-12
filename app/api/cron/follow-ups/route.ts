@@ -10,6 +10,7 @@ import {
   saveEmailLog, 
   generateId,
   getAutomationSettings,
+  getEmailTemplates,
   type Inquiry,
   type EmailLog 
 } from '@/lib/database';
@@ -27,14 +28,16 @@ export async function GET(request: Request) {
   console.log('Running follow-up cron job...');
 
   try {
-    // Use /tmp directory on Vercel for ephemeral data (inquiries, logs, settings)
-    const IS_VERCEL = process.env.VERCEL === '1';
-    const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+    // Load email templates from Firebase
+    const templates = await getEmailTemplates();
     
-    // Load email templates from project directory (Git-tracked)
-    const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
-    const fileContents = fs.readFileSync(templatesPath, 'utf8');
-    const templates = JSON.parse(fileContents);
+    if (!templates) {
+      console.error('Email templates not found in Firebase');
+      return NextResponse.json({ 
+        error: 'Email templates not configured',
+        sent: { emails: 0, sms: 0 } 
+      }, { status: 500 });
+    }
 
     // Load automation settings from Firebase
     const settings = await getAutomationSettings();

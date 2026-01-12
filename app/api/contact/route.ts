@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import fs from 'fs';
-import path from 'path';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
-import { saveInquiry, saveEmailLog, generateId, getAutomationSettings, type Inquiry, type EmailLog } from '@/lib/database';
+import { saveInquiry, saveEmailLog, generateId, getAutomationSettings, getEmailTemplates, type Inquiry, type EmailLog } from '@/lib/database';
 import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured, getSMSConfig } from '@/lib/sms';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -32,26 +30,14 @@ export async function POST(request: Request) {
     await saveInquiry(inquiry);
     console.log('Inquiry saved to database:', inquiryId);
 
-    // Use /tmp directory on Vercel for ephemeral data (inquiries, logs, settings)
-    // But use project directory for templates (tracked in Git)
-    const IS_VERCEL = process.env.VERCEL === '1';
-    const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+    // Load email templates from Firebase
+    const templates = await getEmailTemplates();
     
-    // Load email templates from project directory (Git-tracked)
-    let templates: any = {};
-    try {
-      const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
-      
-      // Templates should always exist in project directory (Git-tracked)
-      if (fs.existsSync(templatesPath)) {
-        const fileContents = fs.readFileSync(templatesPath, 'utf8');
-        templates = JSON.parse(fileContents);
-      } else {
-        console.error('Email templates file does not exist at:', templatesPath);
-        throw new Error('Email templates not found');
-      }
-    } catch (error) {
-      console.error('Error loading email templates:', error);
+    if (!templates) {
+      console.error('Email templates not found in Firebase');
+      return NextResponse.json({ 
+        error: 'Email templates not configured' 
+      }, { status: 500 });
     }
 
     // Load automation settings from Firebase (for SMS and test mode)

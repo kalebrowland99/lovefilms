@@ -38,8 +38,10 @@ export const COLLECTIONS = {
   INQUIRIES: 'inquiries',
   EMAIL_LOGS: 'email_logs',
   AUTOMATION_SETTINGS: 'automation_settings',
+  EMAIL_TEMPLATES: 'email_templates',
 } as const;
 
-// Automation settings document ID (single document for all settings)
+// Single document IDs for global settings
 export const AUTOMATION_SETTINGS_DOC_ID = 'global_settings';
+export const EMAIL_TEMPLATES_DOC_ID = 'global_templates';
 

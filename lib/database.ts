@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { db, COLLECTIONS, AUTOMATION_SETTINGS_DOC_ID } from './firebase';
+import { db, COLLECTIONS, AUTOMATION_SETTINGS_DOC_ID, EMAIL_TEMPLATES_DOC_ID } from './firebase';
 
 // Fallback: Use /tmp directory on Vercel (serverless), or local data directory in development
 const IS_VERCEL = process.env.VERCEL === '1';
@@ -82,6 +82,19 @@ export interface AutomationSettings {
     };
   };
   testMode: boolean;
+}
+
+export interface EmailTemplates {
+  [key: string]: {
+    name: string;
+    subject: string;
+    enabled: boolean;
+    sendTo: string;
+    timing: string;
+    content: {
+      [key: string]: any;
+    };
+  };
 }
 
 // ============================================================================
@@ -275,6 +288,32 @@ async function saveAutomationSettingsToFirebase(settings: AutomationSettings): P
 }
 
 // ============================================================================
+// FIREBASE - EMAIL TEMPLATES
+// ============================================================================
+
+async function getEmailTemplatesFromFirebase(): Promise<EmailTemplates | null> {
+  if (!db) return null;
+  try {
+    const doc = await db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(EMAIL_TEMPLATES_DOC_ID).get();
+    if (!doc.exists) return null;
+    return doc.data() as EmailTemplates;
+  } catch (error) {
+    console.error('Error fetching email templates from Firebase:', error);
+    return null;
+  }
+}
+
+async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(EMAIL_TEMPLATES_DOC_ID).set(templates);
+  } catch (error) {
+    console.error('Error saving email templates to Firebase:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
 // FILE FALLBACK - AUTOMATION SETTINGS
 // ============================================================================
 
@@ -302,6 +341,36 @@ function saveAutomationSettingsToFile(settings: AutomationSettings): void {
     fs.renameSync(tempPath, AUTOMATION_SETTINGS_PATH);
   } catch (error) {
     console.error('Error saving automation settings:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
+// FILE FALLBACK - EMAIL TEMPLATES
+// ============================================================================
+
+const EMAIL_TEMPLATES_PATH = path.join(process.cwd(), 'data', 'email-templates.json');
+
+function getEmailTemplatesFromFile(): EmailTemplates | null {
+  if (!fs.existsSync(EMAIL_TEMPLATES_PATH)) {
+    return null;
+  }
+  try {
+    const data = fs.readFileSync(EMAIL_TEMPLATES_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading email templates:', error);
+    return null;
+  }
+}
+
+function saveEmailTemplatesToFile(templates: EmailTemplates): void {
+  try {
+    const tempPath = EMAIL_TEMPLATES_PATH + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(templates, null, 2));
+    fs.renameSync(tempPath, EMAIL_TEMPLATES_PATH);
+  } catch (error) {
+    console.error('Error saving email templates:', error);
     throw error;
   }
 }
@@ -371,6 +440,20 @@ export function saveAutomationSettings(settings: AutomationSettings): void | Pro
     return saveAutomationSettingsToFirebase(settings);
   }
   return saveAutomationSettingsToFile(settings);
+}
+
+export function getEmailTemplates(): EmailTemplates | null | Promise<EmailTemplates | null> {
+  if (USE_FIREBASE) {
+    return getEmailTemplatesFromFirebase();
+  }
+  return getEmailTemplatesFromFile();
+}
+
+export function saveEmailTemplates(templates: EmailTemplates): void | Promise<void> {
+  if (USE_FIREBASE) {
+    return saveEmailTemplatesToFirebase(templates);
+  }
+  return saveEmailTemplatesToFile(templates);
 }
 
 // Generate unique ID
