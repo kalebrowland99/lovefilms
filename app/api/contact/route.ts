@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     // Load automation settings from Firebase (for SMS and test mode)
     const automationSettings = await getAutomationSettings();
 
-    const isTestMode = automationSettings.testMode || false;
+    const isTestMode = automationSettings?.testMode || false;
     console.log('Test Mode:', isTestMode);
 
     // Send emails using Resend
@@ -220,7 +220,7 @@ export async function POST(request: Request) {
             }
 
             // Send welcome SMS after 45 seconds (or 20 seconds in test mode) if enabled and phone provided
-            if (formData.phone && isSMSConfigured(automationSettings)) {
+            if (formData.phone && automationSettings && isSMSConfigured(automationSettings)) {
               // Ensure SMS templates structure exists
               const smsTemplate = automationSettings.sms?.templates?.day0;
               const isSMSTemplateEnabled = smsTemplate?.enabled !== false; // Default to true if undefined
@@ -328,8 +328,8 @@ export async function POST(request: Request) {
               // Helper function to send SMS in test mode
               const sendTestSMS = async (smsKey: string, delay: number) => {
                 setTimeout(async () => {
-                  const smsTemplate = automationSettings.sms?.templates?.[smsKey];
-                  if (smsTemplate && smsTemplate.enabled && formData.phone && isSMSConfigured(automationSettings)) {
+                  const smsTemplate = automationSettings?.sms?.templates?.[smsKey];
+                  if (smsTemplate && smsTemplate.enabled && formData.phone && automationSettings && isSMSConfigured(automationSettings)) {
                     try {
                       const smsData = {
                         name: formData.name.split(' ')[0],

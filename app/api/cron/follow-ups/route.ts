@@ -41,6 +41,14 @@ export async function GET(request: Request) {
 
     // Load automation settings from Firebase
     const settings = await getAutomationSettings();
+    
+    if (!settings) {
+      console.error('Automation settings not found in Firebase');
+      return NextResponse.json({ 
+        error: 'Automation settings not configured',
+        sent: { emails: 0, sms: 0 } 
+      }, { status: 500 });
+    }
 
     // Get all inquiries
     const inquiries = await getInquiries();
