@@ -439,9 +439,9 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
         content: typeof template.content === 'string' ? template.content : '',
       };
       
-      // Only add optional fields if they have values
-      if (template.callToAction) cleanedTemplate.callToAction = template.callToAction;
-      if (template.callToActionUrl) cleanedTemplate.callToActionUrl = template.callToActionUrl;
+      // Add optional fields - use empty string for call to action fields to allow clearing them
+      cleanedTemplate.callToAction = template.callToAction || '';
+      cleanedTemplate.callToActionUrl = template.callToActionUrl || '';
       if (template.attachmentUrl) cleanedTemplate.attachmentUrl = template.attachmentUrl;
       if (template.showDetails !== undefined) cleanedTemplate.showDetails = template.showDetails;
       

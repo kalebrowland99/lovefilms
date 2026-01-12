@@ -18,8 +18,15 @@ function checkAuth(request: Request): boolean {
 function convertToNewFormat(templates: any): EmailTemplates {
   const converted: EmailTemplates = {};
   
+  console.log('🔄 Converting templates to new format...');
+  
   for (const [key, template] of Object.entries(templates)) {
     const t = template as any;
+    console.log(`  📝 Converting ${key}:`, {
+      callToAction: t.callToAction,
+      callToActionUrl: t.callToActionUrl,
+      contentType: typeof t.content
+    });
     let contentText = '';
     
     // Handle old format with paragraphs
@@ -70,6 +77,11 @@ function convertToNewFormat(templates: any): EmailTemplates {
     // Remove button/URL markers from content text - they're stored separately
     contentText = contentText.replace(/\[Button:[^\]]+\]/g, '').trim();
     contentText = contentText.replace(/\[URL:[^\]]+\]/g, '').trim();
+    
+    console.log(`  ✅ Converted ${key} result:`, {
+      callToAction: callToAction || '(empty)',
+      callToActionUrl: callToActionUrl || '(empty)'
+    });
     
     converted[key] = {
       name: t.name || '',

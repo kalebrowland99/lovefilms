@@ -40,6 +40,10 @@ export async function POST(request: Request) {
     }
     
     console.log('Loaded template:', template.name);
+    console.log('🔍 Template button values:', {
+      callToAction: template.callToAction,
+      callToActionUrl: template.callToActionUrl
+    });
 
     // Sample data for test - covers all possible template variables
     const sampleData = {
