@@ -191,7 +191,23 @@ async function getEmailLogsFromFirebase(): Promise<EmailLog[]> {
 async function saveEmailLogToFirebase(log: EmailLog): Promise<void> {
   if (!db) throw new Error('Firebase not initialized');
   try {
-    await db.collection(COLLECTIONS.EMAIL_LOGS).doc(log.id).set(log);
+    // Remove undefined values - Firestore doesn't allow them
+    const cleanLog: any = {
+      id: log.id,
+      inquiryId: log.inquiryId,
+      recipientEmail: log.recipientEmail,
+      recipientName: log.recipientName,
+      templateType: log.templateType,
+      subject: log.subject,
+      sentAt: log.sentAt,
+      status: log.status
+    };
+    
+    // Only add optional fields if they have values
+    if (log.error !== undefined) cleanLog.error = log.error;
+    if (log.messageType !== undefined) cleanLog.messageType = log.messageType;
+    
+    await db.collection(COLLECTIONS.EMAIL_LOGS).doc(log.id).set(cleanLog);
   } catch (error) {
     console.error('Error saving email log to Firebase:', error);
     throw error;
@@ -666,10 +682,31 @@ async function saveScheduledEmailToFirebase(email: ScheduledEmail): Promise<void
       recipient: email.recipientEmail,
       template: email.templateKey,
       sendAt: email.sendAt,
-      status: email.status
+      status: email.status,
+      collection: COLLECTIONS.SCHEDULED_EMAILS
     });
-    await db.collection(COLLECTIONS.SCHEDULED_EMAILS).doc(email.id).set(email);
-    console.log(`✅ Successfully saved scheduled email ${email.id} to be sent at ${email.sendAt}`);
+    
+    // Remove undefined values - Firestore doesn't allow them
+    const cleanEmail: any = {
+      id: email.id,
+      inquiryId: email.inquiryId,
+      recipientEmail: email.recipientEmail,
+      recipientName: email.recipientName,
+      templateKey: email.templateKey,
+      sendAt: email.sendAt,
+      emailData: email.emailData,
+      status: email.status,
+      createdAt: email.createdAt
+    };
+    
+    // Only add optional fields if they have values
+    if (email.attachmentUrl !== undefined) cleanEmail.attachmentUrl = email.attachmentUrl;
+    if (email.sentAt !== undefined) cleanEmail.sentAt = email.sentAt;
+    if (email.error !== undefined) cleanEmail.error = email.error;
+    
+    await db.collection(COLLECTIONS.SCHEDULED_EMAILS).doc(email.id).set(cleanEmail);
+    console.log(`✅ Successfully saved scheduled email ${email.id} to collection '${COLLECTIONS.SCHEDULED_EMAILS}'`);
+    console.log(`   Will send at: ${email.sendAt}`);
   } catch (error) {
     console.error('❌ Error saving scheduled email to Firebase:', error);
     throw error;
@@ -683,7 +720,8 @@ async function getPendingScheduledEmailsFromFirebase(): Promise<ScheduledEmail[]
   }
   try {
     const now = new Date().toISOString();
-    console.log(`🔍 Querying scheduled emails: status='pending'`);
+    console.log(`🔍 Querying scheduled emails from collection: ${COLLECTIONS.SCHEDULED_EMAILS}`);
+    console.log(`🔍 Query: status='pending'`);
     console.log(`⏰ Current time: ${now}`);
     
     // Query ONLY by status to avoid Firestore composite index requirement
@@ -693,6 +731,20 @@ async function getPendingScheduledEmailsFromFirebase(): Promise<ScheduledEmail[]
       .get();
     
     console.log(`📋 Found ${snapshot.docs.length} pending emails total`);
+    
+    // Log all pending emails for debugging
+    if (snapshot.docs.length > 0) {
+      console.log('📋 All pending emails:', snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          recipient: data.recipientEmail,
+          sendAt: data.sendAt,
+          status: data.status,
+          template: data.templateKey
+        };
+      }));
+    }
     
     // Filter by sendAt in code (avoids Firestore index requirement)
     const readyEmails = snapshot.docs
