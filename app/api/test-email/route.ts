@@ -7,10 +7,8 @@ import path from 'path';
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Use /tmp directory on Vercel (serverless), or local data directory in development
-const IS_VERCEL = process.env.VERCEL === '1';
-const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
-const TEMPLATES_PATH = path.join(DATA_DIR, 'email-templates.json');
+// Always use project directory for templates (Git-tracked)
+const TEMPLATES_PATH = path.join(process.cwd(), 'data', 'email-templates.json');
 
 // Helper to check password
 function checkAuth(request: Request): boolean {
@@ -21,13 +19,6 @@ function checkAuth(request: Request): boolean {
   return password === ADMIN_PASSWORD;
 }
 
-// Ensure data directory exists
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
-
 export async function POST(request: Request) {
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -36,9 +27,7 @@ export async function POST(request: Request) {
   try {
     const { templateKey, testEmail } = await request.json();
 
-    // Load templates
-    ensureDataDir();
-    
+    // Load templates from project directory (Git-tracked)
     if (!fs.existsSync(TEMPLATES_PATH)) {
       return NextResponse.json({ 
         error: 'Templates file not found. Please save your templates first in the Email Automation tab.' 

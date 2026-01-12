@@ -2,9 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-// Use /tmp directory on Vercel (serverless), or local data directory in development
-const IS_VERCEL = process.env.VERCEL === '1';
-const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+// Always use project's data directory (now that templates are tracked in Git)
+const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_PATH = path.join(DATA_DIR, 'email-templates.json');
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 

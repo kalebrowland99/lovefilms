@@ -26,12 +26,12 @@ export async function GET(request: Request) {
   console.log('Running follow-up cron job...');
 
   try {
-    // Use /tmp directory on Vercel (serverless), or local data directory in development
+    // Use /tmp directory on Vercel for ephemeral data (inquiries, logs, settings)
     const IS_VERCEL = process.env.VERCEL === '1';
     const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
     
-    // Load email templates
-    const templatesPath = path.join(DATA_DIR, 'email-templates.json');
+    // Load email templates from project directory (Git-tracked)
+    const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
     const fileContents = fs.readFileSync(templatesPath, 'utf8');
     const templates = JSON.parse(fileContents);
 

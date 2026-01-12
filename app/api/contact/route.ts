@@ -32,27 +32,23 @@ export async function POST(request: Request) {
     saveInquiry(inquiry);
     console.log('Inquiry saved to database:', inquiryId);
 
-    // Use /tmp directory on Vercel (serverless), or local data directory in development
+    // Use /tmp directory on Vercel for ephemeral data (inquiries, logs, settings)
+    // But use project directory for templates (tracked in Git)
     const IS_VERCEL = process.env.VERCEL === '1';
     const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
     
-    // Load email templates
+    // Load email templates from project directory (Git-tracked)
     let templates: any = {};
     try {
-      const templatesPath = path.join(DATA_DIR, 'email-templates.json');
+      const templatesPath = path.join(process.cwd(), 'data', 'email-templates.json');
       
-      // Ensure data directory exists
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-      
-      // If templates file doesn't exist, it will be created by the database functions
-      // For now, just check if it exists and read it
+      // Templates should always exist in project directory (Git-tracked)
       if (fs.existsSync(templatesPath)) {
         const fileContents = fs.readFileSync(templatesPath, 'utf8');
         templates = JSON.parse(fileContents);
       } else {
-        console.warn('Email templates file does not exist yet - emails may not send');
+        console.error('Email templates file does not exist at:', templatesPath);
+        throw new Error('Email templates not found');
       }
     } catch (error) {
       console.error('Error loading email templates:', error);
