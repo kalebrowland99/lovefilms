@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { db, COLLECTIONS } from './firebase';
+import { db, COLLECTIONS, AUTOMATION_SETTINGS_DOC_ID } from './firebase';
 
 // Fallback: Use /tmp directory on Vercel (serverless), or local data directory in development
 const IS_VERCEL = process.env.VERCEL === '1';
@@ -55,6 +55,33 @@ export interface EmailLog {
   status: 'sent' | 'failed';
   error?: string;
   messageType?: 'email' | 'sms';
+}
+
+export interface AutomationSettings {
+  followUpDelays: {
+    [key: string]: {
+      enabled: boolean;
+      delayInDays: number;
+      name: string;
+      description: string;
+    };
+  };
+  sms: {
+    enabled: boolean;
+    twilioAccountSid?: string;
+    twilioAuthToken?: string;
+    twilioPhoneNumber?: string;
+    templates: {
+      [key: string]: {
+        enabled: boolean;
+        delayInSeconds?: number;
+        delayInDays?: number;
+        name: string;
+        message: string;
+      };
+    };
+  };
+  testMode: boolean;
 }
 
 // ============================================================================
@@ -222,6 +249,64 @@ function getLogsForInquiryFromFile(inquiryId: string): EmailLog[] {
 }
 
 // ============================================================================
+// FIREBASE - AUTOMATION SETTINGS
+// ============================================================================
+
+async function getAutomationSettingsFromFirebase(): Promise<AutomationSettings | null> {
+  if (!db) return null;
+  try {
+    const doc = await db.collection(COLLECTIONS.AUTOMATION_SETTINGS).doc(AUTOMATION_SETTINGS_DOC_ID).get();
+    if (!doc.exists) return null;
+    return doc.data() as AutomationSettings;
+  } catch (error) {
+    console.error('Error fetching automation settings from Firebase:', error);
+    return null;
+  }
+}
+
+async function saveAutomationSettingsToFirebase(settings: AutomationSettings): Promise<void> {
+  if (!db) throw new Error('Firebase not initialized');
+  try {
+    await db.collection(COLLECTIONS.AUTOMATION_SETTINGS).doc(AUTOMATION_SETTINGS_DOC_ID).set(settings);
+  } catch (error) {
+    console.error('Error saving automation settings to Firebase:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
+// FILE FALLBACK - AUTOMATION SETTINGS
+// ============================================================================
+
+const AUTOMATION_SETTINGS_PATH = path.join(DATA_DIR, 'automation-settings.json');
+
+function getAutomationSettingsFromFile(): AutomationSettings | null {
+  ensureDataDir();
+  if (!fs.existsSync(AUTOMATION_SETTINGS_PATH)) {
+    return null;
+  }
+  try {
+    const data = fs.readFileSync(AUTOMATION_SETTINGS_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading automation settings:', error);
+    return null;
+  }
+}
+
+function saveAutomationSettingsToFile(settings: AutomationSettings): void {
+  ensureDataDir();
+  try {
+    const tempPath = AUTOMATION_SETTINGS_PATH + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(settings, null, 2));
+    fs.renameSync(tempPath, AUTOMATION_SETTINGS_PATH);
+  } catch (error) {
+    console.error('Error saving automation settings:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
 // PUBLIC API - Routes to Firebase or File based on configuration
 // ============================================================================
 
@@ -272,6 +357,20 @@ export function getLogsForInquiry(inquiryId: string): EmailLog[] | Promise<Email
     return getLogsForInquiryFromFirebase(inquiryId);
   }
   return getLogsForInquiryFromFile(inquiryId);
+}
+
+export function getAutomationSettings(): AutomationSettings | null | Promise<AutomationSettings | null> {
+  if (USE_FIREBASE) {
+    return getAutomationSettingsFromFirebase();
+  }
+  return getAutomationSettingsFromFile();
+}
+
+export function saveAutomationSettings(settings: AutomationSettings): void | Promise<void> {
+  if (USE_FIREBASE) {
+    return saveAutomationSettingsToFirebase(settings);
+  }
+  return saveAutomationSettingsToFile(settings);
 }
 
 // Generate unique ID

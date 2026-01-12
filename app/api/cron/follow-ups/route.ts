@@ -9,6 +9,7 @@ import {
   updateInquiry, 
   saveEmailLog, 
   generateId,
+  getAutomationSettings,
   type Inquiry,
   type EmailLog 
 } from '@/lib/database';
@@ -35,43 +36,8 @@ export async function GET(request: Request) {
     const fileContents = fs.readFileSync(templatesPath, 'utf8');
     const templates = JSON.parse(fileContents);
 
-    // Load automation settings
-    const settingsPath = path.join(DATA_DIR, 'automation-settings.json');
-    let settings: any = {
-      followUpDelays: {
-        day1: { enabled: true, delayInDays: 1 },
-        day3: { enabled: true, delayInDays: 3 }
-      },
-      sms: {
-        enabled: true,
-        templates: {
-          day2: {
-            enabled: true,
-            message: "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
-          },
-          day4: {
-            enabled: true,
-            message: "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
-          }
-        }
-      }
-    };
-    
-    try {
-      const settingsContents = fs.readFileSync(settingsPath, 'utf8');
-      const loadedSettings = JSON.parse(settingsContents);
-      // Merge loaded settings with defaults
-      settings = {
-        ...settings,
-        ...loadedSettings,
-        sms: {
-          ...settings.sms,
-          ...loadedSettings.sms
-        }
-      };
-    } catch (error) {
-      console.warn('Could not load automation settings, using defaults');
-    }
+    // Load automation settings from Firebase
+    const settings = await getAutomationSettings();
 
     // Get all inquiries
     const inquiries = await getInquiries();

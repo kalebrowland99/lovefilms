@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
-import { saveInquiry, saveEmailLog, generateId, type Inquiry, type EmailLog } from '@/lib/database';
+import { saveInquiry, saveEmailLog, generateId, getAutomationSettings, type Inquiry, type EmailLog } from '@/lib/database';
 import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured, getSMSConfig } from '@/lib/sms';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -54,43 +54,8 @@ export async function POST(request: Request) {
       console.error('Error loading email templates:', error);
     }
 
-    // Load automation settings (for SMS and test mode)
-    let automationSettings: any = {
-      sms: {
-        enabled: true,
-        templates: {
-          day0: {
-            enabled: true,
-            message: "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
-          },
-          day2: {
-            enabled: true,
-            message: "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
-          },
-          day4: {
-            enabled: true,
-            message: "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
-          }
-        }
-      }
-    };
-    
-    try {
-      const settingsPath = path.join(DATA_DIR, 'automation-settings.json');
-      const settingsContents = fs.readFileSync(settingsPath, 'utf8');
-      const loadedSettings = JSON.parse(settingsContents);
-      // Merge loaded settings with defaults
-      automationSettings = {
-        ...automationSettings,
-        ...loadedSettings,
-        sms: {
-          ...automationSettings.sms,
-          ...loadedSettings.sms
-        }
-      };
-    } catch (error) {
-      console.error('Error loading automation settings, using defaults:', error);
-    }
+    // Load automation settings from Firebase (for SMS and test mode)
+    const automationSettings = await getAutomationSettings();
 
     const isTestMode = automationSettings.testMode || false;
     console.log('Test Mode:', isTestMode);

@@ -40,3 +40,6 @@ export const COLLECTIONS = {
   AUTOMATION_SETTINGS: 'automation_settings',
 } as const;
 
+// Automation settings document ID (single document for all settings)
+export const AUTOMATION_SETTINGS_DOC_ID = 'global_settings';
+

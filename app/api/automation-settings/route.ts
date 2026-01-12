@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getAutomationSettings, saveAutomationSettings, type AutomationSettings } from '@/lib/database';
 
-// Use /tmp directory on Vercel (serverless), or local data directory in development
-const IS_VERCEL = process.env.VERCEL === '1';
-const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
-const SETTINGS_PATH = path.join(DATA_DIR, 'automation-settings.json');
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
 
 // Helper to check password
@@ -18,7 +13,7 @@ function checkAuth(request: Request): boolean {
 }
 
 // Default settings structure
-const DEFAULT_SETTINGS = {
+const DEFAULT_SETTINGS: AutomationSettings = {
   followUpDelays: {
     day1: {
       enabled: true,
@@ -53,9 +48,10 @@ const DEFAULT_SETTINGS = {
   },
   sms: {
     enabled: true,
-    twilioAccountSid: "",
-    twilioAuthToken: "",
-    twilioPhoneNumber: "",
+    // Don't store credentials in database - use environment variables
+    twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || "",
+    twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || "",
+    twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || "",
     templates: {
       day0: {
         enabled: true,
@@ -87,37 +83,32 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Check if file exists
-    if (!fs.existsSync(SETTINGS_PATH)) {
-      console.log('Settings file does not exist, creating with defaults...');
-      
-      // Ensure data directory exists (use DATA_DIR not hardcoded path)
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-      
-      // Create file with defaults
-      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+    const settings = await getAutomationSettings();
+    
+    if (!settings) {
+      // No settings exist yet, save defaults and return them
+      console.log('No automation settings found, creating defaults...');
+      await saveAutomationSettings(DEFAULT_SETTINGS);
       return NextResponse.json(DEFAULT_SETTINGS);
     }
     
-    const fileContents = fs.readFileSync(SETTINGS_PATH, 'utf8');
-    const settings = JSON.parse(fileContents);
-    
-    // Merge with defaults to ensure all fields exist
-    const mergedSettings = {
+    // Merge with defaults to ensure all fields exist and inject env var credentials
+    const mergedSettings: AutomationSettings = {
       ...DEFAULT_SETTINGS,
       ...settings,
       sms: {
         ...DEFAULT_SETTINGS.sms,
-        ...settings.sms
+        ...settings.sms,
+        // Always use environment variables for Twilio credentials (more secure)
+        twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || settings.sms.twilioAccountSid || "",
+        twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || settings.sms.twilioAuthToken || "",
+        twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || settings.sms.twilioPhoneNumber || "",
       }
     };
     
     return NextResponse.json(mergedSettings);
   } catch (error) {
     console.error('Error reading automation settings:', error);
-    // Return defaults if there's an error
     return NextResponse.json(DEFAULT_SETTINGS);
   }
 }
@@ -131,15 +122,19 @@ export async function POST(request: Request) {
   try {
     const settings = await request.json();
     
-    // Ensure data directory exists (use DATA_DIR not hardcoded path)
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
+    // Don't store Twilio credentials in database if they're in environment variables
+    const settingsToSave: AutomationSettings = {
+      ...settings,
+      sms: {
+        ...settings.sms,
+        // Remove credentials if they match env vars (prefer env vars)
+        twilioAccountSid: process.env.TWILIO_ACCOUNT_SID ? "" : settings.sms.twilioAccountSid,
+        twilioAuthToken: process.env.TWILIO_AUTH_TOKEN ? "" : settings.sms.twilioAuthToken,
+        twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER ? "" : settings.sms.twilioPhoneNumber,
+      }
+    };
     
-    // Write settings to file with atomic operation
-    const tempPath = SETTINGS_PATH + '.tmp';
-    fs.writeFileSync(tempPath, JSON.stringify(settings, null, 2));
-    fs.renameSync(tempPath, SETTINGS_PATH);
+    await saveAutomationSettings(settingsToSave);
     
     return NextResponse.json({ success: true, message: 'Settings saved successfully' });
   } catch (error) {
@@ -147,4 +142,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to save settings' }, { status: 500 });
   }
 }
-
