@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { db, COLLECTIONS, AUTOMATION_SETTINGS_DOC_ID, EMAIL_TEMPLATES_DOC_ID } from './firebase';
+import { db, COLLECTIONS, AUTOMATION_SETTINGS_DOC_ID } from './firebase';
 
 // Fallback: Use /tmp directory on Vercel (serverless), or local data directory in development
 const IS_VERCEL = process.env.VERCEL === '1';
@@ -331,6 +331,7 @@ async function saveEmailTemplatesToFirebase(templates: EmailTemplates): Promise<
     
     // Update or create each template as its own document
     Object.entries(templates).forEach(([templateId, template]) => {
+      if (!db) return; // TypeScript guard
       const templateRef = db.collection(COLLECTIONS.EMAIL_TEMPLATES).doc(templateId);
       batch.set(templateRef, template);
     });

@@ -167,9 +167,9 @@ export async function POST(request: Request) {
                   };
 
                   // Add attachment if URL is provided
-                  if (templates.prices.content.attachmentUrl && templates.prices.content.attachmentUrl.trim()) {
+                  if (templates.prices.attachmentUrl && templates.prices.attachmentUrl.trim()) {
                     try {
-                      const attachmentUrl = templates.prices.content.attachmentUrl.trim();
+                      const attachmentUrl = templates.prices.attachmentUrl.trim();
                       const response = await fetch(attachmentUrl);
                       const buffer = await response.arrayBuffer();
                       const base64 = Buffer.from(buffer).toString('base64');

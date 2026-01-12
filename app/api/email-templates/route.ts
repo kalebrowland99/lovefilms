@@ -77,7 +77,7 @@ function convertToNewFormat(templates: any): EmailTemplates {
 }
 
 // Default templates structure (loaded from example file as fallback)
-function getDefaultTemplates(): EmailTemplates {
+function getDefaultTemplates(): any {
   try {
     const examplePath = path.join(process.cwd(), 'data', 'email-templates.example.json');
     if (fs.existsSync(examplePath)) {
@@ -88,7 +88,7 @@ function getDefaultTemplates(): EmailTemplates {
     console.error('Error loading default templates:', error);
   }
   
-  // Fallback if example file doesn't exist
+  // Fallback if example file doesn't exist (old format - will be converted)
   return {
   "welcome": {
     "name": "Day 0: Welcome Email (Immediate)",
