@@ -8,21 +8,23 @@ Your CRM now includes a **professional wedding videography follow-up sequence** 
 
 ## 📧 Email Sequence (7 Emails)
 
-### **Day 0: Welcome Email (Immediate - Within 5-15 min)**
-**Goal:** Fast response, confirm availability, set expectations
+### **Day 0: Welcome Email (DISABLED)**
+**Status:** Currently disabled - only pricing email is sent
 
-**Key Elements:**
-- Personal greeting with their names + date + venue
-- "Checking availability now" language
-- Ask their #1 priority (ceremony, toasts, party, family)
-- Link to book a call
-- Promise to reply in 15 minutes
+~~**Goal:** Fast response, confirm availability, set expectations~~
+
+~~**Key Elements:**~~
+- ~~Personal greeting with their names + date + venue~~
+- ~~"Checking availability now" language~~
+- ~~Ask their #1 priority (ceremony, toasts, party, family)~~
+- ~~Link to book a call~~
+- ~~Promise to reply in 15 minutes~~
 
 **Template:** Edit at `/crm` → Email Templates → "Day 0: Welcome Email"
 
 ---
 
-### **Day 0: Pricing & Availability (10 minutes after inquiry)**
+### **Day 0: Pricing & Availability (5 minutes after inquiry)**
 **Goal:** Provide pricing info, confirm date availability, schedule call
 
 **Key Elements:**
@@ -142,8 +144,8 @@ Visit: `yourlovefilms.com/crm` → **Email Automation** tab
 - ✅ Use dynamic variables like {{name}} and {{weddingDate}}
 
 **Default Schedule:**
-- Day 0: Immediate (welcome email)
-- Day 0: 10 minutes after inquiry (pricing & availability)
+- ~~Day 0: Immediate (welcome email)~~ **DISABLED**
+- Day 0: 5 minutes after inquiry (pricing & availability)
 - Day 1: 24 hours after inquiry
 - Day 3: 72 hours after inquiry
 - Day 6: 6 days after inquiry

@@ -28,15 +28,20 @@ Then restart your development server or redeploy.
 
 ## Available Email Templates
 
-### 1. **Welcome Email (Sent to Inquirer)**
-- Automatically sent to the person who fills out your contact form
-- Confirms you received their inquiry
-- Can include links to your portfolio, booking calendar, etc.
+### 1. **Welcome Email (DISABLED)**
+- ~~Automatically sent to the person who fills out your contact form~~
+- ~~Confirms you received their inquiry~~
+- **Status:** Currently disabled - only pricing email is sent
 
 ### 2. **Admin Notification (Sent to You)**
-- Sent to hi@yourlovefilms.com
+- Sent to hi@yourlovefilms.com (immediate)
 - Contains all the form submission details
 - Alerts you when you have a new inquiry
+
+### 3. **Pricing & Availability Email (Sent to Inquirer)**
+- Sent 5 minutes after form submission
+- Contains pricing info and availability confirmation
+- Includes links to booking calendar and pricing guide
 
 ## Dynamic Variables
 

@@ -28,11 +28,11 @@
     }
   },
   "prices": {
-    "name": "Day 0: Pricing & Availability (10 minutes after)",
+    "name": "Day 0: Pricing & Availability (5 minutes after)",
     "subject": "AWESOME NEWS: {{weddingDate}} is available! 🎉",
     "enabled": true,
     "sendTo": "inquirer",
-    "timing": "10 minutes after inquiry",
+    "timing": "5 minutes after inquiry",
     "content": {
       "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
       "paragraph1": "I'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message me if you need a time outside the available slots:",

@@ -152,60 +152,60 @@ export async function POST(request: Request) {
           }
         }
 
-        // Send welcome email to inquirer
-        if (templates.welcome && templates.welcome.enabled) {
-          const welcomeHtml = renderTemplate(templates.welcome, emailData);
-          const welcomeSubject = renderSubject(templates.welcome.subject, emailData);
-          
-          try {
-            const { data, error } = await resend.emails.send({
-              from: 'Your Love Films <hi@yourlovefilms.com>',
-              to: formData.email,
-              subject: welcomeSubject,
-              html: welcomeHtml,
-            });
+        // Send welcome email to inquirer - DISABLED (sending pricing email first)
+        // if (templates.welcome && templates.welcome.enabled) {
+        //   const welcomeHtml = renderTemplate(templates.welcome, emailData);
+        //   const welcomeSubject = renderSubject(templates.welcome.subject, emailData);
+        //   
+        //   try {
+        //     const { data, error } = await resend.emails.send({
+        //       from: 'Your Love Films <hi@yourlovefilms.com>',
+        //       to: formData.email,
+        //       subject: welcomeSubject,
+        //       html: welcomeHtml,
+        //     });
+        //
+        //     if (error) {
+        //       console.error('Resend error:', error);
+        //       
+        //       // Log failed email
+        //       const log: EmailLog = {
+        //         id: generateId(),
+        //         inquiryId: inquiryId,
+        //         recipientEmail: formData.email,
+        //         recipientName: formData.name,
+        //         templateType: 'welcome',
+        //         subject: welcomeSubject,
+        //         sentAt: new Date().toISOString(),
+        //         status: 'failed',
+        //         error: String(error),
+        //       };
+        //       saveEmailLog(log);
+        //
+        //       return NextResponse.json({ 
+        //         success: false, 
+        //         message: 'Failed to send email. Please email us directly at hi@yourlovefilms.com' 
+        //       }, { status: 500 });
+        //     }
+        //
+        //     // Log successful email
+        //     const log: EmailLog = {
+        //       id: generateId(),
+        //       inquiryId: inquiryId,
+        //       recipientEmail: formData.email,
+        //       recipientName: formData.name,
+        //       templateType: 'welcome',
+        //       subject: welcomeSubject,
+        //       sentAt: new Date().toISOString(),
+        //       status: 'sent',
+        //     };
+        //     saveEmailLog(log);
+        //
+        //     console.log('Emails sent successfully:', data);
 
-            if (error) {
-              console.error('Resend error:', error);
-              
-              // Log failed email
-              const log: EmailLog = {
-                id: generateId(),
-                inquiryId: inquiryId,
-                recipientEmail: formData.email,
-                recipientName: formData.name,
-                templateType: 'welcome',
-                subject: welcomeSubject,
-                sentAt: new Date().toISOString(),
-                status: 'failed',
-                error: String(error),
-              };
-              saveEmailLog(log);
-
-              return NextResponse.json({ 
-                success: false, 
-                message: 'Failed to send email. Please email us directly at hi@yourlovefilms.com' 
-              }, { status: 500 });
-            }
-
-            // Log successful email
-            const log: EmailLog = {
-              id: generateId(),
-              inquiryId: inquiryId,
-              recipientEmail: formData.email,
-              recipientName: formData.name,
-              templateType: 'welcome',
-              subject: welcomeSubject,
-              sentAt: new Date().toISOString(),
-              status: 'sent',
-            };
-            saveEmailLog(log);
-
-            console.log('Emails sent successfully:', data);
-
-            // Send pricing email after 10 minutes (or 10 seconds in test mode)
+            // Send pricing email after 5 minutes (or 10 seconds in test mode)
             if (templates.prices && templates.prices.enabled) {
-              const pricingDelay = isTestMode ? 10000 : 600000; // 10 seconds vs 10 minutes
+              const pricingDelay = isTestMode ? 10000 : 300000; // 10 seconds vs 5 minutes
               setTimeout(async () => {
                 try {
                   const pricesHtml = renderTemplate(templates.prices, emailData);
@@ -269,7 +269,7 @@ export async function POST(request: Request) {
                 }
               }, pricingDelay);
               
-              console.log(`Pricing email scheduled to send in ${isTestMode ? '10 seconds' : '10 minutes'}`);
+              console.log(`Pricing email scheduled to send in ${isTestMode ? '10 seconds' : '5 minutes'}`);
             }
 
             // Send welcome SMS after 45 seconds (or 20 seconds in test mode) if enabled and phone provided
@@ -333,6 +333,9 @@ export async function POST(request: Request) {
                 console.log(`Welcome SMS scheduled to send in ${isTestMode ? '20 seconds' : '45 seconds'}`);
               }
             }
+
+        // Commented out the welcome email block above - it's now disabled
+        // }
 
             // TEST MODE: Send all follow-up emails and SMS immediately with 10-second intervals
             if (isTestMode) {
@@ -439,24 +442,25 @@ export async function POST(request: Request) {
               
               console.log('🧪 TEST MODE: All messages scheduled (0-90 seconds)');
             }
-          } catch (emailError) {
-            console.error('Email sending error:', emailError);
-            
-            // Log failed email
-            const log: EmailLog = {
-              id: generateId(),
-              inquiryId: inquiryId,
-              recipientEmail: formData.email,
-              recipientName: formData.name,
-              templateType: 'welcome',
-              subject: welcomeSubject,
-              sentAt: new Date().toISOString(),
-              status: 'failed',
-              error: String(emailError),
-            };
-            saveEmailLog(log);
-          }
-        }
+        // Closing brace for commented welcome email section
+        // } catch (emailError) {
+        //   console.error('Email sending error:', emailError);
+        //   
+        //   // Log failed email
+        //   const log: EmailLog = {
+        //     id: generateId(),
+        //     inquiryId: inquiryId,
+        //     recipientEmail: formData.email,
+        //     recipientName: formData.name,
+        //     templateType: 'welcome',
+        //     subject: welcomeSubject,
+        //     sentAt: new Date().toISOString(),
+        //     status: 'failed',
+        //     error: String(emailError),
+        //   };
+        //   saveEmailLog(log);
+        // }
+        // }
       } catch (emailError) {
         console.error('Email sending error:', emailError);
         // Continue even if email fails

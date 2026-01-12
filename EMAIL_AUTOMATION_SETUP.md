@@ -77,22 +77,28 @@ Visit: **yourlovefilms.com/crm**
 
 ## 📝 Email Templates Available
 
-### 1. **Welcome Email**
-- Sent immediately when form is submitted
-- Goes to the inquirer
-- Confirms receipt of their inquiry
+### 1. **Welcome Email (DISABLED)**
+- ~~Sent immediately when form is submitted~~
+- ~~Goes to the inquirer~~
+- ~~Confirms receipt of their inquiry~~
+- **Status:** Currently disabled - only pricing email is sent
 
 ### 2. **Admin Notification**
 - Sent immediately when form is submitted
 - Goes to hi@yourlovefilms.com
 - Contains all form details
 
-### 3. **Day 1 Follow-Up**
+### 3. **Pricing & Availability Email**
+- Sent 5 minutes after form is submitted
+- Goes to the inquirer
+- Contains pricing info and availability confirmation
+
+### 4. **Day 1 Follow-Up**
 - Sent automatically 24 hours after inquiry
 - Only if inquiry status is still "new"
 - Gentle reminder with CTA
 
-### 4. **Day 3 Follow-Up**
+### 5. **Day 3 Follow-Up**
 - Sent automatically 72 hours after inquiry
 - Only if inquiry status is still "new"
 - Final follow-up with urgency

@@ -64,8 +64,8 @@ Then in Vercel Dashboard:
 ## 📧 What You Get
 
 ✅ **Instant Emails**
-- Welcome email to inquirer (immediate)
-- Notification to you (immediate)s
+- Pricing & Availability email to inquirer (5 minutes after inquiry)
+- Notification to you (immediate)
 
 ✅ **Automated Follow-Ups**
 - Day 1 follow-up (24 hours later)
