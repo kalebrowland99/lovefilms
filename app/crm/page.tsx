@@ -75,6 +75,22 @@ export default function EmailAdmin() {
         setIsAuthenticated(true);
         sessionStorage.setItem('emailAdminAuth', 'true');
         sessionStorage.setItem('emailAdminPassword', password);
+        
+        // Set active template if not set
+        if (!activeTemplate || !data[activeTemplate]) {
+          const templateKeys = Object.keys(data);
+          const firstTemplate = templateKeys.includes('inquiry') ? 'inquiry' : templateKeys[0];
+          setActiveTemplate(firstTemplate);
+        }
+        
+        // Load initial data based on active tab
+        if (activeTab === 'leads') {
+          loadInquiries();
+        } else if (activeTab === 'logs') {
+          loadEmailLogs();
+        } else if (activeTab === 'sms') {
+          loadAutomationSettings();
+        }
       } else {
         alert('Incorrect password');
       }
@@ -613,7 +629,7 @@ export default function EmailAdmin() {
   );
   }
 
-  if (!templates) {
+  if (!isAuthenticated || !templates) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
