@@ -73,6 +73,7 @@ export async function GET(request: Request) {
           to: scheduledEmail.recipientEmail,
           subject: emailSubject,
           html: emailHtml,
+          replyTo: 'hi@yourlovefilms.com',
         };
 
         // Add attachment if URL is provided
