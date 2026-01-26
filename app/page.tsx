@@ -321,7 +321,7 @@ export default function Home() {
       
       <InstagramEmbeds />
       
-      <MeetTheCrew />
+      {/* <MeetTheCrew /> */}
       
       <LoveNotes />
       
