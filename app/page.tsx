@@ -198,7 +198,7 @@ export default function Home() {
                   Check if the date is available 💍
                 </h2>
                 <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
-                  Fill out the form below and we'll discuss your special day!
+                  We take on a limited number of weddings each year. Dates book on a first-come basis.
                 </p>
               </div>
 
@@ -349,7 +349,7 @@ export default function Home() {
                   Check if the date is available 💍
                 </h2>
                 <p className="text-md max-w-[600px] mx-auto font-medium text-neutral-600 dark:text-neutral-400 sm:text-xl">
-                  Fill out the form below and we'll discuss your special day!
+                  We take on a limited number of weddings each year. Dates book on a first-come basis.
                 </p>
               </div>
 
