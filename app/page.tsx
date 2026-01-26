@@ -472,6 +472,8 @@ export default function Home() {
 
       <InstagramScrollDemo />
 
+      <InstagramEmbeds title="Recent Previews" />
+
       <Footer />
     </>
   );

@@ -50,7 +50,11 @@ declare global {
   }
 }
 
-export function InstagramEmbeds() {
+interface InstagramEmbedsProps {
+  title?: string;
+}
+
+export function InstagramEmbeds({ title = 'Quick Preview' }: InstagramEmbedsProps = {}) {
   const instagramPosts = [
     'https://www.instagram.com/p/DTGL9CIiT7n/',
     'https://www.instagram.com/p/DTGLpnjCeag/',
@@ -101,7 +105,7 @@ export function InstagramEmbeds() {
       <section className="py-16 md:py-24 px-4 bg-white dark:bg-neutral-950">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl md:text-4xl font-serif font-normal text-center mb-12 text-black dark:text-white">
-            Recent Previews
+            {title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {instagramPosts.map((url, index) => (
