@@ -472,7 +472,7 @@ export default function Home() {
 
       <InstagramScrollDemo />
 
-      <InstagramEmbeds title="Recent Previews" />
+      <InstagramEmbeds title="Recent Preview" />
 
       <Footer />
     </>

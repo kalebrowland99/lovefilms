@@ -54,7 +54,7 @@ interface InstagramEmbedsProps {
   title?: string;
 }
 
-export function InstagramEmbeds({ title = 'Quick Preview' }: InstagramEmbedsProps = {}) {
+export function InstagramEmbeds({ title = 'Quick Previews' }: InstagramEmbedsProps = {}) {
   const instagramPosts = [
     'https://www.instagram.com/p/DTGL9CIiT7n/',
     'https://www.instagram.com/p/DTGLpnjCeag/',
