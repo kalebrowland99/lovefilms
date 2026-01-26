@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { Header } from '@/components/ui/header';
 import { SimpleVideoHero } from '@/components/ui/simple-video-hero';
 import { MeetTheCrew } from '@/components/blocks/meet-the-crew';
+import { InstagramEmbeds } from '@/components/blocks/instagram-embeds';
 import { LoveNotes } from '@/components/blocks/love-notes';
 import { LetsTravel } from '@/components/blocks/lets-travel';
 import { TestimonialsSection } from '@/components/ui/testimonials-with-marquee';
@@ -317,6 +318,8 @@ export default function Home() {
           )}
         </div>
       </section>
+      
+      <InstagramEmbeds />
       
       <MeetTheCrew />
       
