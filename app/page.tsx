@@ -234,7 +234,7 @@ export default function Home() {
 
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Phone Number
+                Phone Number (don't worry, we won't spam you)
               </label>
               <div className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent bg-white dark:bg-neutral-800">
                 <PhoneInput
@@ -385,7 +385,7 @@ export default function Home() {
 
             <div>
               <label htmlFor="phone2" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Phone Number
+                Phone Number (don't worry, we won't spam you)
               </label>
               <div className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent bg-white dark:bg-neutral-800">
                 <PhoneInput

@@ -249,7 +249,7 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="phone-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Phone Number
+                  Phone Number (don't worry, we won't spam you)
                 </label>
                 <div className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus-within:ring-2 focus-within:ring-[#8b8370] focus-within:border-transparent bg-white dark:bg-neutral-800">
                   <PhoneInput
@@ -504,7 +504,7 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="phone-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Phone Number
+                  Phone Number (don't worry, we won't spam you)
                 </label>
                 <div className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus-within:ring-2 focus-within:ring-[#8b8370] focus-within:border-transparent bg-white dark:bg-neutral-800">
                   <PhoneInput
