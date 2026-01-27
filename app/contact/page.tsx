@@ -264,7 +264,7 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="fianceName-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Fiance's Name
+                  Instagram Name
                 </label>
                 <input
                   type="text"
@@ -272,7 +272,7 @@ export default function ContactPage() {
                   name="fianceName"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Fiance's Name"
+                  placeholder="Instagram Name"
                 />
               </div>
 
@@ -519,7 +519,7 @@ export default function ContactPage() {
 
               <div>
                 <label htmlFor="fianceName-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
-                  Fiance's Name
+                  Instagram Name
                 </label>
                 <input
                   type="text"
@@ -527,7 +527,7 @@ export default function ContactPage() {
                   name="fianceName"
                   required
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
-                  placeholder="Fiance's Name"
+                  placeholder="Instagram Name"
                 />
               </div>
 

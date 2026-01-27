@@ -1213,7 +1213,7 @@ export default function EmailAdmin() {
                   </div>
                   <div>
                     <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{fianceName}}`}</code>
-                    <span className="text-gray-600 ml-2">Fiancé's name</span>
+                    <span className="text-gray-600 ml-2">Instagram name</span>
                   </div>
                   <div>
                     <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{weddingDate}}`}</code>

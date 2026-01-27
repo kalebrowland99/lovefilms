@@ -18,7 +18,7 @@ export function renderTemplate(template: any, data: any): string {
     content += `Name: ${data.formData.name || 'N/A'}\n`;
     content += `Email: ${data.formData.email || 'N/A'}\n`;
     content += `Phone: ${data.formData.phone || 'N/A'}\n`;
-    content += `Fiance's Name: ${data.formData.fianceName || 'N/A'}\n`;
+    content += `Instagram Name: ${data.formData.fianceName || 'N/A'}\n`;
     content += `Wedding Date: ${data.formData.weddingDate || 'N/A'}\n`;
     content += `Wedding Venue: ${data.formData.venue || 'N/A'}\n`;
     content += `---\n\n`;

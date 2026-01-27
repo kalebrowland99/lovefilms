@@ -577,7 +577,7 @@ export default function SpecialPricingPage() {
 
                 <div>
                   <label htmlFor="fianceName" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                    Fiance's Name
+                    Instagram Name
                   </label>
                   <input
                     type="text"
@@ -585,7 +585,7 @@ export default function SpecialPricingPage() {
                     name="fianceName"
                     required
                     className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
-                    placeholder="Fiance's Name"
+                    placeholder="Instagram Name"
                   />
                 </div>
 

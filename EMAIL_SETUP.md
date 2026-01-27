@@ -42,7 +42,7 @@ The form currently logs submissions to the console. To enable actual email sendi
        <p><strong>Name:</strong> ${formData.name}</p>
        <p><strong>Email:</strong> ${formData.email}</p>
        <p><strong>Phone:</strong> ${formData.phone}</p>
-       <p><strong>Fiance's Name:</strong> ${formData.fianceName}</p>
+       <p><strong>Instagram Name:</strong> ${formData.fianceName}</p>
        <p><strong>Wedding Date:</strong> ${formData.weddingDate}</p>
        <p><strong>Wedding Venue:</strong> ${formData.venue}</p>
        <p><strong>Videographer Booked:</strong> ${formData.videographer}</p>

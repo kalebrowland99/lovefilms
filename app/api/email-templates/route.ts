@@ -125,7 +125,7 @@ function getDefaultTemplates(): any {
       "paragraph1": "Name: {{name}}",
       "paragraph2": "Email: {{formData.email}}",
       "paragraph3": "Phone: {{formData.phone}}",
-      "paragraph4": "Fiance: {{fianceName}}",
+      "paragraph4": "Instagram: {{fianceName}}",
       "paragraph5": "Wedding Date: {{weddingDate}}",
       "paragraph6": "Venue: {{venue}}",
       "footer": "Log in to CRM to respond."
