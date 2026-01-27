@@ -106,10 +106,10 @@ export async function POST(request: Request) {
                 const sendAt = new Date(Date.now() + availabilityDelayMs).toISOString();
                 
                 const scheduledEmail: ScheduledEmail = {
-                  id: generateId(),
-                  inquiryId: inquiryId,
-                  recipientEmail: formData.email,
-                  recipientName: formData.name,
+                    id: generateId(),
+                    inquiryId: inquiryId,
+                    recipientEmail: formData.email,
+                    recipientName: formData.name,
                   templateKey: 'availabilityday0',
                   sendAt: sendAt,
                   emailData: emailData,
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
                 console.error('❌ Failed to schedule availability email:', scheduleError);
                 // Don't fail the whole request if scheduling fails
               }
-            } else {
+                  } else {
               console.warn('⚠️ availabilityday0 template not found or disabled:', {
                 exists: !!templates.availabilityday0,
                 enabled: templates.availabilityday0?.enabled,

@@ -911,17 +911,17 @@ export default function EmailAdmin() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <select
-                                value={inquiry.status}
-                                onChange={(e) => updateInquiryStatus(inquiry.id, e.target.value)}
-                                disabled={updatingInquiry === inquiry.id}
-                                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-black focus:border-transparent outline-none disabled:opacity-50"
-                              >
-                                <option value="new">New</option>
-                                <option value="contacted">Contacted</option>
+                            <select
+                              value={inquiry.status}
+                              onChange={(e) => updateInquiryStatus(inquiry.id, e.target.value)}
+                              disabled={updatingInquiry === inquiry.id}
+                              className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-black focus:border-transparent outline-none disabled:opacity-50"
+                            >
+                              <option value="new">New</option>
+                              <option value="contacted">Contacted</option>
                                 <option value="booked">Call booked</option>
-                                <option value="dead">Dead</option>
-                              </select>
+                              <option value="dead">Dead</option>
+                            </select>
                               <button
                                 onClick={() => deleteInquiry(inquiry.id, inquiry.name)}
                                 disabled={updatingInquiry === inquiry.id}

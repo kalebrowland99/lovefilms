@@ -27,7 +27,7 @@ export async function GET(request: Request) {
   if (CRON_SECRET) {
     if (authHeader !== `Bearer ${CRON_SECRET}`) {
       console.error('❌ Unauthorized cron request. Auth header:', authHeader);
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
   } else {
     console.warn('⚠️ CRON_SECRET not set - cron endpoint is not secured!');
