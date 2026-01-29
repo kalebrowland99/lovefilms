@@ -750,6 +750,15 @@ export default function EmailAdmin() {
                     {logsLoading ? 'Refreshing...' : 'Refresh Logs'}
                   </button>
                 )}
+                {activeTab === 'manual' && templates && Object.keys(templates).some(key => key.startsWith('manual')) && (
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save Template Changes'}
+                  </button>
+                )}
             </div>
           </div>
           
@@ -773,7 +782,7 @@ export default function EmailAdmin() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              📧 Email Automation
+              📧 Form - Email Automation
             </button>
             <button
               onClick={() => setActiveTab('sms')}
@@ -803,7 +812,7 @@ export default function EmailAdmin() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              ✉️ Manual Enrollment
+              ✉️ IG DM - Email Automation
             </button>
           </div>
         </div>
@@ -1179,6 +1188,7 @@ export default function EmailAdmin() {
               <h2 className="text-lg font-semibold mb-4">Templates</h2>
               <div className="space-y-2">
                 {Object.entries(templates)
+                  .filter(([key]) => !key.startsWith('manual'))
                   .sort(([keyA], [keyB]) => {
                     const order = ['inquiry', 'availabilityday0', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
                     return order.indexOf(keyA) - order.indexOf(keyB);
@@ -1495,10 +1505,40 @@ export default function EmailAdmin() {
                                   ✓ Sent
                                 </span>
                               ) : (
-                                <div className="flex flex-col gap-1">
-                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 w-fit">
-                                    ✗ Failed
-                                  </span>
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                      ✗ Failed
+                                    </span>
+                                    <button
+                                      onClick={async () => {
+                                        if (!confirm('Retry sending this email?')) return;
+                                        try {
+                                          const pwd = sessionStorage.getItem('emailAdminPassword') || password;
+                                          const response = await fetch('/api/retry-email', {
+                                            method: 'POST',
+                                            headers: {
+                                              'Content-Type': 'application/json',
+                                              'Authorization': `Bearer ${pwd}`
+                                            },
+                                            body: JSON.stringify({ logId: log.id })
+                                          });
+                                          const result = await response.json();
+                                          if (result.success) {
+                                            alert('✅ Email resent successfully!');
+                                            loadEmailLogs(); // Refresh logs
+                                          } else {
+                                            alert(`❌ Failed to retry: ${result.error}`);
+                                          }
+                                        } catch (error) {
+                                          alert(`❌ Error: ${error}`);
+                                        }
+                                      }}
+                                      className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                    >
+                                      🔄 Retry
+                                    </button>
+                                  </div>
                                   {log.error && (
                                     <span className="text-xs text-red-600 max-w-xs">
                                       {log.error}
@@ -1521,9 +1561,9 @@ export default function EmailAdmin() {
         {activeTab === 'manual' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Manual Email Enrollment</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">IG DM Email Enrollment</h2>
               <p className="text-sm text-gray-600 mb-6">
-                Add a person to a different email automation sequence. This is separate from the regular inquiry automation.
+                Add a person to a different email automation sequence. Use this for people you connect with via Instagram DMs or in person. This is separate from the regular form inquiry automation.
               </p>
 
               {enrollmentMessage && (
@@ -1672,13 +1712,13 @@ export default function EmailAdmin() {
               </form>
 
               <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="text-sm font-semibold text-blue-900 mb-2">📧 Manual Automation Flow</h3>
+                <h3 className="text-sm font-semibold text-blue-900 mb-2">📧 IG DM Automation Flow</h3>
                 <p className="text-xs text-blue-800 mb-2">
-                  This enrollment uses a separate automation sequence from regular inquiries:
+                  This enrollment uses a separate automation sequence from regular form inquiries:
                 </p>
                 <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
                   <li>Custom welcome email sent immediately</li>
-                  <li>Different follow-up schedule than regular inquiries</li>
+                  <li>Different follow-up schedule than form submissions</li>
                   <li>Customize templates below</li>
                 </ul>
               </div>
@@ -1690,7 +1730,7 @@ export default function EmailAdmin() {
                 {/* Template Selector */}
                 <div className="lg:col-span-1">
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
-                    <h2 className="text-lg font-semibold mb-4">Manual Templates</h2>
+                    <h2 className="text-lg font-semibold mb-4">IG DM Templates</h2>
                     <div className="space-y-2">
                       {Object.entries(templates)
                         .filter(([key]) => key.startsWith('manual'))

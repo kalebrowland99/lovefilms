@@ -222,6 +222,18 @@ async function saveEmailLogToFirebase(log: EmailLog): Promise<void> {
   }
 }
 
+async function getEmailLogByIdFromFirebase(id: string): Promise<EmailLog | undefined> {
+  if (!db) return undefined;
+  try {
+    const doc = await db.collection(COLLECTIONS.EMAIL_LOGS).doc(id).get();
+    if (!doc.exists) return undefined;
+    return { id: doc.id, ...doc.data() } as EmailLog;
+  } catch (error) {
+    console.error('Error fetching email log from Firebase:', error);
+    return undefined;
+  }
+}
+
 async function getLogsForInquiryFromFirebase(inquiryId: string): Promise<EmailLog[]> {
   if (!db) return [];
   try {
@@ -328,6 +340,11 @@ function saveEmailLogToFile(log: EmailLog): void {
 function getLogsForInquiryFromFile(inquiryId: string): EmailLog[] {
   const logs = getEmailLogsFromFile();
   return logs.filter(log => log.inquiryId === inquiryId);
+}
+
+function getEmailLogByIdFromFile(id: string): EmailLog | undefined {
+  const logs = getEmailLogsFromFile();
+  return logs.find(log => log.id === id);
 }
 
 // ============================================================================
@@ -648,6 +665,17 @@ export function getLogsForInquiry(inquiryId: string): EmailLog[] | Promise<Email
     return getLogsForInquiryFromFirebase(inquiryId);
   }
   return getLogsForInquiryFromFile(inquiryId);
+}
+
+export function getEmailLog(id: string): EmailLog | undefined | Promise<EmailLog | undefined> {
+  if (USE_FIREBASE) {
+    return getEmailLogByIdFromFirebase(id);
+  }
+  return getEmailLogByIdFromFile(id);
+}
+
+export function getInquiry(id: string): Inquiry | undefined | Promise<Inquiry | undefined> {
+  return getInquiryById(id);
 }
 
 export function getAutomationSettings(): AutomationSettings | null | Promise<AutomationSettings | null> {
