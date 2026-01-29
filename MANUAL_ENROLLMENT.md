@@ -31,21 +31,21 @@ Optional fields:
 ### 3. What Happens When You Enroll Someone
 
 **Immediate Actions:**
-1. Person is saved to your database with "contacted" status and marked as manual enrollment
-2. They receive a custom welcome email (using `manualWelcome` template)
-3. You receive an admin notification email
+1. Person is saved to your database with "contacted" status and marked as IG DM enrollment
+2. You receive an admin notification email (no welcome email sent to them)
+3. System checks if email already exists (prevents duplicate automation)
 
 **Separate Automation:**
 - This uses **completely different email templates** than your regular inquiry flow
-- Manual enrollments have their own set of follow-up emails:
-  - `manualWelcome` - Welcome email (sent immediately)
-  - `manualAdmin` - Admin notification (sent immediately)
+- IG DM enrollments have their own set of follow-up emails:
+  - `manualAdmin` - Admin notification (sent immediately to you)
   - `manualFollowupDay1` - First follow-up (1 day after enrollment)
   - `manualFollowupDay3` - Second follow-up (3 days after enrollment)
   - `manualFollowupDay6` - Third follow-up (6 days after enrollment)
   - `manualFollowupDay10` - Fourth follow-up (10 days after enrollment)
   - `manualFollowupDay14` - Final follow-up (14 days after enrollment)
-- You can customize all these templates directly in the Manual Enrollment tab
+- No welcome email is sent (since they already know you from Instagram/in-person)
+- You can customize all these templates directly in the IG DM - Email Automation tab
 
 ### 4. Customizing the Templates
 
@@ -53,54 +53,52 @@ In the **Manual Enrollment tab**, scroll down to see the template editor with al
 
 #### Available Templates:
 
-1. **Manual Enrollment Welcome** (`manualWelcome`)
-   - **Sent To:** The enrolled person
-   - **When:** Immediately after enrollment
-   - **Purpose:** Welcome them and invite them to schedule a call
-
-2. **Manual Enrollment Admin Notification** (`manualAdmin`)
+1. **IG DM Admin Notification** (`manualAdmin`)
    - **Sent To:** You (hi@yourlovefilms.com)
    - **When:** Immediately after enrollment
    - **Purpose:** Notify you that someone was manually enrolled
 
-3. **Manual Follow-up Day 1** (`manualFollowupDay1`)
+2. **IG DM Follow-up Day 1** (`manualFollowupDay1`)
    - **Sent To:** The enrolled person
    - **When:** 1 day after enrollment
-   - **Purpose:** Quick follow-up to see if they have questions
+   - **Purpose:** First follow-up (they already know you from IG/in-person)
 
-4. **Manual Follow-up Day 3** (`manualFollowupDay3`)
+3. **IG DM Follow-up Day 3** (`manualFollowupDay3`)
    - **Sent To:** The enrolled person
    - **When:** 3 days after enrollment
    - **Purpose:** Check in about their wedding video plans
 
-5. **Manual Follow-up Day 6** (`manualFollowupDay6`)
+4. **IG DM Follow-up Day 6** (`manualFollowupDay6`)
    - **Sent To:** The enrolled person
    - **When:** 6 days after enrollment
    - **Purpose:** Remind them dates are filling up
 
-6. **Manual Follow-up Day 10** (`manualFollowupDay10`)
+5. **IG DM Follow-up Day 10** (`manualFollowupDay10`)
    - **Sent To:** The enrolled person
    - **When:** 10 days after enrollment
    - **Purpose:** Last chance to secure their date
 
-7. **Manual Follow-up Day 14** (`manualFollowupDay14`)
+6. **IG DM Follow-up Day 14** (`manualFollowupDay14`)
    - **Sent To:** The enrolled person
    - **When:** 14 days after enrollment
    - **Purpose:** Final follow-up
 
-You can edit all templates directly in the Manual Enrollment tab - no need to switch between tabs!
+**Note:** No welcome email is sent to the enrolled person since they already know you from Instagram or meeting in person. Follow-ups start on Day 1.
+
+You can edit all templates directly in the IG DM - Email Automation tab - no need to switch between tabs!
 
 ## Differences from Regular Inquiry Automation
 
-| Feature | Regular Inquiry | Manual Enrollment |
+| Feature | Regular Inquiry (Form) | IG DM Enrollment |
 |---------|----------------|-------------------|
 | Trigger | Form submission | Manual CRM entry |
 | Status | Starts as "new" | Starts as "contacted" |
-| Welcome Email | `availabilityday0` template | `manualWelcome` template |
+| Welcome Email | `availabilityday0` template (sent immediately) | None (they already know you) |
 | Follow-ups | `followupDay1-14` templates | `manualFollowupDay1-14` templates |
 | Admin Notification | `inquiry` template | `manualAdmin` template |
-| Template Location | Email Automation tab | Manual Enrollment tab |
+| Template Location | Form - Email Automation tab | IG DM - Email Automation tab |
 | Tracking | `followUpSentAt` field | `manualFollowUpSentAt` field |
+| Duplicate Prevention | N/A | Converts form inquiries to IG DM |
 
 ## Follow-Up Automation
 

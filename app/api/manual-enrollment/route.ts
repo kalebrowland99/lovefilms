@@ -99,51 +99,10 @@ export async function POST(request: Request) {
           formData: formData
         };
 
-        // Send custom welcome email for manual enrollments (using manualWelcome template)
-        if (templates.manualWelcome && templates.manualWelcome.enabled) {
-          const welcomeHtml = renderTemplate(templates.manualWelcome, emailData);
-          const welcomeSubject = renderSubject(templates.manualWelcome.subject, emailData);
-          
-          try {
-            await resend.emails.send({
-              from: 'Your Love Films <hi@yourlovefilms.com>',
-              to: formData.email,
-              subject: welcomeSubject,
-              html: welcomeHtml,
-            });
+        // Welcome email disabled for IG DM enrollments (they already know you)
+        // Follow-ups will start on Day 1
 
-            // Log email
-            const log: EmailLog = {
-              id: generateId(),
-              inquiryId: inquiryId,
-              recipientEmail: formData.email,
-              recipientName: formData.name,
-              templateType: 'manual-welcome',
-              subject: welcomeSubject,
-              sentAt: new Date().toISOString(),
-              status: 'sent',
-            };
-            await saveEmailLog(log);
-            
-            console.log('Manual welcome email sent');
-          } catch (error) {
-            console.error('Failed to send manual welcome email:', error);
-            const log: EmailLog = {
-              id: generateId(),
-              inquiryId: inquiryId,
-              recipientEmail: formData.email,
-              recipientName: formData.name,
-              templateType: 'manual-welcome',
-              subject: welcomeSubject,
-              sentAt: new Date().toISOString(),
-              status: 'failed',
-              error: String(error),
-            };
-            await saveEmailLog(log);
-          }
-        }
-
-        // Also send admin notification about manual enrollment
+        // Send admin notification about manual enrollment
         if (templates.manualAdmin && templates.manualAdmin.enabled) {
           const adminHtml = renderTemplate(templates.manualAdmin, emailData);
           const adminSubject = renderSubject(templates.manualAdmin.subject, emailData);

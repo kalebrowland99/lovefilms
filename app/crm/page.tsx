@@ -1717,7 +1717,8 @@ export default function EmailAdmin() {
                   This enrollment uses a separate automation sequence from regular form inquiries:
                 </p>
                 <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
-                  <li>Custom welcome email sent immediately</li>
+                  <li>No welcome email (they already know you from IG/in-person)</li>
+                  <li>Follow-ups start on Day 1 after enrollment</li>
                   <li>Different follow-up schedule than form submissions</li>
                   <li>Customize templates below</li>
                 </ul>
