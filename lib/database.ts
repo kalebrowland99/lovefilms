@@ -646,6 +646,27 @@ export function getInquiryById(id: string): Inquiry | undefined | Promise<Inquir
   return getInquiryByIdFromFile(id);
 }
 
+export async function getInquiryByEmail(email: string): Promise<Inquiry | undefined> {
+  if (USE_FIREBASE) {
+    if (!db) return undefined;
+    try {
+      const snapshot = await db.collection(COLLECTIONS.INQUIRIES)
+        .where('email', '==', email)
+        .limit(1)
+        .get();
+      if (snapshot.empty) return undefined;
+      const doc = snapshot.docs[0];
+      return { id: doc.id, ...doc.data() } as Inquiry;
+    } catch (error) {
+      console.error('Error finding inquiry by email:', error);
+      return undefined;
+    }
+  } else {
+    const inquiries = getInquiriesFromFile();
+    return inquiries.find(inq => inq.email.toLowerCase() === email.toLowerCase());
+  }
+}
+
 export function getEmailLogs(): EmailLog[] | Promise<EmailLog[]> {
   if (USE_FIREBASE) {
     return getEmailLogsFromFirebase();

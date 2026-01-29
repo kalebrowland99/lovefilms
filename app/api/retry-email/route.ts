@@ -100,7 +100,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: 'Your Love Films <hi@yourlovefilms.com>',
       to: recipient,
-      subject: `[RETRY] ${emailSubject}`,
+      subject: emailSubject,
       html: emailHtml,
       replyTo: 'hi@yourlovefilms.com',
     });
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
         recipientEmail: recipient,
         recipientName: log.recipientName,
         templateType: log.templateType,
-        subject: `[RETRY] ${emailSubject}`,
+        subject: `[RETRY] ${emailSubject}`, // Keep [RETRY] in logs for tracking
         sentAt: new Date().toISOString(),
         status: 'failed',
         error: String(error),
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
       recipientEmail: recipient,
       recipientName: log.recipientName,
       templateType: log.templateType,
-      subject: `[RETRY] ${emailSubject}`,
+      subject: `[RETRY] ${emailSubject}`, // Keep [RETRY] in logs for tracking
       sentAt: new Date().toISOString(),
       status: 'sent',
     };

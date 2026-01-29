@@ -1840,8 +1840,10 @@ export default function EmailAdmin() {
                               updateTemplateField(activeTemplate, 'content', e.target.value);
                             }, 300);
                           }}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent font-mono text-sm h-96"
+                          className="w-full h-[600px] px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none text-sm resize-none"
+                          style={{ fontFamily: 'Arial, sans-serif' }}
                           placeholder="Type your email content here..."
+                          spellCheck={true}
                         />
                       </div>
 
@@ -1921,15 +1923,6 @@ export default function EmailAdmin() {
                           Preview how this email will look with sample data before sending to real customers.
                         </p>
                       </div>
-
-                      {/* Save Button */}
-                      <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="w-full px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
-                      >
-                        {saving ? 'Saving...' : 'Save Template Changes'}
-                      </button>
                     </div>
                   </div>
                 )}

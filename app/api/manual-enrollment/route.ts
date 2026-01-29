@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
-import { saveInquiry, saveEmailLog, generateId, getEmailTemplates, type Inquiry, type EmailLog } from '@/lib/database';
+import { saveInquiry, updateInquiry, saveEmailLog, generateId, getEmailTemplates, getInquiryByEmail, type Inquiry, type EmailLog } from '@/lib/database';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
@@ -33,22 +33,50 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
 
-    // Save as inquiry to database with special status
-    const inquiryId = generateId();
-    const inquiry: Inquiry = {
-      id: inquiryId,
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone || '',
-      fianceName: formData.instagramName || '',
-      weddingDate: formData.weddingDate || '',
-      venue: formData.venue || '',
-      status: 'contacted', // Mark as contacted since this is manual enrollment
-      createdAt: new Date().toISOString(),
-      isManualEnrollment: true, // Mark as manual enrollment to use separate automation
-    };
-    await saveInquiry(inquiry);
-    console.log('Manual enrollment saved to database:', inquiryId);
+    // Check if email already exists
+    const existingInquiry = await getInquiryByEmail(formData.email);
+    
+    let inquiryId: string;
+    let isExistingConverted = false;
+    
+    if (existingInquiry) {
+      // Email exists - convert to manual enrollment and stop form automation
+      console.log('Email already exists, converting to manual enrollment:', existingInquiry.id);
+      
+      inquiryId = existingInquiry.id;
+      
+      // Update existing inquiry to be a manual enrollment
+      await updateInquiry(existingInquiry.id, {
+        isManualEnrollment: true,
+        status: 'contacted',
+        // Update any new info provided
+        phone: formData.phone || existingInquiry.phone,
+        fianceName: formData.instagramName || existingInquiry.fianceName,
+        weddingDate: formData.weddingDate || existingInquiry.weddingDate,
+        venue: formData.venue || existingInquiry.venue,
+        name: formData.name || existingInquiry.name,
+      });
+      
+      isExistingConverted = true;
+      console.log('Converted existing inquiry to manual enrollment');
+    } else {
+      // New person - create manual enrollment
+      inquiryId = generateId();
+      const inquiry: Inquiry = {
+        id: inquiryId,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || '',
+        fianceName: formData.instagramName || '',
+        weddingDate: formData.weddingDate || '',
+        venue: formData.venue || '',
+        status: 'contacted', // Mark as contacted since this is manual enrollment
+        createdAt: new Date().toISOString(),
+        isManualEnrollment: true, // Mark as manual enrollment to use separate automation
+      };
+      await saveInquiry(inquiry);
+      console.log('Manual enrollment saved to database:', inquiryId);
+    }
 
     // Load email templates
     const templates = await getEmailTemplates();
@@ -156,8 +184,11 @@ export async function POST(request: Request) {
     // Return success response
     return NextResponse.json({ 
       success: true, 
-      message: 'Successfully enrolled in manual automation',
-      inquiryId: inquiryId
+      message: isExistingConverted 
+        ? '✓ Email found! Converted to IG DM automation (form automation stopped)' 
+        : '✓ Successfully enrolled in IG DM automation',
+      inquiryId: inquiryId,
+      wasConverted: isExistingConverted
     }, { status: 200 });
     
   } catch (error) {
