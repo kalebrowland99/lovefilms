@@ -148,7 +148,40 @@ function getDefaultTemplates(): any {
       "footer": "Thank you for reaching out, {{name}}, and I can't wait to work with you!\n\nBest,\nYour Love Films",
         "attachmentUrl": ""
     }
+    },
+  "manualWelcome": {
+    "name": "Manual Enrollment Welcome",
+    "subject": "Welcome, {{name}}! 🎥",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "immediate",
+    "content": {
+      "greeting": "Hi {{name}},",
+      "paragraph1": "Thank you for your interest in Your Love Films! I'm excited to connect with you about capturing your special day.",
+      "paragraph2": "I specialize in creating cinematic wedding films that tell your unique love story. My approach is all about capturing authentic moments and emotions that you'll cherish forever.",
+      "paragraph3": "I'd love to learn more about your wedding plans and see if we're the perfect fit. Feel free to reply to this email with any questions, or we can schedule a quick call to chat!",
+      "callToAction": "Schedule a Call",
+      "callToActionUrl": "https://calendly.com/kalebrowland99/personal-wedding-call",
+      "footer": "Looking forward to hearing from you!\n\nBest,\nYour Love Films"
     }
+  },
+  "manualAdmin": {
+    "name": "Manual Enrollment Admin Notification",
+    "subject": "Manual Enrollment: {{name}}",
+    "enabled": true,
+    "sendTo": "admin",
+    "timing": "immediate",
+    "content": {
+      "greeting": "New manual enrollment added!",
+      "paragraph1": "Name: {{name}}",
+      "paragraph2": "Email: {{formData.email}}",
+      "paragraph3": "Phone: {{formData.phone}}",
+      "paragraph4": "Instagram: {{fianceName}}",
+      "paragraph5": "Wedding Date: {{weddingDate}}",
+      "paragraph6": "Venue: {{venue}}",
+      "footer": "This person was manually enrolled via the CRM."
+    }
+  }
   };
 }
 

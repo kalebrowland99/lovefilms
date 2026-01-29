@@ -10,12 +10,12 @@ export default function EmailAdmin() {
   const [activeTemplate, setActiveTemplate] = useState<string>(''); // Will be set when templates load
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'leads' | 'email' | 'sms' | 'logs'>(() => {
+  const [activeTab, setActiveTab] = useState<'leads' | 'email' | 'sms' | 'logs' | 'manual'>(() => {
     // Load saved tab from localStorage or default to 'leads'
     if (typeof window !== 'undefined') {
       const savedTab = localStorage.getItem('crmActiveTab');
-      if (savedTab && ['leads', 'email', 'sms', 'logs'].includes(savedTab)) {
-        return savedTab as 'leads' | 'email' | 'sms' | 'logs';
+      if (savedTab && ['leads', 'email', 'sms', 'logs', 'manual'].includes(savedTab)) {
+        return savedTab as 'leads' | 'email' | 'sms' | 'logs' | 'manual';
       }
     }
     return 'leads';
@@ -34,6 +34,18 @@ export default function EmailAdmin() {
   const [emailContentText, setEmailContentText] = useState<string>('');
   const [templatesLoading, setTemplatesLoading] = useState(false);
   const [templatesError, setTemplatesError] = useState<string>('');
+  
+  // Manual enrollment state
+  const [manualEnrollment, setManualEnrollment] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    instagramName: '',
+    weddingDate: '',
+    venue: ''
+  });
+  const [enrolling, setEnrolling] = useState(false);
+  const [enrollmentMessage, setEnrollmentMessage] = useState('');
   
   // Refs for timers and loading state
   const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
@@ -780,6 +792,16 @@ export default function EmailAdmin() {
             >
               📊 Logs
             </button>
+            <button
+              onClick={() => setActiveTab('manual')}
+              className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'manual'
+                  ? 'border-black text-black'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              ✉️ Manual Enrollment
+            </button>
           </div>
         </div>
       </div>
@@ -1482,6 +1504,173 @@ export default function EmailAdmin() {
                   </table>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'manual' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Manual Email Enrollment</h2>
+              <p className="text-sm text-gray-600 mb-6">
+                Add a person to a different email automation sequence. This is separate from the regular inquiry automation.
+              </p>
+
+              {enrollmentMessage && (
+                <div className={`mb-4 px-4 py-3 rounded-lg ${
+                  enrollmentMessage.includes('success') || enrollmentMessage.includes('enrolled')
+                    ? 'bg-green-50 border border-green-200 text-green-800'
+                    : 'bg-red-50 border border-red-200 text-red-800'
+                }`}>
+                  {enrollmentMessage}
+                </div>
+              )}
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setEnrolling(true);
+                setEnrollmentMessage('');
+
+                try {
+                  const response = await fetch('/api/manual-enrollment', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${password}`
+                    },
+                    body: JSON.stringify(manualEnrollment)
+                  });
+
+                  const result = await response.json();
+
+                  if (response.ok) {
+                    setEnrollmentMessage('✓ Successfully enrolled! Check the Logs tab to see sent emails.');
+                    // Reset form
+                    setManualEnrollment({
+                      name: '',
+                      email: '',
+                      phone: '',
+                      instagramName: '',
+                      weddingDate: '',
+                      venue: ''
+                    });
+                    // Refresh logs if needed
+                    if (emailLogs.length > 0) {
+                      loadEmailLogs();
+                    }
+                  } else {
+                    setEnrollmentMessage(`Error: ${result.error || 'Failed to enroll'}`);
+                  }
+                } catch (error) {
+                  setEnrollmentMessage(`Error: ${error}`);
+                } finally {
+                  setEnrolling(false);
+                }
+              }} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={manualEnrollment.name}
+                      onChange={(e) => setManualEnrollment({...manualEnrollment, name: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="John Smith"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={manualEnrollment.email}
+                      onChange={(e) => setManualEnrollment({...manualEnrollment, email: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={manualEnrollment.phone}
+                      onChange={(e) => setManualEnrollment({...manualEnrollment, phone: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="(615) 555-1234"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Instagram Name
+                    </label>
+                    <input
+                      type="text"
+                      value={manualEnrollment.instagramName}
+                      onChange={(e) => setManualEnrollment({...manualEnrollment, instagramName: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="@username"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Wedding Date
+                    </label>
+                    <input
+                      type="text"
+                      value={manualEnrollment.weddingDate}
+                      onChange={(e) => setManualEnrollment({...manualEnrollment, weddingDate: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="June 15, 2026"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Wedding Venue
+                    </label>
+                    <input
+                      type="text"
+                      value={manualEnrollment.venue}
+                      onChange={(e) => setManualEnrollment({...manualEnrollment, venue: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      placeholder="The Hermitage Hotel, Nashville"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={enrolling}
+                    className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+                  >
+                    {enrolling ? 'Enrolling...' : 'Enroll in Manual Automation'}
+                  </button>
+                </div>
+              </form>
+
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="text-sm font-semibold text-blue-900 mb-2">📧 Manual Automation Flow</h3>
+                <p className="text-xs text-blue-800 mb-2">
+                  This enrollment uses a separate automation sequence from regular inquiries:
+                </p>
+                <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                  <li>Custom welcome email sent immediately</li>
+                  <li>Different follow-up schedule than regular inquiries</li>
+                  <li>Customize templates in the Email Automation tab</li>
+                </ul>
+              </div>
             </div>
           </div>
         )}
