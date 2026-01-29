@@ -332,6 +332,9 @@ export default function EmailAdmin() {
     if (activeTab === 'email' && isAuthenticated && !templates) {
       loadTemplates(sessionStorage.getItem('emailAdminPassword') || '');
     }
+    if (activeTab === 'manual' && isAuthenticated && !templates) {
+      loadTemplates(sessionStorage.getItem('emailAdminPassword') || '');
+    }
   }, [activeTab, isAuthenticated]);
 
   // Auto-refresh leads every 30 seconds when on leads tab
@@ -1486,15 +1489,22 @@ export default function EmailAdmin() {
                             <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
                               {log.subject}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-4">
                               {log.status === 'sent' ? (
                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                   ✓ Sent
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800" title={log.error}>
-                                  ✗ Failed
-                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 w-fit">
+                                    ✗ Failed
+                                  </span>
+                                  {log.error && (
+                                    <span className="text-xs text-red-600 max-w-xs">
+                                      {log.error}
+                                    </span>
+                                  )}
+                                </div>
                               )}
                             </td>
                           </tr>
@@ -1532,11 +1542,12 @@ export default function EmailAdmin() {
                 setEnrollmentMessage('');
 
                 try {
+                  const pwd = sessionStorage.getItem('emailAdminPassword') || password;
                   const response = await fetch('/api/manual-enrollment', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${password}`
+                      'Authorization': `Bearer ${pwd}`
                     },
                     body: JSON.stringify(manualEnrollment)
                   });
@@ -1668,10 +1679,222 @@ export default function EmailAdmin() {
                 <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
                   <li>Custom welcome email sent immediately</li>
                   <li>Different follow-up schedule than regular inquiries</li>
-                  <li>Customize templates in the Email Automation tab</li>
+                  <li>Customize templates below</li>
                 </ul>
               </div>
             </div>
+
+            {/* Manual Enrollment Email Templates */}
+            {templates && (
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
+                {/* Template Selector */}
+                <div className="lg:col-span-1">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
+                    <h2 className="text-lg font-semibold mb-4">Manual Templates</h2>
+                    <div className="space-y-2">
+                      {Object.entries(templates)
+                        .filter(([key]) => key.startsWith('manual'))
+                        .sort(([keyA], [keyB]) => {
+                          const order = ['manualWelcome', 'manualAdmin', 'manualFollowupDay1', 'manualFollowupDay3', 'manualFollowupDay6', 'manualFollowupDay10', 'manualFollowupDay14'];
+                          return order.indexOf(keyA) - order.indexOf(keyB);
+                        })
+                        .map(([key, template]: [string, any]) => (
+                        <button
+                          key={key}
+                          onClick={() => setActiveTemplate(key)}
+                          className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                            activeTemplate === key
+                              ? 'bg-black text-white'
+                              : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          <div className="font-medium text-sm">{template.name}</div>
+                          <div className={`text-xs mt-1 ${activeTemplate === key ? 'text-gray-300' : 'text-gray-500'}`}>
+                            {template.enabled ? '✓ Enabled' : '✗ Disabled'}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Email Editor & Preview */}
+                {activeTemplate && templates[activeTemplate] && activeTemplate.startsWith('manual') && (
+                  <div className="lg:col-span-3">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                      <div className="mb-6">
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">{templates[activeTemplate].name}</h2>
+                        <label className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={templates[activeTemplate].enabled}
+                            onChange={(e) => updateTemplateField(activeTemplate, 'enabled', e.target.checked)}
+                            className="rounded"
+                          />
+                          <span className="text-gray-700">Enable this email</span>
+                        </label>
+                      </div>
+
+                      {/* Available Variables Info Box */}
+                      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 className="text-sm font-semibold text-blue-900 mb-3">📝 Available Template Variables</h3>
+                        <p className="text-xs text-blue-800 mb-3">Copy and paste these into your subject line or email content:</p>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div>
+                            <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{name}}`}</code>
+                            <span className="text-gray-600 ml-2">Customer's name</span>
+                          </div>
+                          <div>
+                            <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{email}}`}</code>
+                            <span className="text-gray-600 ml-2">Customer's email</span>
+                          </div>
+                          <div>
+                            <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{phone}}`}</code>
+                            <span className="text-gray-600 ml-2">Phone number</span>
+                          </div>
+                          <div>
+                            <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{fianceName}}`}</code>
+                            <span className="text-gray-600 ml-2">Instagram name</span>
+                          </div>
+                          <div>
+                            <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{weddingDate}}`}</code>
+                            <span className="text-gray-600 ml-2">Wedding date</span>
+                          </div>
+                          <div>
+                            <code className="bg-white px-2 py-1 rounded border border-blue-300 text-blue-900">{`{{venue}}`}</code>
+                            <span className="text-gray-600 ml-2">Venue name</span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-blue-700 mt-3 italic">
+                          💡 Example: "Hey {`{{name}}`}! Can't wait to film your wedding at {`{{venue}}`} on {`{{weddingDate}}`}!"
+                        </p>
+                      </div>
+
+                      {/* Subject Line */}
+                      <div className="mb-6">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Subject Line
+                        </label>
+                        <input
+                          type="text"
+                          value={templates[activeTemplate].subject}
+                          onChange={(e) => updateTemplateField(activeTemplate, 'subject', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent font-medium"
+                          placeholder="Enter email subject line..."
+                        />
+                      </div>
+
+                      {/* Email Content */}
+                      <div className="mb-6">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Email Content
+                          <span className="ml-2 text-xs font-normal text-gray-500">Edit your email text directly – separate paragraphs with blank lines</span>
+                        </label>
+                        <textarea
+                          ref={emailContentRef}
+                          value={emailContentText}
+                          onChange={(e) => {
+                            setEmailContentText(e.target.value);
+                            if (parseTimer.current) clearTimeout(parseTimer.current);
+                            parseTimer.current = setTimeout(() => {
+                              updateTemplateField(activeTemplate, 'content', e.target.value);
+                            }, 300);
+                          }}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent font-mono text-sm h-96"
+                          placeholder="Type your email content here..."
+                        />
+                      </div>
+
+                      {/* Call to Action Button */}
+                      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                        <h3 className="text-sm font-semibold text-gray-700 mb-3">🔘 Call-to-Action Button (Optional)</h3>
+                        <div className="space-y-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Button Text</label>
+                            <input
+                              type="text"
+                              value={templates[activeTemplate].callToAction || ''}
+                              onChange={(e) => updateTemplateField(activeTemplate, 'callToAction', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                              placeholder="e.g. Schedule a Call"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Button URL</label>
+                            <input
+                              type="url"
+                              value={templates[activeTemplate].callToActionUrl || ''}
+                              onChange={(e) => updateTemplateField(activeTemplate, 'callToActionUrl', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                              placeholder="https://calendly.com/..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Test Email Section */}
+                      <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <h3 className="text-sm font-semibold text-yellow-900 mb-3">✉️ Send Test Email</h3>
+                        <div className="flex gap-2">
+                          <input
+                            type="email"
+                            value={testEmail}
+                            onChange={(e) => setTestEmail(e.target.value)}
+                            className="flex-1 px-3 py-2 border border-yellow-300 rounded-lg text-sm"
+                            placeholder="your-email@example.com"
+                          />
+                          <button
+                            onClick={async () => {
+                              setSendingTest(true);
+                              try {
+                                const pwd = sessionStorage.getItem('emailAdminPassword') || password;
+                                const response = await fetch('/api/test-email', {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${pwd}`
+                                  },
+                                  body: JSON.stringify({
+                                    templateKey: activeTemplate,
+                                    testEmail: testEmail
+                                  })
+                                });
+                                const result = await response.json();
+                                if (result.success) {
+                                  alert('✅ Test email sent! Check your inbox.');
+                                } else {
+                                  alert(`❌ Failed to send: ${result.error || 'Unknown error'}`);
+                                }
+                              } catch (error) {
+                                alert(`❌ Error: ${error}`);
+                              } finally {
+                                setSendingTest(false);
+                              }
+                            }}
+                            disabled={sendingTest || !testEmail}
+                            className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:bg-gray-400 text-sm font-medium"
+                          >
+                            {sendingTest ? 'Sending...' : 'Send Test'}
+                          </button>
+                        </div>
+                        <p className="text-xs text-yellow-800 mt-2">
+                          Preview how this email will look with sample data before sending to real customers.
+                        </p>
+                      </div>
+
+                      {/* Save Button */}
+                      <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="w-full px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50"
+                      >
+                        {saving ? 'Saving...' : 'Save Template Changes'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

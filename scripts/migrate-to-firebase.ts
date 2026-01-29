@@ -28,7 +28,15 @@ interface Inquiry {
   videographer?: string;
   status: 'new' | 'contacted' | 'booked' | 'dead';
   createdAt: string;
+  isManualEnrollment?: boolean;
   followUpSentAt?: {
+    day1?: string;
+    day3?: string;
+    day6?: string;
+    day10?: string;
+    day14?: string;
+  };
+  manualFollowUpSentAt?: {
     day1?: string;
     day3?: string;
     day6?: string;

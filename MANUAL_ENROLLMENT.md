@@ -31,33 +31,64 @@ Optional fields:
 ### 3. What Happens When You Enroll Someone
 
 **Immediate Actions:**
-1. Person is saved to your database with "contacted" status
+1. Person is saved to your database with "contacted" status and marked as manual enrollment
 2. They receive a custom welcome email (using `manualWelcome` template)
 3. You receive an admin notification email
 
 **Separate Automation:**
-- This uses **different email templates** than your regular inquiry flow
-- You can customize these in the Email Automation tab:
-  - `manualWelcome` - The welcome email they receive
-  - `manualAdmin` - The notification you receive
+- This uses **completely different email templates** than your regular inquiry flow
+- Manual enrollments have their own set of follow-up emails:
+  - `manualWelcome` - Welcome email (sent immediately)
+  - `manualAdmin` - Admin notification (sent immediately)
+  - `manualFollowupDay1` - First follow-up (1 day after enrollment)
+  - `manualFollowupDay3` - Second follow-up (3 days after enrollment)
+  - `manualFollowupDay6` - Third follow-up (6 days after enrollment)
+  - `manualFollowupDay10` - Fourth follow-up (10 days after enrollment)
+  - `manualFollowupDay14` - Final follow-up (14 days after enrollment)
+- You can customize all these templates directly in the Manual Enrollment tab
 
 ### 4. Customizing the Templates
 
-In the Email Automation tab, you'll find these new templates:
+In the **Manual Enrollment tab**, scroll down to see the template editor with all manual enrollment templates:
 
-#### Manual Enrollment Welcome
-- **Template Key:** `manualWelcome`
-- **Sent To:** The enrolled person
-- **When:** Immediately after enrollment
-- **Purpose:** Welcome them and invite them to schedule a call
+#### Available Templates:
 
-#### Manual Enrollment Admin Notification
-- **Template Key:** `manualAdmin`
-- **Sent To:** You (hi@yourlovefilms.com)
-- **When:** Immediately after enrollment
-- **Purpose:** Notify you that someone was manually enrolled
+1. **Manual Enrollment Welcome** (`manualWelcome`)
+   - **Sent To:** The enrolled person
+   - **When:** Immediately after enrollment
+   - **Purpose:** Welcome them and invite them to schedule a call
 
-You can edit both templates to match your voice and include any information you want.
+2. **Manual Enrollment Admin Notification** (`manualAdmin`)
+   - **Sent To:** You (hi@yourlovefilms.com)
+   - **When:** Immediately after enrollment
+   - **Purpose:** Notify you that someone was manually enrolled
+
+3. **Manual Follow-up Day 1** (`manualFollowupDay1`)
+   - **Sent To:** The enrolled person
+   - **When:** 1 day after enrollment
+   - **Purpose:** Quick follow-up to see if they have questions
+
+4. **Manual Follow-up Day 3** (`manualFollowupDay3`)
+   - **Sent To:** The enrolled person
+   - **When:** 3 days after enrollment
+   - **Purpose:** Check in about their wedding video plans
+
+5. **Manual Follow-up Day 6** (`manualFollowupDay6`)
+   - **Sent To:** The enrolled person
+   - **When:** 6 days after enrollment
+   - **Purpose:** Remind them dates are filling up
+
+6. **Manual Follow-up Day 10** (`manualFollowupDay10`)
+   - **Sent To:** The enrolled person
+   - **When:** 10 days after enrollment
+   - **Purpose:** Last chance to secure their date
+
+7. **Manual Follow-up Day 14** (`manualFollowupDay14`)
+   - **Sent To:** The enrolled person
+   - **When:** 14 days after enrollment
+   - **Purpose:** Final follow-up
+
+You can edit all templates directly in the Manual Enrollment tab - no need to switch between tabs!
 
 ## Differences from Regular Inquiry Automation
 
@@ -66,14 +97,24 @@ You can edit both templates to match your voice and include any information you 
 | Trigger | Form submission | Manual CRM entry |
 | Status | Starts as "new" | Starts as "contacted" |
 | Welcome Email | `availabilityday0` template | `manualWelcome` template |
-| Follow-ups | Regular day 1, 3, 6, etc. | Same follow-ups (customizable) |
+| Follow-ups | `followupDay1-14` templates | `manualFollowupDay1-14` templates |
 | Admin Notification | `inquiry` template | `manualAdmin` template |
+| Template Location | Email Automation tab | Manual Enrollment tab |
+| Tracking | `followUpSentAt` field | `manualFollowUpSentAt` field |
 
 ## Follow-Up Automation
 
-People enrolled manually will still receive the same follow-up emails (Day 1, 3, 6, 10, 14) as regular inquiries, **unless** you:
-1. Change their status to "booked" or "dead" (which stops automation)
-2. Customize separate manual enrollment follow-ups in the future
+People enrolled manually receive **completely separate** follow-up emails from regular inquiries:
+
+- **Day 1:** Quick follow-up to see if they have questions
+- **Day 3:** Check in about their wedding video plans
+- **Day 6:** Remind them dates are filling up
+- **Day 10:** Last chance to secure their date
+- **Day 14:** Final follow-up
+
+These follow-ups will continue **unless** you:
+1. Change their status to "booked" or "dead" (which stops all automation)
+2. Disable specific follow-up templates in the Manual Enrollment tab
 
 ## Tracking
 

@@ -30,7 +30,15 @@ export interface Inquiry {
   videographer?: string; // Optional - removed from forms
   status: 'new' | 'contacted' | 'booked' | 'dead';
   createdAt: string;
+  isManualEnrollment?: boolean; // Track if this was manually enrolled
   followUpSentAt?: {
+    day1?: string;
+    day3?: string;
+    day6?: string;
+    day10?: string;
+    day14?: string;
+  };
+  manualFollowUpSentAt?: {
     day1?: string;
     day3?: string;
     day6?: string;

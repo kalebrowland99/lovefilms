@@ -45,6 +45,7 @@ export async function POST(request: Request) {
       venue: formData.venue || '',
       status: 'contacted', // Mark as contacted since this is manual enrollment
       createdAt: new Date().toISOString(),
+      isManualEnrollment: true, // Mark as manual enrollment to use separate automation
     };
     await saveInquiry(inquiry);
     console.log('Manual enrollment saved to database:', inquiryId);

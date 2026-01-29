@@ -75,13 +75,22 @@ export async function GET(request: Request) {
       day4: 0
     };
 
-    // Map of follow-up keys to template keys
+    // Map of follow-up keys to template keys (for regular inquiries)
     const followUpMap: Record<string, { templateKey: string; emailType: string }> = {
       day1: { templateKey: 'followupDay1', emailType: 'followup-day1' },
       day3: { templateKey: 'followupDay3', emailType: 'followup-day3' },
       day6: { templateKey: 'followupDay6', emailType: 'followup-day6' },
       day10: { templateKey: 'followupDay10', emailType: 'followup-day10' },
       day14: { templateKey: 'followupDay14', emailType: 'followup-day14' }
+    };
+
+    // Map for manual enrollment follow-ups (separate templates)
+    const manualFollowUpMap: Record<string, { templateKey: string; emailType: string }> = {
+      day1: { templateKey: 'manualFollowupDay1', emailType: 'manual-followup-day1' },
+      day3: { templateKey: 'manualFollowupDay3', emailType: 'manual-followup-day3' },
+      day6: { templateKey: 'manualFollowupDay6', emailType: 'manual-followup-day6' },
+      day10: { templateKey: 'manualFollowupDay10', emailType: 'manual-followup-day10' },
+      day14: { templateKey: 'manualFollowupDay14', emailType: 'manual-followup-day14' }
     };
 
     for (const inquiry of inquiries) {
@@ -92,18 +101,27 @@ export async function GET(request: Request) {
       const createdAt = new Date(inquiry.createdAt);
       const daysSinceCreated = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
 
+      // Determine which template map and tracking field to use
+      const isManual = inquiry.isManualEnrollment === true;
+      const templateMap = isManual ? manualFollowUpMap : followUpMap;
+      const trackingField = isManual ? 'manualFollowUpSentAt' : 'followUpSentAt';
+
       // Process each email follow-up dynamically
       for (const [followUpKey, config] of Object.entries(settings.followUpDelays)) {
         const delay = (config as any).delayInDays;
-        const mapping = followUpMap[followUpKey];
+        const mapping = templateMap[followUpKey];
         
         if (!mapping) continue; // Skip if no mapping exists
         
         // Check if this follow-up should be sent
+        const alreadySent = isManual 
+          ? inquiry.manualFollowUpSentAt?.[followUpKey as keyof typeof inquiry.manualFollowUpSentAt]
+          : inquiry.followUpSentAt?.[followUpKey as keyof typeof inquiry.followUpSentAt];
+        
         if ((config as any).enabled && 
             daysSinceCreated >= delay && 
             daysSinceCreated < delay + 1 && 
-            !inquiry.followUpSentAt?.[followUpKey as keyof typeof inquiry.followUpSentAt]) {
+            !alreadySent) {
           
           const template = templates[mapping.templateKey];
           if (template && template.enabled) {
@@ -111,7 +129,8 @@ export async function GET(request: Request) {
               inquiry, 
               template, 
               mapping.emailType as any, 
-              followUpKey as any
+              followUpKey as any,
+              trackingField
             );
             emailsSent[followUpKey as keyof typeof emailsSent]++;
           }
@@ -160,8 +179,9 @@ export async function GET(request: Request) {
 async function sendFollowUp(
   inquiry: Inquiry,
   template: any,
-  templateType: 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14',
-  followUpDay: 'day1' | 'day3' | 'day6' | 'day10' | 'day14'
+  templateType: 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'manual-followup-day1' | 'manual-followup-day3' | 'manual-followup-day6' | 'manual-followup-day10' | 'manual-followup-day14',
+  followUpDay: 'day1' | 'day3' | 'day6' | 'day10' | 'day14',
+  trackingField: 'followUpSentAt' | 'manualFollowUpSentAt' = 'followUpSentAt'
 ) {
   try {
     const emailData = {
@@ -217,8 +237,13 @@ async function sendFollowUp(
     };
     await saveEmailLog(log);
 
-    // Update inquiry with follow-up timestamp
-    const updates: Partial<Inquiry> = {
+    // Update inquiry with follow-up timestamp (use correct tracking field)
+    const updates: Partial<Inquiry> = trackingField === 'manualFollowUpSentAt' ? {
+      manualFollowUpSentAt: {
+        ...inquiry.manualFollowUpSentAt,
+        [followUpDay]: new Date().toISOString()
+      }
+    } : {
       followUpSentAt: {
         ...inquiry.followUpSentAt,
         [followUpDay]: new Date().toISOString()
@@ -226,7 +251,7 @@ async function sendFollowUp(
     };
     await updateInquiry(inquiry.id, updates);
 
-    console.log(`Sent ${followUpDay} follow-up to ${inquiry.email}`);
+    console.log(`Sent ${followUpDay} ${trackingField === 'manualFollowUpSentAt' ? 'manual' : 'regular'} follow-up to ${inquiry.email}`);
 
   } catch (error) {
     console.error(`Error sending follow-up to ${inquiry.email}:`, error);
