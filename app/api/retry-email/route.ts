@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
 
     // Find the template based on the log's templateType
-    let templateKey = log.templateType;
+    let templateKey: string = log.templateType;
     
     // Map old template types to keys
     const templateTypeMap: Record<string, string> = {
