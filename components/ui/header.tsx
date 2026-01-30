@@ -82,11 +82,13 @@ export function Header() {
           <div className="lg:hidden border-t border-neutral-200 dark:border-neutral-800 py-4">
             <nav className="flex flex-col gap-4">
               <a
-                href="https://form.typeform.com/to/01KE2M3ED7WVGJP9Y25THEN7XJ"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#booking"
                 className="flex items-center justify-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
               >
                 Book Consultation ✨
               </a>

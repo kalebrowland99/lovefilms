@@ -240,7 +240,7 @@ function getDefaultTemplates(): any {
       "paragraph3": "I wish you nothing but the best for your wedding day and hope it's everything you've dreamed of!",
       "footer": "Warmest regards,\nYour Love Films"
     }
-  }
+    }
   };
 }
 
