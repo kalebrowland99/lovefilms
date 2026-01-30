@@ -125,7 +125,7 @@ These follow-ups will continue **unless** you:
 
 1. **Add context:** Use the Instagram Name or Venue fields to remember where you met them
 2. **Keep it organized:** Update their status as you follow up
-3. **Customize the welcome:** Edit the `manualWelcome` template to mention where you met or why they're receiving the email
+3. **Customize follow-ups:** Edit the IG DM templates to reference your Instagram conversation or where you met
 4. **Track in Logs:** Check the Logs tab to confirm emails were sent successfully
 
 ## Template Variables
@@ -145,13 +145,14 @@ When customizing the manual enrollment templates, you can use these variables:
 
 **Steps:**
 1. Get their name and email
-2. Later, go to CRM → Manual Enrollment tab
+2. Later, go to CRM → IG DM - Email Automation tab
 3. Enter their info: "Sarah Johnson, sarah@example.com"
 4. Add note in Instagram field: "Met at Nashville Bridal Show 2026"
 5. Click "Enroll in Manual Automation"
-6. They immediately receive your custom welcome email
-7. You get a notification that they were enrolled
-8. Follow up with them using the lead tracking in CRM
+6. You get an admin notification that they were enrolled
+7. No welcome email is sent to them (they already know you)
+8. Day 1 follow-up email will send automatically tomorrow
+9. Track their status in the Leads tab
 
 ---
 

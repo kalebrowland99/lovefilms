@@ -30,16 +30,8 @@ export async function POST(request: Request) {
     // Copy form templates to IG DM templates
     const updatedTemplates = { ...templates };
 
-    // Copy welcome email (availabilityday0 → manualWelcome)
-    if (templates.availabilityday0) {
-      updatedTemplates.manualWelcome = {
-        ...templates.availabilityday0,
-        name: "IG DM Welcome Email",
-        timing: "immediate"
-      };
-    }
-
-    // Copy follow-up emails
+    // No welcome email for IG DM (they already know you)
+    // Copy follow-up emails only
     const followUpMapping = [
       { from: 'followupDay1', to: 'manualFollowupDay1', name: 'IG DM Follow-up Day 1' },
       { from: 'followupDay3', to: 'manualFollowupDay3', name: 'IG DM Follow-up Day 3' },

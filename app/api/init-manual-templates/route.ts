@@ -23,16 +23,6 @@ export async function POST(request: Request) {
     
     // Add manual enrollment templates if they don't exist
     const manualTemplates = {
-      manualWelcome: {
-        name: "Manual Enrollment Welcome",
-        subject: "Welcome, {{name}}! 🎥",
-        enabled: true,
-        sendTo: "inquirer",
-        timing: "immediate",
-        content: "Hi {{name}},\n\nThank you for your interest in Your Love Films! I'm excited to connect with you about capturing your special day.\n\nI specialize in creating cinematic wedding films that tell your unique love story. My approach is all about capturing authentic moments and emotions that you'll cherish forever.\n\nI'd love to learn more about your wedding plans and see if we're the perfect fit. Feel free to reply to this email with any questions, or we can schedule a quick call to chat!\n\nLooking forward to hearing from you!\n\nBest,\nYour Love Films",
-        callToAction: "Schedule a Call",
-        callToActionUrl: "https://calendly.com/kalebrowland99/personal-wedding-call"
-      },
       manualAdmin: {
         name: "Manual Enrollment Admin Notification",
         subject: "Manual Enrollment: {{name}}",

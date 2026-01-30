@@ -1734,9 +1734,9 @@ export default function EmailAdmin() {
                     <h2 className="text-lg font-semibold mb-4">IG DM Templates</h2>
                     <div className="space-y-2">
                       {Object.entries(templates)
-                        .filter(([key]) => key.startsWith('manual'))
+                        .filter(([key]) => key.startsWith('manual') && key !== 'manualWelcome')
                         .sort(([keyA], [keyB]) => {
-                          const order = ['manualWelcome', 'manualAdmin', 'manualFollowupDay1', 'manualFollowupDay3', 'manualFollowupDay6', 'manualFollowupDay10', 'manualFollowupDay14'];
+                          const order = ['manualAdmin', 'manualFollowupDay1', 'manualFollowupDay3', 'manualFollowupDay6', 'manualFollowupDay10', 'manualFollowupDay14'];
                           return order.indexOf(keyA) - order.indexOf(keyB);
                         })
                         .map(([key, template]: [string, any]) => (
@@ -1846,33 +1846,6 @@ export default function EmailAdmin() {
                           placeholder="Type your email content here..."
                           spellCheck={true}
                         />
-                      </div>
-
-                      {/* Call to Action Button */}
-                      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <h3 className="text-sm font-semibold text-gray-700 mb-3">🔘 Call-to-Action Button (Optional)</h3>
-                        <div className="space-y-3">
-                          <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Button Text</label>
-                            <input
-                              type="text"
-                              value={templates[activeTemplate].callToAction || ''}
-                              onChange={(e) => updateTemplateField(activeTemplate, 'callToAction', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                              placeholder="e.g. Schedule a Call"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Button URL</label>
-                            <input
-                              type="url"
-                              value={templates[activeTemplate].callToActionUrl || ''}
-                              onChange={(e) => updateTemplateField(activeTemplate, 'callToActionUrl', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                              placeholder="https://calendly.com/..."
-                            />
-                          </div>
-                        </div>
                       </div>
 
                       {/* Test Email Section */}

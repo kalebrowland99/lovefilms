@@ -149,22 +149,6 @@ function getDefaultTemplates(): any {
         "attachmentUrl": ""
     }
     },
-  "manualWelcome": {
-    "name": "Manual Enrollment Welcome",
-    "subject": "Welcome, {{name}}! 🎥",
-    "enabled": true,
-    "sendTo": "inquirer",
-    "timing": "immediate",
-    "content": {
-      "greeting": "Hi {{name}},",
-      "paragraph1": "Thank you for your interest in Your Love Films! I'm excited to connect with you about capturing your special day.",
-      "paragraph2": "I specialize in creating cinematic wedding films that tell your unique love story. My approach is all about capturing authentic moments and emotions that you'll cherish forever.",
-      "paragraph3": "I'd love to learn more about your wedding plans and see if we're the perfect fit. Feel free to reply to this email with any questions, or we can schedule a quick call to chat!",
-      "callToAction": "Schedule a Call",
-      "callToActionUrl": "https://calendly.com/kalebrowland99/personal-wedding-call",
-      "footer": "Looking forward to hearing from you!\n\nBest,\nYour Love Films"
-    }
-  },
   "manualAdmin": {
     "name": "Manual Enrollment Admin Notification",
     "subject": "Manual Enrollment: {{name}}",
