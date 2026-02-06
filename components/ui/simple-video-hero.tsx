@@ -66,8 +66,9 @@ export function SimpleVideoHero({ videoSrc, title, subtitle }: SimpleVideoHeroPr
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ contentVisibility: 'auto' }}
       />
       
       {/* Dark Overlay */}

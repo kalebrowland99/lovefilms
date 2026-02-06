@@ -20,7 +20,7 @@ export const Footer = ({ className }: { className?: string }) => {
             height={60}
             className="h-10 md:h-14 w-auto object-contain dark:invert mb-2"
           />
-          <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4">Capturing love stories across Tennessee</p>
+          <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4">Capturing love stories across the South</p>
           <div className="flex space-x-4">
             <a href="https://instagram.com/yourlovefilms" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors">
               <IconBrandInstagram size={24} />
@@ -32,7 +32,7 @@ export const Footer = ({ className }: { className?: string }) => {
         <div className="text-center md:text-left">
           <h4 className="text-lg font-semibold text-black dark:text-white mb-4">Contact</h4>
           <p className="text-neutral-600 dark:text-neutral-400 mb-2">Email: <a href="mailto:hi@yourlovefilms.com" className="hover:text-black dark:hover:text-white transition-colors">hi@yourlovefilms.com</a></p>
-          <p className="text-neutral-600 dark:text-neutral-400 text-sm mt-4">Proudly serving all of Tennessee.</p>
+          <p className="text-neutral-600 dark:text-neutral-400 text-sm mt-4">Proudly serving all of the South.</p>
         </div>
       </div>
 
