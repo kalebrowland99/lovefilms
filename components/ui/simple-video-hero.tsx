@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef, useEffect, useState } from 'react';
+
 interface SimpleVideoHeroProps {
   videoSrc: string;
   title?: string;
@@ -7,10 +9,58 @@ interface SimpleVideoHeroProps {
 }
 
 export function SimpleVideoHero({ videoSrc, title, subtitle }: SimpleVideoHeroProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoError, setVideoError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleLoadedData = () => {
+      console.log('✅ Video loaded successfully');
+      setIsLoading(false);
+    };
+
+    const handleError = (e: Event) => {
+      console.error('❌ Video error:', e);
+      const target = e.target as HTMLVideoElement;
+      const error = target.error;
+      if (error) {
+        console.error('Video error code:', error.code);
+        console.error('Video error message:', error.message);
+        setVideoError(`Video failed to load: ${error.message}`);
+      }
+      setIsLoading(false);
+    };
+
+    const handleLoadStart = () => {
+      console.log('🔄 Video loading started...');
+    };
+
+    const handleCanPlay = () => {
+      console.log('✅ Video can play');
+      setIsLoading(false);
+    };
+
+    video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('error', handleError);
+    video.addEventListener('loadstart', handleLoadStart);
+    video.addEventListener('canplay', handleCanPlay);
+
+    return () => {
+      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('error', handleError);
+      video.removeEventListener('loadstart', handleLoadStart);
+      video.removeEventListener('canplay', handleCanPlay);
+    };
+  }, [videoSrc]);
+
   return (
     <section className="relative w-full h-screen overflow-hidden bg-black">
       {/* Background Video */}
       <video
+        ref={videoRef}
         src={videoSrc}
         autoPlay
         muted
@@ -22,6 +72,26 @@ export function SimpleVideoHero({ videoSrc, title, subtitle }: SimpleVideoHeroPr
       
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/20" />
+
+      {/* Loading/Error State */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-black">
+          <div className="text-white text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p>Loading video...</p>
+          </div>
+        </div>
+      )}
+
+      {videoError && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-black">
+          <div className="text-red-500 text-center p-4">
+            <p className="text-xl mb-2">⚠️ Video Error</p>
+            <p className="text-sm">{videoError}</p>
+            <p className="text-xs mt-2 text-gray-400">Check console for details</p>
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">

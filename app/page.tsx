@@ -182,7 +182,7 @@ export default function Home() {
     <>
       <Header />
       <SimpleVideoHero
-        videoSrc="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media"
+        videoSrc="https://firebasestorage.googleapis.com/v0/b/lovefilms-d618e.firebasestorage.app/o/homevideo.mp4?alt=media&token=fb181071-298c-4743-94fb-1ba8bd778741"
         subtitle="Tennessee"
       />
 
