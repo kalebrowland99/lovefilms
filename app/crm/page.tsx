@@ -1191,7 +1191,7 @@ export default function EmailAdmin() {
                 {Object.entries(templates)
                   .filter(([key]) => !key.startsWith('manual'))
                   .sort(([keyA], [keyB]) => {
-                    const order = ['inquiry', 'availabilityday0', 'followupDay1', 'followupDay3', 'followupDay6', 'followupDay10', 'followupDay14'];
+                    const order = ['inquiry', 'availabilityday0', 'followupDay1', 'followupDay3', 'followupDay4', 'followupDay6', 'followupDay10', 'followupDay14'];
                     return order.indexOf(keyA) - order.indexOf(keyB);
                   })
                   .map(([key, template]: [string, any]) => (
@@ -1737,7 +1737,7 @@ export default function EmailAdmin() {
                       {Object.entries(templates)
                         .filter(([key]) => key.startsWith('manual') && key !== 'manualWelcome')
                         .sort(([keyA], [keyB]) => {
-                          const order = ['manualAdmin', 'manualFollowupDay1', 'manualFollowupDay3', 'manualFollowupDay6', 'manualFollowupDay10', 'manualFollowupDay14'];
+                          const order = ['manualAdmin', 'manualFollowupDay1', 'manualFollowupDay3', 'manualFollowupDay4', 'manualFollowupDay6', 'manualFollowupDay10', 'manualFollowupDay14'];
                           return order.indexOf(keyA) - order.indexOf(keyB);
                         })
                         .map(([key, template]: [string, any]) => (
