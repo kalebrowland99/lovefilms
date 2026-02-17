@@ -62,6 +62,23 @@
       "footer": "Want to chat about what matters most for your day? I'm here."
     }
   },
+  "followupDay4": {
+    "name": "Day 4: $100 Deposit Lock",
+    "subject": "Should I release your wedding date?",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "4 days after inquiry",
+    "content": {
+      "greeting": "Hey {{name}},",
+      "paragraph1": "Just wanted to check in.",
+      "paragraph2": "I've had another couple ask about your wedding date, so I can't guarantee availability much longer without a retainer in place.",
+      "paragraph3": "If you still want it, you can lock it in with the $100 retainer and we'll officially secure the date.",
+      "paragraph4": "If not, totally okay (I just want to respect everyone's timeline and keep things fair).",
+      "callToAction": "Lock In My Date",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "Let me know what feels right for you 🤍"
+    }
+  },
   "followupDay6": {
     "name": "Day 6: Helpful Guidance",
     "subject": "What makes a wedding film feel cinematic (+ your timeline)",
