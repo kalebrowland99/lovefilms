@@ -24,6 +24,7 @@ export async function POST(request: Request) {
       fianceName: formData.fianceName,
       weddingDate: formData.weddingDate,
       venue: formData.venue,
+      referralSource: formData.referralSource,
       status: 'new',
       createdAt: new Date().toISOString(),
     };

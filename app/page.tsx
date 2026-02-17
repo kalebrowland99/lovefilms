@@ -288,6 +288,34 @@ export default function Home() {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                Where did you find us?
+              </label>
+              <div className="space-y-3">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="referralSource"
+                    value="Facebook/Instagram"
+                    required
+                    className="w-4 h-4 text-blue-600 border-neutral-300 focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="ml-3 text-neutral-900 dark:text-neutral-100">Facebook / Instagram</span>
+                </label>
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="referralSource"
+                    value="TikTok"
+                    required
+                    className="w-4 h-4 text-blue-600 border-neutral-300 focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="ml-3 text-neutral-900 dark:text-neutral-100">TikTok</span>
+                </label>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={isSubmitting}
@@ -437,6 +465,34 @@ export default function Home() {
                 className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal"
                 placeholder="Wedding Venue/s"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                Where did you find us?
+              </label>
+              <div className="space-y-3">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="referralSource"
+                    value="Facebook/Instagram"
+                    required
+                    className="w-4 h-4 text-blue-600 border-neutral-300 focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="ml-3 text-neutral-900 dark:text-neutral-100">Facebook / Instagram</span>
+                </label>
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="referralSource"
+                    value="TikTok"
+                    required
+                    className="w-4 h-4 text-blue-600 border-neutral-300 focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="ml-3 text-neutral-900 dark:text-neutral-100">TikTok</span>
+                </label>
+              </div>
             </div>
 
             <button

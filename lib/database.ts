@@ -27,6 +27,7 @@ export interface Inquiry {
   fianceName: string;
   weddingDate: string;
   venue: string;
+  referralSource?: string; // Where they found us (FB/IG or TikTok)
   videographer?: string; // Optional - removed from forms
   status: 'new' | 'contacted' | 'booked' | 'dead';
   createdAt: string;

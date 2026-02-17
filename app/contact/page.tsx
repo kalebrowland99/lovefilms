@@ -304,6 +304,34 @@ export default function ContactPage() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-3">
+                  Where did you find us?
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="referralSource"
+                      value="Facebook/Instagram"
+                      required
+                      className="w-4 h-4 text-[#8b8370] border-[#E8DED2] focus:ring-[#8b8370] focus:ring-2"
+                    />
+                    <span className="ml-3 text-neutral-900 dark:text-neutral-100 font-serif">Facebook / Instagram</span>
+                  </label>
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="referralSource"
+                      value="TikTok"
+                      required
+                      className="w-4 h-4 text-[#8b8370] border-[#E8DED2] focus:ring-[#8b8370] focus:ring-2"
+                    />
+                    <span className="ml-3 text-neutral-900 dark:text-neutral-100 font-serif">TikTok</span>
+                  </label>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -557,6 +585,34 @@ export default function ContactPage() {
                   className="w-full px-4 py-3 border border-[#E8DED2] rounded-lg focus:ring-2 focus:ring-[#8b8370] focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:font-normal font-serif"
                   placeholder="Wedding Venue/s"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-3">
+                  Where did you find us?
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="referralSource"
+                      value="Facebook/Instagram"
+                      required
+                      className="w-4 h-4 text-[#8b8370] border-[#E8DED2] focus:ring-[#8b8370] focus:ring-2"
+                    />
+                    <span className="ml-3 text-neutral-900 dark:text-neutral-100 font-serif">Facebook / Instagram</span>
+                  </label>
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="referralSource"
+                      value="TikTok"
+                      required
+                      className="w-4 h-4 text-[#8b8370] border-[#E8DED2] focus:ring-[#8b8370] focus:ring-2"
+                    />
+                    <span className="ml-3 text-neutral-900 dark:text-neutral-100 font-serif">TikTok</span>
+                  </label>
+                </div>
               </div>
 
               <button
