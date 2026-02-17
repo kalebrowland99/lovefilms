@@ -12,6 +12,12 @@
       "name": "Day 3: Social Proof",
       "description": "Share a client success story"
     },
+    "day4": {
+      "enabled": true,
+      "delayInDays": 4,
+      "name": "Day 4: $100 Deposit Lock",
+      "description": "Create urgency with $100 retainer to secure date"
+    },
     "day6": {
       "enabled": true,
       "delayInDays": 6,

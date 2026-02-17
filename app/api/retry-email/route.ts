@@ -4,7 +4,7 @@ import { renderTemplate, renderSubject } from '@/lib/email-renderer';
 import { getEmailLog, getInquiry, saveEmailLog, generateId, getEmailTemplates, type EmailLog } from '@/lib/database';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'ylf';
 
 // Helper to check password
 function checkAuth(request: Request): boolean {

@@ -3,7 +3,7 @@ import { renderTemplate } from '@/lib/email-renderer';
 import { Resend } from 'resend';
 import { getEmailTemplates } from '@/lib/database';
 
-const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'ylf';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Helper to check password

@@ -26,7 +26,7 @@ interface Inquiry {
   weddingDate: string;
   venue: string;
   videographer?: string;
-  status: 'new' | 'contacted' | 'booked' | 'dead';
+  status: 'new' | 'contacted' | 'booked' | 'paid' | 'dead';
   createdAt: string;
   isManualEnrollment?: boolean;
   followUpSentAt?: {

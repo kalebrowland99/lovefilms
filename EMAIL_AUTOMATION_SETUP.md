@@ -95,13 +95,33 @@ Visit: **yourlovefilms.com/crm**
 
 ### 4. **Day 1 Follow-Up**
 - Sent automatically 24 hours after inquiry
-- Only if inquiry status is still "new"
+- Only if inquiry status is still "new" or "contacted"
 - Gentle reminder with CTA
 
 ### 5. **Day 3 Follow-Up**
 - Sent automatically 72 hours after inquiry
-- Only if inquiry status is still "new"
-- Final follow-up with urgency
+- Only if inquiry status is still "new" or "contacted"
+- Social proof story
+
+### 6. **Day 4 Follow-Up**
+- Sent automatically 96 hours (4 days) after inquiry
+- Only if inquiry status is still "new" or "contacted"
+- $100 retainer urgency
+
+### 7. **Day 6 Follow-Up**
+- Sent automatically 6 days after inquiry
+- Only if inquiry status is still "new" or "contacted"
+- Helpful guidance + soft date hold
+
+### 8. **Day 10 Follow-Up**
+- Sent automatically 10 days after inquiry
+- Only if inquiry status is still "new" or "contacted"
+- Gentle boundary - hold or release date
+
+### 9. **Day 14 Follow-Up**
+- Sent automatically 14 days after inquiry
+- Only if inquiry status is still "new" or "contacted"
+- Final breakup email
 
 All templates can be **edited from the UI** at `/crm`!
 
@@ -113,16 +133,14 @@ All templates can be **edited from the UI** at `/crm`!
 
 Every day at 9:00 AM UTC, Vercel runs `/api/cron/follow-ups` which:
 
-1. Loads all inquiries from `data/inquiries.json`
+1. Loads all inquiries from Firebase or local JSON
 2. Checks each inquiry's creation date
-3. For inquiries 1 day old (and no Day 1 follow-up sent):
-   - Sends Day 1 follow-up email
-   - Logs the email
-   - Marks follow-up as sent
-4. For inquiries 3 days old (and no Day 3 follow-up sent):
-   - Sends Day 3 follow-up email
-   - Logs the email
-   - Marks follow-up as sent
+3. For inquiries matching each follow-up day (1, 3, 4, 6, 10, 14):
+   - Checks if that specific follow-up has already been sent
+   - If not sent and inquiry status is "new" or "contacted":
+     - Sends the follow-up email
+     - Logs the email
+     - Marks follow-up as sent with timestamp
 
 ### Preventing Duplicate Sends
 
@@ -237,7 +255,7 @@ This will process all inquiries and send any pending follow-ups.
 A: Right now, the system will still send Day 3 follow-up. In the future, we can add a webhook to mark inquiries as "contacted" when you reply.
 
 **Q: Can I stop follow-ups for specific people?**  
-A: Yes! Edit `data/inquiries.json` and change their `status` from `"new"` to `"contacted"` or `"dead"`.
+A: Yes! In the CRM, change their status to "booked", "paid", or "dead" to stop all automation.
 
 **Q: What if I want to add a Day 7 follow-up?**  
 A: 1. Add a new template in `email-templates.json`, 2. Update the cron job to check for 7-day-old inquiries, 3. Add the sending logic. I can help with this!

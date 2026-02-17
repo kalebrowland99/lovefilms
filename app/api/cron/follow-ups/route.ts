@@ -65,6 +65,7 @@ export async function GET(request: Request) {
     const emailsSent: Record<string, number> = {
       day1: 0,
       day3: 0,
+      day4: 0,
       day6: 0,
       day10: 0,
       day14: 0
@@ -79,6 +80,7 @@ export async function GET(request: Request) {
     const followUpMap: Record<string, { templateKey: string; emailType: string }> = {
       day1: { templateKey: 'followupDay1', emailType: 'followup-day1' },
       day3: { templateKey: 'followupDay3', emailType: 'followup-day3' },
+      day4: { templateKey: 'followupDay4', emailType: 'followup-day4' },
       day6: { templateKey: 'followupDay6', emailType: 'followup-day6' },
       day10: { templateKey: 'followupDay10', emailType: 'followup-day10' },
       day14: { templateKey: 'followupDay14', emailType: 'followup-day14' }
@@ -88,6 +90,7 @@ export async function GET(request: Request) {
     const manualFollowUpMap: Record<string, { templateKey: string; emailType: string }> = {
       day1: { templateKey: 'manualFollowupDay1', emailType: 'manual-followup-day1' },
       day3: { templateKey: 'manualFollowupDay3', emailType: 'manual-followup-day3' },
+      day4: { templateKey: 'manualFollowupDay4', emailType: 'manual-followup-day4' },
       day6: { templateKey: 'manualFollowupDay6', emailType: 'manual-followup-day6' },
       day10: { templateKey: 'manualFollowupDay10', emailType: 'manual-followup-day10' },
       day14: { templateKey: 'manualFollowupDay14', emailType: 'manual-followup-day14' }
@@ -95,7 +98,7 @@ export async function GET(request: Request) {
 
     for (const inquiry of inquiries) {
       // Skip if not in 'new' or 'contacted' status
-      // 'booked' and 'dead' stop all automation
+      // 'booked', 'paid', and 'dead' stop all automation
       if (inquiry.status !== 'new' && inquiry.status !== 'contacted') continue;
 
       const createdAt = new Date(inquiry.createdAt);
@@ -179,8 +182,8 @@ export async function GET(request: Request) {
 async function sendFollowUp(
   inquiry: Inquiry,
   template: any,
-  templateType: 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'manual-followup-day1' | 'manual-followup-day3' | 'manual-followup-day6' | 'manual-followup-day10' | 'manual-followup-day14',
-  followUpDay: 'day1' | 'day3' | 'day6' | 'day10' | 'day14',
+  templateType: 'followup-day1' | 'followup-day3' | 'followup-day4' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'manual-followup-day1' | 'manual-followup-day3' | 'manual-followup-day4' | 'manual-followup-day6' | 'manual-followup-day10' | 'manual-followup-day14',
+  followUpDay: 'day1' | 'day3' | 'day4' | 'day6' | 'day10' | 'day14',
   trackingField: 'followUpSentAt' | 'manualFollowUpSentAt' = 'followUpSentAt'
 ) {
   try {

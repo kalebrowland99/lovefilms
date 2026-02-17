@@ -3,7 +3,7 @@ import { getEmailTemplates, saveEmailTemplates, type EmailTemplates, type EmailT
 import fs from 'fs';
 import path from 'path';
 
-const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'ylf';
 
 // Helper to check password
 function checkAuth(request: Request): boolean {
@@ -197,6 +197,23 @@ function getDefaultTemplates(): any {
       "footer": "Best,\nYour Love Films"
     }
   },
+  "manualFollowupDay4": {
+    "name": "Manual Follow-up Day 4: $100 Deposit Lock",
+    "subject": "Should I release your wedding date?",
+    "enabled": true,
+    "sendTo": "inquirer",
+    "timing": "4 days after manual enrollment",
+    "content": {
+      "greeting": "Hey {{name}},",
+      "paragraph1": "Just wanted to check in.",
+      "paragraph2": "I've had another couple ask about your wedding date, so I can't guarantee availability much longer without a retainer in place.",
+      "paragraph3": "If you still want it, you can lock it in with the $100 retainer and we'll officially secure the date.",
+      "paragraph4": "If not, totally okay (I just want to respect everyone's timeline and keep things fair).",
+      "callToAction": "Lock In My Date",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "Let me know what feels right for you 🤍"
+    }
+  },
   "manualFollowupDay6": {
     "name": "Manual Follow-up Day 6",
     "subject": "Your wedding date is booking up...",
@@ -215,16 +232,18 @@ function getDefaultTemplates(): any {
   },
   "manualFollowupDay10": {
     "name": "Manual Follow-up Day 10",
-    "subject": "Last chance to secure your date, {{name}}",
+    "subject": "Should I release your wedding date?",
     "enabled": true,
     "sendTo": "inquirer",
     "timing": "10 days after manual enrollment",
     "content": {
-      "greeting": "Hi {{name}},",
-      "paragraph1": "I wanted to reach out one more time about videography for your wedding.",
-      "paragraph2": "I'm still here to answer any questions you might have, and I'd love to help you capture your special day!",
-      "paragraph3": "If now isn't the right time or you've decided to go in a different direction, I completely understand. Just wanted to make sure I followed up!",
-      "footer": "Wishing you all the best with your wedding planning!\n\nBest,\nYour Love Films"
+      "greeting": "{{name}},",
+      "paragraph1": "Quick check-in: I've been holding your date for you, but I have another couple asking about the same weekend.",
+      "paragraph2": "and they're willing to put down a $100 retainer today. I don't want to pressure you, but I also don't want you to lose the date if you were still planning to book.",
+      "paragraph3": "Can I hold it for another 24 hours? Or should I let it go?",
+      "callToAction": "Yes, Hold It",
+      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "footer": "Either way, no worries. Just want to respect your timeline (and theirs)."
     }
   },
   "manualFollowupDay14": {

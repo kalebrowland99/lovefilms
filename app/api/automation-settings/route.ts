@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAutomationSettings, saveAutomationSettings, type AutomationSettings } from '@/lib/database';
 
-const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'yourlovefilms';
+const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'ylf';
 
 // Helper to check password
 function checkAuth(request: Request): boolean {
@@ -26,6 +26,12 @@ const DEFAULT_SETTINGS: AutomationSettings = {
       delayInDays: 3,
       name: "Day 3: Social Proof",
       description: "Share a client success story"
+    },
+    day4: {
+      enabled: true,
+      delayInDays: 4,
+      name: "Day 4: $100 Deposit Lock",
+      description: "Create urgency with $100 retainer to secure date"
     },
     day6: {
       enabled: true,

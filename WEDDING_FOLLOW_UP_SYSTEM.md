@@ -6,7 +6,7 @@ Your CRM now includes a **professional wedding videography follow-up sequence** 
 
 ---
 
-## 📧 Email Sequence (7 Emails)
+## 📧 Email Sequence (8 Emails)
 
 ### **Day 0: Welcome Email (DISABLED)**
 **Status:** Currently disabled - only pricing email is sent
@@ -61,6 +61,20 @@ Your CRM now includes a **professional wedding videography follow-up sequence** 
 - Link to similar wedding film
 
 **Template:** Edit at `/crm` → Email Templates → "Day 3: Social Proof"
+
+---
+
+### **Day 4: $100 Deposit Lock**
+**Goal:** Create urgency with retainer, respect their timeline
+
+**Key Elements:**
+- Another couple asking about their date
+- Can't guarantee availability without retainer
+- Lock it in with $100 retainer
+- "Totally okay if not" - respectful tone
+- Clear CTA to secure date
+
+**Template:** Edit at `/crm` → Email Templates → "Day 4: $100 Deposit Lock"
 
 ---
 
@@ -342,7 +356,7 @@ TWILIO_PHONE_NUMBER=from_crm_settings
 ## ❓ FAQ
 
 **Q: What if they respond after Day 1?**
-A: Manually change their status in `/data/inquiries.json` from "new" to "contacted" - this stops the sequence.
+A: Change their status in the CRM to "booked" (if they scheduled), "paid" (if they paid deposit), or keep as "contacted" (to continue follow-ups).
 
 **Q: Can I add more follow-ups?**
 A: Yes! Add new templates to `email-templates.json` and update `automation-settings.json` with new delays.

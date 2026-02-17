@@ -41,8 +41,9 @@ Optional fields:
   - `manualAdmin` - Admin notification (sent immediately to you)
   - `manualFollowupDay1` - First follow-up (1 day after enrollment)
   - `manualFollowupDay3` - Second follow-up (3 days after enrollment)
-  - `manualFollowupDay6` - Third follow-up (6 days after enrollment)
-  - `manualFollowupDay10` - Fourth follow-up (10 days after enrollment)
+  - `manualFollowupDay4` - Third follow-up (4 days after enrollment)
+  - `manualFollowupDay6` - Fourth follow-up (6 days after enrollment)
+  - `manualFollowupDay10` - Fifth follow-up (10 days after enrollment)
   - `manualFollowupDay14` - Final follow-up (14 days after enrollment)
 - No welcome email is sent (since they already know you from Instagram/in-person)
 - You can customize all these templates directly in the IG DM - Email Automation tab
@@ -68,17 +69,22 @@ In the **Manual Enrollment tab**, scroll down to see the template editor with al
    - **When:** 3 days after enrollment
    - **Purpose:** Check in about their wedding video plans
 
-4. **IG DM Follow-up Day 6** (`manualFollowupDay6`)
+4. **IG DM Follow-up Day 4** (`manualFollowupDay4`)
+   - **Sent To:** The enrolled person
+   - **When:** 4 days after enrollment
+   - **Purpose:** Create urgency with $100 retainer to secure date
+
+5. **IG DM Follow-up Day 6** (`manualFollowupDay6`)
    - **Sent To:** The enrolled person
    - **When:** 6 days after enrollment
    - **Purpose:** Remind them dates are filling up
 
-5. **IG DM Follow-up Day 10** (`manualFollowupDay10`)
+6. **IG DM Follow-up Day 10** (`manualFollowupDay10`)
    - **Sent To:** The enrolled person
    - **When:** 10 days after enrollment
    - **Purpose:** Last chance to secure their date
 
-6. **IG DM Follow-up Day 14** (`manualFollowupDay14`)
+7. **IG DM Follow-up Day 14** (`manualFollowupDay14`)
    - **Sent To:** The enrolled person
    - **When:** 14 days after enrollment
    - **Purpose:** Final follow-up
@@ -106,12 +112,13 @@ People enrolled manually receive **completely separate** follow-up emails from r
 
 - **Day 1:** Quick follow-up to see if they have questions
 - **Day 3:** Check in about their wedding video plans
+- **Day 4:** Create urgency with $100 retainer to secure date
 - **Day 6:** Remind them dates are filling up
 - **Day 10:** Last chance to secure their date
 - **Day 14:** Final follow-up
 
 These follow-ups will continue **unless** you:
-1. Change their status to "booked" or "dead" (which stops all automation)
+1. Change their status to "booked", "paid", or "dead" (which stops all automation)
 2. Disable specific follow-up templates in the Manual Enrollment tab
 
 ## Tracking

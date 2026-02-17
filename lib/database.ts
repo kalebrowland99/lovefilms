@@ -29,12 +29,13 @@ export interface Inquiry {
   venue: string;
   referralSource?: string; // Where they found us (FB/IG or TikTok)
   videographer?: string; // Optional - removed from forms
-  status: 'new' | 'contacted' | 'booked' | 'dead';
+  status: 'new' | 'contacted' | 'booked' | 'paid' | 'dead';
   createdAt: string;
   isManualEnrollment?: boolean; // Track if this was manually enrolled
   followUpSentAt?: {
     day1?: string;
     day3?: string;
+    day4?: string;
     day6?: string;
     day10?: string;
     day14?: string;
@@ -42,6 +43,7 @@ export interface Inquiry {
   manualFollowUpSentAt?: {
     day1?: string;
     day3?: string;
+    day4?: string;
     day6?: string;
     day10?: string;
     day14?: string;
@@ -58,7 +60,7 @@ export interface EmailLog {
   inquiryId: string;
   recipientEmail: string;
   recipientName: string;
-  templateType: 'availabilityday0' | 'inquiry' | 'followup-day1' | 'followup-day3' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'manual-welcome' | 'manual-admin' | 'manual-followup-day1' | 'manual-followup-day3' | 'manual-followup-day6' | 'manual-followup-day10' | 'manual-followup-day14' | 'sms';
+  templateType: 'availabilityday0' | 'inquiry' | 'followup-day1' | 'followup-day3' | 'followup-day4' | 'followup-day6' | 'followup-day10' | 'followup-day14' | 'manual-welcome' | 'manual-admin' | 'manual-followup-day1' | 'manual-followup-day3' | 'manual-followup-day4' | 'manual-followup-day6' | 'manual-followup-day10' | 'manual-followup-day14' | 'sms';
   subject: string;
   sentAt: string;
   status: 'sent' | 'failed';

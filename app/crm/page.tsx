@@ -954,6 +954,7 @@ export default function EmailAdmin() {
                               <option value="new">New</option>
                               <option value="contacted">Contacted</option>
                                 <option value="booked">Call booked</option>
+                                <option value="paid">Paid</option>
                               <option value="dead">Dead</option>
                             </select>
                               <button
