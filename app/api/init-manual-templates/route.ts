@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         timing: "1 day after manual enrollment",
         content: "Hi {{name}},\n\nJust wanted to follow up from yesterday and see if you have any questions about my wedding videography services!\n\nI'd love to learn more about your wedding plans and see how I can help capture your special day.\n\nLooking forward to connecting!\n\nBest,\nYour Love Films",
         callToAction: "Schedule a Call",
-        callToActionUrl: "https://calendly.com/kalebrowland99/personal-wedding-call"
+        callToActionUrl: "https://calendly.com/hi-yourlovefilms/30min"
       },
       manualFollowupDay3: {
         name: "Manual Follow-up Day 3",
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         timing: "3 days after manual enrollment",
         content: "Hi {{name}},\n\nI wanted to reach out again and see if you're still considering videography for your wedding.\n\nI know planning a wedding can be overwhelming with so many decisions to make! I'm here to answer any questions and make this process as easy as possible for you.\n\nWould love to chat more about your vision for the day!\n\nBest,\nYour Love Films",
         callToAction: "Let's Talk",
-        callToActionUrl: "https://calendly.com/kalebrowland99/personal-wedding-call"
+        callToActionUrl: "https://calendly.com/hi-yourlovefilms/30min"
       },
       manualFollowupDay6: {
         name: "Manual Follow-up Day 6",
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         timing: "6 days after manual enrollment",
         content: "Hi {{name}},\n\nJust wanted to give you a heads up that wedding dates are filling up quickly, especially for {{weddingDate}}!\n\nI'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, I'd love to get you on my calendar.\n\nNo pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.\n\nBest wishes,\nYour Love Films",
         callToAction: "Check My Availability",
-        callToActionUrl: "https://calendly.com/kalebrowland99/personal-wedding-call"
+        callToActionUrl: "https://calendly.com/hi-yourlovefilms/30min"
       },
       manualFollowupDay10: {
         name: "Manual Follow-up Day 10",
