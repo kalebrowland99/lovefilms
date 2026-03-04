@@ -35,6 +35,10 @@ export default function EmailAdmin() {
   const [templatesLoading, setTemplatesLoading] = useState(false);
   const [templatesError, setTemplatesError] = useState<string>('');
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const leadsPerPage = 20;
+
   // Manual enrollment state
   const [manualEnrollment, setManualEnrollment] = useState({
     name: '',
@@ -48,7 +52,6 @@ export default function EmailAdmin() {
   const [enrollmentMessage, setEnrollmentMessage] = useState('');
   
   // Refs for timers and loading state
-  const leadsAutoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
   const isLoadingInquiries = useRef<boolean>(false);
   const emailContentRef = useRef<HTMLTextAreaElement>(null);
   const parseTimer = useRef<NodeJS.Timeout | null>(null);
@@ -168,6 +171,7 @@ export default function EmailAdmin() {
         // Only update if data is valid
         if (Array.isArray(data)) {
           setInquiries(data);
+          setCurrentPage(1);
           setLastLeadsRefresh(new Date());
         }
       }
@@ -337,25 +341,6 @@ export default function EmailAdmin() {
     }
   }, [activeTab, isAuthenticated]);
 
-  // Auto-refresh leads every 30 seconds when on leads tab
-  useEffect(() => {
-    if (activeTab === 'leads' && isAuthenticated) {
-      // Set up interval to refresh every 30 seconds
-      leadsAutoRefreshTimer.current = setInterval(() => {
-        // Only refresh if not currently loading to prevent race conditions
-        if (!inquiriesLoading) {
-          loadInquiries();
-        }
-      }, 30000); // 30 seconds
-
-      // Cleanup on unmount or tab change
-      return () => {
-        if (leadsAutoRefreshTimer.current) {
-          clearInterval(leadsAutoRefreshTimer.current);
-        }
-      };
-    }
-  }, [activeTab, isAuthenticated, inquiriesLoading]);
 
 
   const handleSave = async () => {
@@ -872,109 +857,153 @@ export default function EmailAdmin() {
                 <div className="p-12 text-center">
                   <p className="text-gray-500">No inquiries yet. Submit a contact form to see leads here.</p>
                 </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Couple
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Contact
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Wedding Details
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Follow-Ups Sent
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {inquiries.map((inquiry) => (
-                        <tr key={inquiry.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{inquiry.name}</div>
-                            {inquiry.fianceName && (
-                              <div className="text-sm text-gray-500">& {inquiry.fianceName}</div>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900">{inquiry.email}</div>
-                            <div className="text-sm text-gray-500">{inquiry.phone}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm font-medium text-gray-900">{inquiry.weddingDate}</div>
-                            <div className="text-sm text-gray-500">{inquiry.venue}</div>
-                            <div className="text-xs text-gray-400 mt-1">
-                              Inquired: {new Date(inquiry.createdAt).toLocaleDateString()}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-wrap gap-1">
-                              {inquiry.followUpSentAt && Object.keys(inquiry.followUpSentAt).length > 0 ? (
-                                Object.entries(inquiry.followUpSentAt).map(([key, value]: [string, any]) => (
-                                  <span key={key} className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                    {key}
-                                  </span>
-                                ))
-                              ) : (
-                                <span className="text-sm text-gray-500">None yet</span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              inquiry.status === 'new' ? 'bg-blue-100 text-blue-800' :
-                              inquiry.status === 'contacted' ? 'bg-yellow-100 text-yellow-800' :
-                              inquiry.status === 'booked' ? 'bg-green-100 text-green-800' :
-                              'bg-gray-100 text-gray-800'
-                            }`}>
-                              {inquiry.status === 'new' && '🆕 New'}
-                              {inquiry.status === 'contacted' && '💬 Contacted'}
-                              {inquiry.status === 'booked' && '✅ Call booked'}
-                              {inquiry.status === 'dead' && '❌ Dead'}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                            <select
-                              value={inquiry.status}
-                              onChange={(e) => updateInquiryStatus(inquiry.id, e.target.value)}
-                              disabled={updatingInquiry === inquiry.id}
-                              className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-black focus:border-transparent outline-none disabled:opacity-50"
+              ) : (() => {
+                const totalPages = Math.ceil(inquiries.length / leadsPerPage);
+                const safePage = Math.min(currentPage, totalPages);
+                const startIdx = (safePage - 1) * leadsPerPage;
+                const pageLeads = inquiries.slice(startIdx, startIdx + leadsPerPage);
+                return (
+                  <>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gray-50 border-b border-gray-200">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Couple
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Contact
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Wedding Details
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Follow-Ups Sent
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Status
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {pageLeads.map((inquiry) => (
+                            <tr key={inquiry.id} className="hover:bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">{inquiry.name}</div>
+                                {inquiry.fianceName && (
+                                  <div className="text-sm text-gray-500">& {inquiry.fianceName}</div>
+                                )}
+                              </td>
+                              <td className="px-6 py-4">
+                                <div className="text-sm text-gray-900">{inquiry.email}</div>
+                                <div className="text-sm text-gray-500">{inquiry.phone}</div>
+                              </td>
+                              <td className="px-6 py-4">
+                                <div className="text-sm font-medium text-gray-900">{inquiry.weddingDate}</div>
+                                <div className="text-sm text-gray-500">{inquiry.venue}</div>
+                                <div className="text-xs text-gray-400 mt-1">
+                                  Inquired: {new Date(inquiry.createdAt).toLocaleDateString()}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4">
+                                <div className="flex flex-wrap gap-1">
+                                  {inquiry.followUpSentAt && Object.keys(inquiry.followUpSentAt).length > 0 ? (
+                                    Object.entries(inquiry.followUpSentAt).map(([key, value]: [string, any]) => (
+                                      <span key={key} className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                        {key}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <span className="text-sm text-gray-500">None yet</span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                  inquiry.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                                  inquiry.status === 'contacted' ? 'bg-yellow-100 text-yellow-800' :
+                                  inquiry.status === 'booked' ? 'bg-green-100 text-green-800' :
+                                  'bg-gray-100 text-gray-800'
+                                }`}>
+                                  {inquiry.status === 'new' && '🆕 New'}
+                                  {inquiry.status === 'contacted' && '💬 Contacted'}
+                                  {inquiry.status === 'booked' && '✅ Call booked'}
+                                  {inquiry.status === 'dead' && '❌ Dead'}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                  <select
+                                    value={inquiry.status}
+                                    onChange={(e) => updateInquiryStatus(inquiry.id, e.target.value)}
+                                    disabled={updatingInquiry === inquiry.id}
+                                    className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-black focus:border-transparent outline-none disabled:opacity-50"
+                                  >
+                                    <option value="new">New</option>
+                                    <option value="contacted">Contacted</option>
+                                    <option value="booked">Call booked</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="dead">Dead</option>
+                                  </select>
+                                  <button
+                                    onClick={() => deleteInquiry(inquiry.id, inquiry.name)}
+                                    disabled={updatingInquiry === inquiry.id}
+                                    className="text-red-600 hover:text-red-800 disabled:opacity-50 p-1.5 hover:bg-red-50 rounded transition-colors"
+                                    title="Delete lead"
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {totalPages > 1 && (
+                      <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <p className="text-sm text-gray-600">
+                          Showing {startIdx + 1}–{Math.min(startIdx + leadsPerPage, inquiries.length)} of {inquiries.length} leads
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={safePage === 1}
+                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                          >
+                            ← Previous
+                          </button>
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                            <button
+                              key={page}
+                              onClick={() => setCurrentPage(page)}
+                              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                                page === safePage
+                                  ? 'bg-black text-white'
+                                  : 'border border-gray-300 hover:bg-gray-50'
+                              }`}
                             >
-                              <option value="new">New</option>
-                              <option value="contacted">Contacted</option>
-                                <option value="booked">Call booked</option>
-                                <option value="paid">Paid</option>
-                              <option value="dead">Dead</option>
-                            </select>
-                              <button
-                                onClick={() => deleteInquiry(inquiry.id, inquiry.name)}
-                                disabled={updatingInquiry === inquiry.id}
-                                className="text-red-600 hover:text-red-800 disabled:opacity-50 p-1.5 hover:bg-red-50 rounded transition-colors"
-                                title="Delete lead"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                                </svg>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                              {page}
+                            </button>
+                          ))}
+                          <button
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={safePage === totalPages}
+                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                          >
+                            Next →
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
 
             {/* Info Box */}
