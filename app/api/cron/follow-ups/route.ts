@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     }
 
     // Load automation settings from Firebase
-    const settings = await getAutomationSettings();
+    let settings = await getAutomationSettings();
     
     if (!settings) {
       console.error('Automation settings not found in Firebase');
@@ -56,6 +56,20 @@ export async function GET(request: Request) {
         error: 'Automation settings not configured',
         sent: { emails: 0, sms: 0 } 
       }, { status: 500 });
+    }
+
+    // Ensure followUpDelays exists (e.g. old DB documents may lack it) so manual + form follow-ups run
+    const defaultFollowUpDelays: Record<string, { enabled: boolean; delayInDays: number; name: string; description: string }> = {
+      day1: { enabled: true, delayInDays: 1, name: 'Day 1', description: '' },
+      day3: { enabled: true, delayInDays: 3, name: 'Day 3', description: '' },
+      day4: { enabled: true, delayInDays: 4, name: 'Day 4', description: '' },
+      day6: { enabled: true, delayInDays: 6, name: 'Day 6', description: '' },
+      day10: { enabled: true, delayInDays: 10, name: 'Day 10', description: '' },
+      day14: { enabled: true, delayInDays: 14, name: 'Day 14', description: '' },
+    };
+    if (!settings.followUpDelays || Object.keys(settings.followUpDelays).length === 0) {
+      console.warn('followUpDelays missing in automation settings, using defaults');
+      settings = { ...settings, followUpDelays: defaultFollowUpDelays };
     }
 
     // Get all inquiries

@@ -910,15 +910,18 @@ export default function EmailAdmin() {
                               </td>
                               <td className="px-6 py-4">
                                 <div className="flex flex-wrap gap-1">
-                                  {inquiry.followUpSentAt && Object.keys(inquiry.followUpSentAt).length > 0 ? (
-                                    Object.entries(inquiry.followUpSentAt).map(([key, value]: [string, any]) => (
-                                      <span key={key} className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                        {key}
-                                      </span>
-                                    ))
-                                  ) : (
-                                    <span className="text-sm text-gray-500">None yet</span>
-                                  )}
+                                  {(() => {
+                                    const sentAt = inquiry.isManualEnrollment ? inquiry.manualFollowUpSentAt : inquiry.followUpSentAt;
+                                    return sentAt && Object.keys(sentAt).length > 0 ? (
+                                      Object.entries(sentAt).map(([key]: [string, any]) => (
+                                        <span key={key} className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                          {key}
+                                        </span>
+                                      ))
+                                    ) : (
+                                      <span className="text-sm text-gray-500">None yet</span>
+                                    );
+                                  })()}
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
