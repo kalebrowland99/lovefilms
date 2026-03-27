@@ -17,10 +17,6 @@ const loveNotes = [
     quote: "From our first meeting to receiving the final video, the entire experience was amazing. They made us feel so comfortable on camera and captured moments we didn't even know happened!"
   },
   {
-    names: "Lauren & Chris",
-    quote: "Our wedding video is a work of art. The way they captured the golden hour shots at our venue was breathtaking. We watch it constantly and cry happy tears every time!"
-  },
-  {
     names: "Amanda & Blake",
     quote: "The drone footage of our outdoor ceremony was absolutely stunning! They captured the beauty of our venue and the emotion of our day perfectly. We're so grateful we chose them!"
   },

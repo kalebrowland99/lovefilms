@@ -68,19 +68,19 @@ export function TimelineDemo() {
           </p>
           <div className="mb-8">
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Professional Color Grading
+              • Professional Color Grading
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Cinematic Editing
+              • Cinematic Editing
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Music & Sound Design
+              • Music & Sound Design
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Revisions Included
+              • Revisions Included
             </div>
             <div className="flex gap-2 items-center text-[#8B7355] dark:text-neutral-300 text-xs md:text-sm">
-              ✅ Fast Turnaround Time
+              • Fast Turnaround Time
             </div>
           </div>
           <div className="w-full">

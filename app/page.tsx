@@ -34,13 +34,6 @@ const testimonials = [
   },
   {
     author: {
-      name: "Lauren & Chris",
-      avatar: "https://images.unsplash.com/photo-1606800052052-a08af7148866?w=150&h=150&fit=crop&crop=face"
-    },
-    text: "Our wedding video is a work of art. The way they captured the golden hour shots at our venue was breathtaking. We watch it constantly and cry happy tears every time!",
-  },
-  {
-    author: {
       name: "Amanda & Blake",
       avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?w=150&h=150&fit=crop&crop=face"
     },
