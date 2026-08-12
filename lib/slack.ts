@@ -1,27 +1,120 @@
 import type { Inquiry } from './database';
 
+const DEFAULT_ELI_USERNAME = 'eli.isla';
+const DEFAULT_BREE_USERNAME = 'bree.bryce';
+
 export function isSlackConfigured(): boolean {
   return !!process.env.SLACK_BOT_TOKEN;
 }
 
-function buildMentionText(): string {
-  const userIds = [
+type SlackMember = {
+  id: string;
+  deleted?: boolean;
+  is_bot?: boolean;
+  name?: string;
+  real_name?: string;
+  profile?: { real_name?: string; display_name?: string };
+};
+
+function normalizeName(value: string): string {
+  return value.toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function memberMatchesFullName(member: SlackMember, first: string, last: string): boolean {
+  const target = normalizeName(`${first} ${last}`);
+  const candidates = [
+    member.real_name,
+    member.profile?.real_name,
+    member.profile?.display_name,
+    member.name?.replace(/[._-]/g, ' '),
+  ].filter(Boolean) as string[];
+
+  return candidates.some((name) => normalizeName(name) === target);
+}
+
+async function fetchSlackMembers(token: string): Promise<SlackMember[] | null> {
+  const members: SlackMember[] = [];
+  let cursor: string | undefined;
+
+  do {
+    const params = new URLSearchParams({ limit: '200' });
+    if (cursor) params.set('cursor', cursor);
+
+    const response = await fetch(`https://slack.com/api/users.list?${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+
+    if (!data.ok) {
+      if (data.error === 'missing_scope') return null;
+      console.error('Slack users.list error:', data.error);
+      return null;
+    }
+
+    members.push(...(data.members || []));
+    cursor = data.response_metadata?.next_cursor || undefined;
+  } while (cursor);
+
+  return members;
+}
+
+async function resolveUserIdByFullName(
+  token: string,
+  first: string,
+  last: string,
+  members?: SlackMember[] | null
+): Promise<string | null> {
+  const list = members ?? (await fetchSlackMembers(token));
+  if (!list) return null;
+
+  const match = list.find(
+    (member) => !member.deleted && !member.is_bot && memberMatchesFullName(member, first, last)
+  );
+
+  return match?.id ?? null;
+}
+
+async function buildMentionText(token: string): Promise<{ text: string; useLinkNames: boolean }> {
+  const configuredIds = [
     process.env.SLACK_MENTION_ELI,
     process.env.SLACK_MENTION_BREE,
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
 
-  if (userIds.length) {
-    return userIds.map((id) => `<@${id}>`).join(' ');
+  if (configuredIds.length === 2) {
+    return {
+      text: configuredIds.map((id) => `<@${id}>`).join(' '),
+      useLinkNames: false,
+    };
   }
 
   const fromList = process.env.SLACK_MENTION_USER_IDS?.split(',')
     .map((s) => s.trim())
     .filter(Boolean);
   if (fromList?.length) {
-    return fromList.map((id) => `<@${id}>`).join(' ');
+    return {
+      text: fromList.map((id) => `<@${id}>`).join(' '),
+      useLinkNames: false,
+    };
   }
 
-  return '@eli @bree';
+  const members = await fetchSlackMembers(token);
+  const eliId = await resolveUserIdByFullName(token, 'Eli', 'Isla', members);
+  const breeId = await resolveUserIdByFullName(token, 'Bree', 'Bryce', members);
+
+  if (eliId && breeId) {
+    return {
+      text: `<@${eliId}> <@${breeId}>`,
+      useLinkNames: false,
+    };
+  }
+
+  const eliUsername = process.env.SLACK_MENTION_ELI_USERNAME || DEFAULT_ELI_USERNAME;
+  const breeUsername = process.env.SLACK_MENTION_BREE_USERNAME || DEFAULT_BREE_USERNAME;
+
+  return {
+    text: `@${eliUsername} @${breeUsername}`,
+    useLinkNames: true,
+  };
 }
 
 function buildInquiryBlocks(inquiry: Inquiry, mentionText: string) {
@@ -77,17 +170,17 @@ export async function notifyNewInquiry(
     return { success: false, error: 'SLACK_BOT_TOKEN not configured' };
   }
 
+  const token = process.env.SLACK_BOT_TOKEN;
   const channel = process.env.SLACK_SALES_CHANNEL || '#sales';
-  const mentionText = buildMentionText();
+  const { text: mentionText, useLinkNames } = await buildMentionText(token);
   const blocks = buildInquiryBlocks(inquiry, mentionText);
   const fallbackText = `${mentionText} — New wedding inquiry from ${inquiry.name} — ${inquiry.weddingDate || 'date TBD'} at ${inquiry.venue || 'venue TBD'}`;
-  const useLinkNames = !process.env.SLACK_MENTION_ELI && !process.env.SLACK_MENTION_BREE && !process.env.SLACK_MENTION_USER_IDS;
 
   try {
     const response = await fetch('https://slack.com/api/chat.postMessage', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
