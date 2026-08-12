@@ -6,6 +6,7 @@ import { DateField, DateInput } from '@/components/ui/datefield';
 import { Label } from '@/components/ui/field';
 import { parseDate, getLocalTimeZone } from '@internationalized/date';
 import { PhoneInput } from '@/components/ui/phone-input';
+import { HoneypotField } from '@/components/ui/honeypot-field';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -218,7 +219,8 @@ export default function ContactPage() {
                 </h3>
                 
                 {/* Contact Form */}
-                <form onSubmit={(e) => handleSubmit(e, 1)} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+                <form onSubmit={(e) => handleSubmit(e, 1)} className="space-y-4 md:space-y-6 max-w-2xl mx-auto relative">
+              <HoneypotField />
               <div>
                 <label htmlFor="name-1" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Your Name
@@ -501,7 +503,8 @@ export default function ContactPage() {
                 </h3>
                 
                 {/* Contact Form */}
-                <form onSubmit={(e) => handleSubmit(e, 2)} className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+                <form onSubmit={(e) => handleSubmit(e, 2)} className="space-y-4 md:space-y-6 max-w-2xl mx-auto relative">
+              <HoneypotField />
               <div>
                 <label htmlFor="name-2" className="block text-sm font-serif font-normal text-neutral-700 dark:text-neutral-300 mb-2">
                   Your Name

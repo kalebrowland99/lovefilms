@@ -7,6 +7,7 @@ import { Footer } from '@/components/ui/footer';
 import { DateField, DateInput } from '@/components/ui/datefield';
 import { Label } from '@/components/ui/field';
 import { PhoneInput } from '@/components/ui/phone-input';
+import { HoneypotField } from '@/components/ui/honeypot-field';
 
 export default function SpecialPricingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -531,7 +532,8 @@ export default function SpecialPricingPage() {
               </div>
 
               {/* Contact Form */}
-              <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12">
+              <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-neutral-50 dark:bg-neutral-900 rounded-2xl p-8 md:p-12 relative">
+              <HoneypotField />
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                     Your Name

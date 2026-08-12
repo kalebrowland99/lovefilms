@@ -3,6 +3,8 @@ import { Resend } from 'resend';
 import { renderTemplate, renderSubject } from '@/lib/email-renderer';
 import { saveInquiry, saveEmailLog, generateId, getAutomationSettings, getEmailTemplates, saveScheduledEmail, type Inquiry, type EmailLog, type ScheduledEmail } from '@/lib/database';
 import { sendSMS, renderSMSTemplate, formatPhoneNumber, isSMSConfigured, getSMSConfig } from '@/lib/sms';
+import { notifyNewInquiry, isSlackConfigured } from '@/lib/slack';
+import { isSpamSubmission, getSpamReasons, SPAM_SUCCESS_RESPONSE, type ContactFormData } from '@/lib/spam-filter';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,9 +12,17 @@ export async function POST(request: Request) {
   console.log('API route hit!');
   
   try {
-    const formData = await request.json();
+    const formData: ContactFormData = await request.json();
     
     console.log('Form data received:', formData);
+
+    if (isSpamSubmission(formData)) {
+      console.log('Spam submission blocked:', getSpamReasons(formData), {
+        name: formData.name,
+        email: formData.email,
+      });
+      return NextResponse.json(SPAM_SUCCESS_RESPONSE, { status: 200 });
+    }
 
     // Save inquiry to database
     const inquiryId = generateId();
@@ -30,6 +40,12 @@ export async function POST(request: Request) {
     };
     await saveInquiry(inquiry);
     console.log('Inquiry saved to database:', inquiryId);
+
+    if (isSlackConfigured()) {
+      notifyNewInquiry(inquiry).catch((err) =>
+        console.error('Slack notification failed:', err)
+      );
+    }
 
     // Load email templates from Firebase
     const templates = await getEmailTemplates();
