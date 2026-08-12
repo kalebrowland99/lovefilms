@@ -26,14 +26,20 @@ export async function POST(request: Request) {
 
     // Save inquiry to database
     const inquiryId = generateId();
+    const name = String(formData.name);
+    const email = String(formData.email);
+    const phone = String(formData.phone || '');
+    const fianceName = String(formData.fianceName || '');
+    const weddingDate = String(formData.weddingDate || '');
+    const venue = String(formData.venue || '');
     const inquiry: Inquiry = {
       id: inquiryId,
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      fianceName: formData.fianceName,
-      weddingDate: formData.weddingDate,
-      venue: formData.venue,
+      name,
+      email,
+      phone,
+      fianceName,
+      weddingDate,
+      venue,
       referralSource: formData.referralSource,
       status: 'new',
       createdAt: new Date().toISOString(),
@@ -67,10 +73,10 @@ export async function POST(request: Request) {
     if (process.env.RESEND_API_KEY) {
       try {
         const emailData = {
-          name: formData.name,
-          fianceName: formData.fianceName,
-          weddingDate: formData.weddingDate,
-          venue: formData.venue,
+          name,
+          fianceName,
+          weddingDate,
+          venue,
           formData: formData
         };
 
@@ -125,8 +131,8 @@ export async function POST(request: Request) {
                 const scheduledEmail: ScheduledEmail = {
                     id: generateId(),
                     inquiryId: inquiryId,
-                    recipientEmail: formData.email,
-                    recipientName: formData.name,
+                    recipientEmail: email,
+                    recipientName: name,
                   templateKey: 'availabilityday0',
                   sendAt: sendAt,
                   emailData: emailData,
@@ -150,7 +156,7 @@ export async function POST(request: Request) {
             }
 
             // Send welcome SMS after 45 seconds (or 20 seconds in test mode) if enabled and phone provided
-            if (formData.phone && automationSettings && isSMSConfigured(automationSettings)) {
+            if (phone && automationSettings && isSMSConfigured(automationSettings)) {
               // Ensure SMS templates structure exists
               const smsTemplate = automationSettings.sms?.templates?.day0;
               const isSMSTemplateEnabled = smsTemplate?.enabled !== false; // Default to true if undefined
@@ -161,14 +167,14 @@ export async function POST(request: Request) {
                 setTimeout(async () => {
                   try {
                     const smsData = {
-                      name: formData.name.split(' ')[0], // First name only for SMS
-                      fianceName: formData.fianceName ? formData.fianceName.split(' ')[0] : '',
-                      weddingDate: formData.weddingDate,
-                      venue: formData.venue
+                      name: name.split(' ')[0], // First name only for SMS
+                      fianceName: fianceName ? fianceName.split(' ')[0] : '',
+                      weddingDate,
+                      venue
                     };
                     
                     const smsMessage = renderSMSTemplate(smsTemplate.message, smsData);
-                    const formattedPhone = formatPhoneNumber(formData.phone);
+                    const formattedPhone = formatPhoneNumber(phone);
                     
                     const smsConfig = getSMSConfig(automationSettings);
                     if (!smsConfig) {
@@ -186,8 +192,8 @@ export async function POST(request: Request) {
                     const smsLog: EmailLog = {
                       id: generateId(),
                       inquiryId: inquiryId,
-                      recipientEmail: formData.phone, // Store phone in email field
-                      recipientName: formData.name,
+                      recipientEmail: phone, // Store phone in email field
+                      recipientName: name,
                       templateType: 'sms' as any,
                       subject: 'Welcome SMS (Day 0)',
                       sentAt: new Date().toISOString(),
@@ -229,7 +235,7 @@ export async function POST(request: Request) {
                       
                       await resend.emails.send({
                         from: 'Your Love Films <hi@yourlovefilms.com>',
-                        to: formData.email,
+                        to: email,
                         subject: followUpSubject,
                         html: followUpHtml,
                       });
@@ -238,8 +244,8 @@ export async function POST(request: Request) {
                       const log: EmailLog = {
                         id: generateId(),
                         inquiryId: inquiryId,
-                        recipientEmail: formData.email,
-                        recipientName: formData.name,
+                        recipientEmail: email,
+                        recipientName: name,
                         templateType: templateType as any,
                         subject: followUpSubject,
                         sentAt: new Date().toISOString(),
@@ -259,17 +265,17 @@ export async function POST(request: Request) {
               const sendTestSMS = async (smsKey: string, delay: number) => {
                 setTimeout(async () => {
                   const smsTemplate = automationSettings?.sms?.templates?.[smsKey];
-                  if (smsTemplate && smsTemplate.enabled && formData.phone && automationSettings && isSMSConfigured(automationSettings)) {
+                  if (smsTemplate && smsTemplate.enabled && phone && automationSettings && isSMSConfigured(automationSettings)) {
                     try {
                       const smsData = {
-                        name: formData.name.split(' ')[0],
-                        fianceName: formData.fianceName ? formData.fianceName.split(' ')[0] : '',
-                        weddingDate: formData.weddingDate,
-                        venue: formData.venue
+                        name: name.split(' ')[0],
+                        fianceName: fianceName ? fianceName.split(' ')[0] : '',
+                        weddingDate,
+                        venue
                       };
                       
                       const smsMessage = renderSMSTemplate(smsTemplate.message, smsData);
-                      const formattedPhone = formatPhoneNumber(formData.phone);
+                      const formattedPhone = formatPhoneNumber(phone);
                       
                       const smsConfig = getSMSConfig(automationSettings);
                       if (!smsConfig) {
@@ -287,8 +293,8 @@ export async function POST(request: Request) {
                       const smsLog: EmailLog = {
                         id: generateId(),
                         inquiryId: inquiryId,
-                        recipientEmail: formData.phone,
-                        recipientName: formData.name,
+                        recipientEmail: phone,
+                        recipientName: name,
                         templateType: 'sms' as any,
                         subject: `SMS: ${smsTemplate.name}`,
                         sentAt: new Date().toISOString(),
