@@ -1,7 +1,7 @@
 import type { Inquiry } from './database';
 
-const DEFAULT_ELI_USERNAME = 'eli.isla';
-const DEFAULT_BREE_USERNAME = 'bree.bryce';
+const DEFAULT_ELI_USERNAME = 'eliisla';
+const DEFAULT_BREE_USERNAME = 'breebryce';
 
 export function isSlackConfigured(): boolean {
   return !!process.env.SLACK_BOT_TOKEN;
