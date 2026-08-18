@@ -356,7 +356,7 @@ export default function ContactPage() {
                 </h3>
                 <div 
                   className="calendly-inline-widget" 
-                  data-url="https://calendly.com/hi-yourlovefilms/30min" 
+                  data-url="https://calendly.com/d/dv52-zpb-26d/love-films-quick-call" 
                   style={{ minWidth: '320px', height: '700px' }}
                 />
               </>
@@ -640,7 +640,7 @@ export default function ContactPage() {
                 </h3>
                 <div 
                   className="calendly-inline-widget" 
-                  data-url="https://calendly.com/hi-yourlovefilms/30min" 
+                  data-url="https://calendly.com/d/dv52-zpb-26d/love-films-quick-call" 
                   style={{ minWidth: '320px', height: '700px' }}
                 />
               </>

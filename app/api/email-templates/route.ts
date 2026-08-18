@@ -177,7 +177,7 @@ function getDefaultTemplates(): any {
       "paragraph1": "Just wanted to follow up from yesterday and see if you have any questions about my wedding videography services!",
       "paragraph2": "I'd love to learn more about your wedding plans and see how I can help capture your special day.",
       "callToAction": "Schedule a Call",
-      "callToActionUrl": "https://calendly.com/hi-yourlovefilms/30min",
+      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Looking forward to connecting!\n\nBest,\nYour Love Films"
     }
   },
@@ -193,7 +193,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "I know planning a wedding can be overwhelming with so many decisions to make! I'm here to answer any questions and make this process as easy as possible for you.",
       "paragraph3": "Would love to chat more about your vision for the day!",
       "callToAction": "Let's Talk",
-      "callToActionUrl": "https://calendly.com/hi-yourlovefilms/30min",
+      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Best,\nYour Love Films"
     }
   },
@@ -226,7 +226,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "I'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, I'd love to get you on my calendar.",
       "paragraph3": "No pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.",
       "callToAction": "Check My Availability",
-      "callToActionUrl": "https://calendly.com/hi-yourlovefilms/30min",
+      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Best wishes,\nYour Love Films"
     }
   },
