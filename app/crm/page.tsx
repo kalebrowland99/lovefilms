@@ -585,7 +585,7 @@ export default function EmailAdmin() {
         phone: '(615) 555-1234',
         fianceName: 'Jane Doe',
         weddingDate: 'June 15, 2026',
-        venue: 'The Hermitage Hotel, Nashville',
+        venue: 'The Breakers, Palm Beach',
         videographer: 'Not Yet'
       }
     };
@@ -1737,7 +1737,7 @@ export default function EmailAdmin() {
                       value={manualEnrollment.venue}
                       onChange={(e) => setManualEnrollment({...manualEnrollment, venue: e.target.value})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="The Hermitage Hotel, Nashville"
+                      placeholder="Venue name, City"
                     />
                   </div>
                 </div>

@@ -8,7 +8,7 @@ export default function ExamplePage() {
       mediaType="image"
       mediaSrc="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1280&auto=format&fit=crop"
       bgImageSrc="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop"
-      title="Tennessee Videographer"
+      title="Wedding Team"
       date="Professional Video Production"
       scrollToExpand="Scroll to Explore"
     >

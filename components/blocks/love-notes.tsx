@@ -5,25 +5,30 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const loveNotes = [
   {
-    names: "jeb and easley",
-    quote: "We both teared up multiple times and are just overwhelmed at how talented YourLoveFilms is. We could not BELIEVE the beautiful way they made sure each person and part of our life that means the most to us was highlighted."
+    names: 'Lauren & Chris',
+    quote:
+      'Our highlight came back in about six weeks and honestly felt like something we\'d watch in a theater — not a typical wedding video. They kept the real stuff: the flower girl taking off mid-aisle, Chris tearing up during vows, my brother giving a toast that made zero sense. We\'ve sent it to basically everyone we know.',
   },
   {
-    names: "Emily & Jordan",
-    quote: "We couldn't be happier with our wedding film! Every emotion, every tear, every laugh was captured beautifully. Watching it feels like reliving our perfect day all over again."
+    names: 'Nicole & Jake',
+    quote:
+      'I\'ll be honest — I thought wedding video was going to feel cheesy. It didn\'t. Jake hates being on camera and said he barely noticed them, which is probably the best compliment. The final film still got us both crying on the couch.',
   },
   {
-    names: "Rachel & Tyler",
-    quote: "From our first meeting to receiving the final video, the entire experience was amazing. They made us feel so comfortable on camera and captured moments we didn't even know happened!"
+    names: 'Priya & James',
+    quote:
+      'We had two ceremonies and I was worried a team wouldn\'t know how to handle both without making one feel like an afterthought. They asked thoughtful questions ahead of time and the edit gave equal weight to both sides of our families.',
   },
   {
-    names: "Amanda & Blake",
-    quote: "The drone footage of our outdoor ceremony was absolutely stunning! They captured the beauty of our venue and the emotion of our day perfectly. We're so grateful we chose them!"
+    names: 'Emma & Ryan',
+    quote:
+      'Our wedding was in Scottsdale and half our family flew in from out of state. The team showed up early, stayed calm when the timeline ran late, and somehow got footage of my grandma on the dance floor that I didn\'t even know happened until we watched the film.',
   },
   {
-    names: "Megan & Daniel",
-    quote: "Best investment we made for our wedding! The attention to detail, the cinematic quality, the beautiful music - everything was perfect. Our families watch the video on repeat!"
-  }
+    names: 'Chloe & David',
+    quote:
+      'What sold us was how natural everything felt on the wedding day — no awkward posing, no hovering. The audio from our vows alone is something we\'ll keep forever. David still refuses to watch it in public because he knows he cried.',
+  },
 ];
 
 export function LoveNotes() {
@@ -43,7 +48,6 @@ export function LoveNotes() {
     <section className="py-20 px-4 bg-[#d9d4c8]">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
-          {/* Left Side - Title */}
           <div>
             <h2 className="text-5xl md:text-7xl font-serif tracking-tight text-neutral-800 mb-4">
               LOVE<br />NOTES
@@ -54,15 +58,13 @@ export function LoveNotes() {
             <div className="w-full h-[1px] bg-neutral-400"></div>
           </div>
 
-          {/* Right Side - Quote and Navigation */}
           <div className="flex flex-col justify-between min-h-[300px]">
             <div className="flex-1 flex items-center">
               <p className="text-lg md:text-xl font-serif leading-relaxed text-neutral-800 text-center md:text-right">
-                "{currentNote.quote}"
+                &ldquo;{currentNote.quote}&rdquo;
               </p>
             </div>
 
-            {/* Navigation */}
             <div className="mt-12">
               <div className="flex items-center justify-end gap-8 mb-6">
                 <button
@@ -94,4 +96,3 @@ export function LoveNotes() {
     </section>
   );
 }
-

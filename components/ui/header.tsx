@@ -14,7 +14,7 @@ export function Header() {
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#8b8370] text-white py-3 px-3 text-center text-[11px] leading-snug md:text-sm md:py-2">
         <div className="max-w-7xl mx-auto">
           <span className="font-sans font-normal">
-            Destination Wedding Videographer. 1/3 Of 2026 Dates Have Been Booked. So{' '}
+            Destination Wedding Team. 1/3 Of 2026 Dates Have Been Booked. So{' '}
             <a
               href="#booking"
               className="underline font-medium hover:text-neutral-200 transition-colors whitespace-nowrap"

@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export interface TestimonialAuthor {
   name: string
   handle?: string
-  avatar: string
+  avatar?: string
+  initials?: string
 }
 
 export interface TestimonialCardProps {
@@ -21,6 +22,14 @@ export function TestimonialCard({
   className
 }: TestimonialCardProps) {
   const Card = href ? 'a' : 'div'
+  const fallbackInitials =
+    author.initials ??
+    author.name
+      .split(/[&\s]+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("")
 
   return (
     <Card
@@ -37,7 +46,12 @@ export function TestimonialCard({
     >
       <div className="flex items-center gap-3">
         <Avatar className="h-12 w-12">
-          <AvatarImage src={author.avatar} alt={author.name} />
+          {author.avatar ? (
+            <AvatarImage src={author.avatar} alt={author.name} />
+          ) : null}
+          <AvatarFallback className="bg-[#d9d4c8] text-neutral-800 text-sm font-medium font-sans">
+            {fallbackInitials}
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col items-start">
           <h3 className="text-md font-semibold leading-none text-black dark:text-white font-sans">
@@ -50,7 +64,7 @@ export function TestimonialCard({
           )}
         </div>
       </div>
-      <p className="sm:text-md mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+      <p className="sm:text-md mt-4 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
         {text}
       </p>
     </Card>

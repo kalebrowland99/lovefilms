@@ -23,7 +23,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Your Love Films | Professional Wedding Videography",
-  description: "Professional wedding videography services in Tennessee. Capturing your love story with stunning cinematography.",
+  description: "Professional wedding videography across California, Texas, Florida, New York, and nationwide. Capturing your love story with cinematic storytelling.",
 };
 
 export default function RootLayout({
