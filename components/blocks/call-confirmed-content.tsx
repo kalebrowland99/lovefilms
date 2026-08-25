@@ -97,7 +97,7 @@ export function CallConfirmedContent() {
               Check your spam folder if you don&apos;t see it. Click &ldquo;I
               know the sender&rdquo; and &ldquo;Yes&rdquo; for the invite.
             </p>
-            <p className="text-center text-lg md:text-xl font-serif font-medium text-red-600 leading-relaxed mt-5">
+            <p className="text-center text-lg md:text-xl font-serif font-medium text-neutral-900 leading-relaxed mt-5">
               Both you and your fiancé should be on the call — we want to hear
               from both of you about your wedding day.
             </p>
