@@ -1,5 +1,7 @@
-const BRIDES_ON_A_MISSION_URL =
-  "https://bridesonamission.com/your-love-films-a-modern-wedding-film-studio-focused-on-fun-cinematic-storytelling/";
+import {
+  BRIDES_ON_A_MISSION_QUOTE,
+  BRIDES_ON_A_MISSION_URL,
+} from '@/lib/press';
 
 export function FeaturedOn() {
   return (
@@ -19,7 +21,7 @@ export function FeaturedOn() {
               Brides on a Mission
             </p>
             <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              &ldquo;A Modern Wedding Film Studio Focused on Fun Cinematic Storytelling&rdquo;
+              &ldquo;{BRIDES_ON_A_MISSION_QUOTE}&rdquo;
             </p>
             <span className="mt-5 inline-block text-sm font-medium text-neutral-800 dark:text-neutral-200 underline underline-offset-4 decoration-neutral-300 group-hover:decoration-neutral-500 transition-colors">
               Read the feature
