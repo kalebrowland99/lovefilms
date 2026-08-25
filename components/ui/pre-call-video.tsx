@@ -23,7 +23,7 @@ export function PreCallVideo() {
   const sendCommand = useCallback(
     (
       func: 'playVideo' | 'pauseVideo' | 'seekTo',
-      args: string | number[] = ''
+      args: string | Array<string | number | boolean> = ''
     ) => {
       iframeRef.current?.contentWindow?.postMessage(
         JSON.stringify({ event: 'command', func, args }),
