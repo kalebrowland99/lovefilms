@@ -52,7 +52,7 @@ export function CallConfirmedContent() {
           <h1 className="text-3xl md:text-[2.75rem] font-serif leading-tight text-neutral-900 mb-4">
             Congrats! Your Call Has Been Booked.
           </h1>
-          <p className="text-base md:text-lg font-sans font-semibold text-red-600 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-base md:text-lg font-sans font-semibold text-neutral-800 leading-relaxed max-w-2xl mx-auto">
             IMPORTANT: Complete The 2 Steps Below Now. If You Don&apos;t,
             We&apos;ll Be Forced To Cancel Your Call And Give Your Slot To
             Someone Else.
@@ -74,7 +74,7 @@ export function CallConfirmedContent() {
 
           <PreCallVideo />
 
-          <p className="text-center text-xl md:text-2xl font-serif font-medium text-red-600 mt-6 md:mt-8 leading-snug max-w-2xl mx-auto">
+          <p className="text-center text-xl md:text-2xl font-serif font-medium text-neutral-900 mt-6 md:mt-8 leading-snug max-w-2xl mx-auto">
             Make sure your fiancé is on the call with you.
           </p>
         </section>
