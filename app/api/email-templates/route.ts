@@ -141,7 +141,7 @@ function getDefaultTemplates(): any {
       "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
       "paragraph1": "I'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message me if you need a time outside the available slots:",
       "callToAction": "Schedule Your Call",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "paragraph2": "If you'd like to review my package and pricing info before our call, you can find my Price and Info Guide attached to this email. We'll also go over it together during our call! I've included both desktop and mobile versions for easy viewing.",
       "paragraph3": "*A quick note: I cannot hold your date until a contract is signed and the booking is made. I book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films!",
       "paragraph4": "I'm so excited to get started!",
@@ -210,7 +210,7 @@ function getDefaultTemplates(): any {
       "paragraph3": "If you still want it, you can lock it in with the $100 retainer and we'll officially secure the date.",
       "paragraph4": "If not, totally okay (I just want to respect everyone's timeline and keep things fair).",
       "callToAction": "Lock In My Date",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Let me know what feels right for you 🤍"
     }
   },
@@ -242,7 +242,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "and they're willing to put down a $100 retainer today. I don't want to pressure you, but I also don't want you to lose the date if you were still planning to book.",
       "paragraph3": "Can I hold it for another 24 hours? Or should I let it go?",
       "callToAction": "Yes, Hold It",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Either way, no worries. Just want to respect your timeline (and theirs)."
     }
   },

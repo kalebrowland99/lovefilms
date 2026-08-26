@@ -213,7 +213,6 @@ export default function ContactPage() {
             variant="contact"
             title="Book your call"
             description="Pick a time below — we'll check availability and walk you through everything."
-            enableConfetti={false}
           />
         </div>
       </section>

@@ -10,26 +10,7 @@ export function Header() {
 
   return (
     <>
-      {/* Promotional Banner */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#8b8370] text-white py-3 px-3 text-center text-[11px] leading-snug md:text-sm md:py-2">
-        <div className="max-w-7xl mx-auto">
-          <span className="font-sans font-normal">
-            Destination Wedding Team. 1/3 Of 2026 Dates Have Been Booked. So{' '}
-            <a
-              href="#booking"
-              className="underline font-medium hover:text-neutral-200 transition-colors whitespace-nowrap"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-            >
-              Reach Out Now
-            </a>
-          </span>
-        </div>
-      </div>
-
-      <header className="fixed top-[52px] md:top-9 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo Section */}
@@ -49,8 +30,14 @@ export function Header() {
             </span>
           </div>
 
-          {/* CTA Button and Mobile Menu */}
+          {/* Nav + CTA */}
           <div className="flex items-center gap-4">
+            <Link
+              href="/portfolio"
+              className="hidden md:inline-flex items-center px-5 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:hover:border-white rounded-full font-medium text-sm text-neutral-800 dark:text-neutral-200 transition-all"
+            >
+              Portfolio
+            </Link>
             <a
               href="#booking"
               className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm hover:shadow-lg transition-all"
@@ -81,6 +68,13 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-neutral-200 dark:border-neutral-800 py-4">
             <nav className="flex flex-col gap-4">
+              <Link
+                href="/portfolio"
+                className="flex items-center justify-center px-6 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-full font-medium text-sm text-neutral-800 dark:text-neutral-200"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Portfolio
+              </Link>
               <a
                 href="#booking"
                 className="flex items-center justify-center gap-2 px-6 py-2.5 bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 dark:text-black text-white rounded-full font-medium text-sm"

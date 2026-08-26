@@ -97,12 +97,9 @@ export function TimelineDemo() {
       ),
     },
     {
-      title: "Quick Previews",
+      title: "Portfolio",
       content: (
         <div id="quick-previews">
-          <p className="text-[#5C4033] dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            Watch our latest work and see the quality and creativity we bring to every project.
-          </p>
           <div className="mb-8">
             {/* Video */}
             <div className="w-full">
@@ -112,7 +109,7 @@ export function TimelineDemo() {
                   frameBorder="0"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                  title="Quick Preview"
+                  title="Portfolio"
                 />
               </div>
             </div>

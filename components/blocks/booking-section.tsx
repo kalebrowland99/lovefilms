@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import confetti from 'canvas-confetti';
 import { CalendlyEmbed } from '@/components/ui/calendly-embed';
+import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
 import { cn } from '@/lib/utils';
 
 interface BookingSectionProps {
@@ -12,7 +11,8 @@ interface BookingSectionProps {
   className?: string;
   innerClassName?: string;
   variant?: 'default' | 'contact';
-  enableConfetti?: boolean;
+  layout?: 'embed' | 'button';
+  buttonLabel?: string;
 }
 
 export function BookingSection({
@@ -22,51 +22,13 @@ export function BookingSection({
   className,
   innerClassName,
   variant = 'default',
-  enableConfetti = true,
+  layout = 'embed',
+  buttonLabel = 'Book Your Call',
 }: BookingSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const hasTriggeredConfetti = useRef(false);
-
-  useEffect(() => {
-    if (!enableConfetti) return;
-
-    const triggerConfetti = () => {
-      const isMobile = window.innerWidth < 768;
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#FFD700', '#FFA500', '#DAA520', '#B8860B', '#F4C430', '#FFDF00'],
-        scalar: isMobile ? 0.6 : 1,
-      });
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (
-            entry.isIntersecting &&
-            entry.target === sectionRef.current &&
-            !hasTriggeredConfetti.current
-          ) {
-            triggerConfetti();
-            hasTriggeredConfetti.current = true;
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-
-    return () => observer.disconnect();
-  }, [enableConfetti]);
-
   const isContact = variant === 'contact';
 
   return (
     <section
-      ref={sectionRef}
       id={id}
       className={cn(
         isContact ? 'bg-white dark:bg-neutral-900 rounded-2xl border border-[#E8DED2] p-6 md:p-12' : 'py-20 px-4 bg-white dark:bg-neutral-950',
@@ -97,14 +59,27 @@ export function BookingSection({
           ) : null}
         </div>
 
-        <div
-          className={cn(
-            'mx-auto max-w-3xl overflow-hidden rounded-2xl',
-            isContact ? '' : 'bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8'
-          )}
-        >
-          <CalendlyEmbed />
-        </div>
+        {layout === 'button' ? (
+          <div className="flex justify-center">
+            <a
+              href={CALENDLY_BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full bg-[#8b8370] px-8 py-4 text-base md:text-lg font-sans font-semibold text-white shadow-md transition-transform hover:scale-[1.02] hover:bg-[#7a7260] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8b8370] focus-visible:ring-offset-2"
+            >
+              {buttonLabel}
+            </a>
+          </div>
+        ) : (
+          <div
+            className={cn(
+              'mx-auto max-w-3xl overflow-hidden rounded-2xl',
+              isContact ? '' : 'bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8'
+            )}
+          >
+            <CalendlyEmbed />
+          </div>
+        )}
       </div>
     </section>
   );

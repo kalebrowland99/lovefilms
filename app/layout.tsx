@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Cormorant_Garamond, Inter } from "next/font/google";
+import { Playfair_Display, Cormorant_Garamond, Inter, Cinzel } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -21,9 +21,15 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+const cinzel = Cinzel({
+  variable: "--font-engraved",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "Your Love Films | Professional Wedding Videography",
-  description: "Professional wedding videography across California, Texas, Florida, New York, and nationwide. Capturing your love story with cinematic storytelling.",
+  title: "Your Love Films | Wedding Videography & Photography Nationwide",
+  description: "Cinematic wedding videography and photography for couples nationwide. Capturing your love story on film and in photographs, wherever you say I do.",
 };
 
 export default function RootLayout({
@@ -34,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} font-serif font-normal antialiased`}
+        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} ${cinzel.variable} font-serif font-normal antialiased`}
       >
         {/* Google Analytics */}
         <Script 

@@ -1,6 +1,7 @@
 'use client';
 
 import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero';
+import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
 
 export default function ExamplePage() {
   return (
@@ -18,9 +19,9 @@ export default function ExamplePage() {
             Capturing Your Story
           </h2>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
-            Welcome to Tennessee's premier videography service. We specialize in
-            creating stunning visual stories that capture the essence of your
-            special moments.
+            Welcome to our nationwide wedding videography and photography
+            service. We specialize in creating stunning visual stories that
+            capture the essence of your special moments.
           </p>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
             From weddings to corporate events, our team brings years of
@@ -60,9 +61,14 @@ export default function ExamplePage() {
           <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
             Contact us today to discuss your project and receive a custom quote.
           </p>
-          <button className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+          <a
+            href={CALENDLY_BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+          >
             Get in Touch
-          </button>
+          </a>
         </section>
       </div>
     </ScrollExpandMedia>
