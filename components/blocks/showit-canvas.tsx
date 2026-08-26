@@ -215,6 +215,8 @@ function Element({
   arrowTone,
   marquee,
   onArrow,
+  shown = true,
+  layered = false,
 }: {
   el: CanvasEl;
   mode: Mode;
@@ -224,6 +226,8 @@ function Element({
   arrowTone: string;
   marquee?: 'forward' | 'reverse';
   onArrow?: (dir: 'prev' | 'next') => void;
+  shown?: boolean;
+  layered?: boolean;
 }) {
   const box = mode === 'd' ? el.d : el.m;
   if (box.hide || !box.w) return null;
@@ -234,8 +238,16 @@ function Element({
     top: box.t,
     width: box.w,
     height: box.h,
-    opacity: box.op ?? 1,
+    opacity: shown ? (box.op ?? 1) : 0,
+    transform:
+      layered && el.kind === 'image' ? (shown ? 'scale(1)' : 'scale(0.96)') : undefined,
+    zIndex: layered ? (shown ? (el.kind === 'image' ? 2 : 3) : 1) : undefined,
+    pointerEvents: shown ? undefined : 'none',
   };
+
+  const layerClass = layered
+    ? `ylf-state-layer${shown ? '' : ' ylf-state-layer-out'}`
+    : undefined;
 
   if (el.kind === 'video' && el.videos?.length) {
     const media = <FilmPreview src={el.videos[0]} poster={el.imgs?.[0]} />;
@@ -243,14 +255,14 @@ function Element({
       <Link
         href={el.href}
         style={frame}
-        className="ylf-canvas-link"
+        className={['ylf-canvas-link', 'ylf-canvas-link-media', layerClass].filter(Boolean).join(' ')}
         aria-label={el.label}
         {...externalProps(el.href)}
       >
         {media}
       </Link>
     ) : (
-      <div style={frame}>{media}</div>
+      <div style={frame} className={layerClass}>{media}</div>
     );
   }
 
@@ -264,14 +276,14 @@ function Element({
       <Link
         href={el.href}
         style={frame}
-        className="ylf-canvas-link"
+        className={['ylf-canvas-link', 'ylf-canvas-link-media', layerClass].filter(Boolean).join(' ')}
         aria-label={el.label}
         {...externalProps(el.href)}
       >
         {media}
       </Link>
     ) : (
-      <div style={frame}>{media}</div>
+      <div style={frame} className={layerClass}>{media}</div>
     );
   }
 
@@ -286,7 +298,7 @@ function Element({
         type="button"
         aria-label={dir === 'next' ? 'Next' : 'Previous'}
         onClick={() => onArrow?.(dir)}
-        style={{ ...frame, background: 'none', border: 0, padding: 0, cursor: 'pointer' }}
+        style={{ ...frame, background: 'none', border: 0, padding: 0, cursor: 'pointer', zIndex: 5 }}
       >
         <Arrow dir={dir} tone={tone} />
       </button>
@@ -295,22 +307,23 @@ function Element({
 
   if (el.kind === 'text' && el.text) {
     const s = mode === 'd' ? el.ds : el.ms;
-    const content = (
-      <div style={{ ...frame, ...(s ? textStyle(s) : {}) }}>
-        <RichText text={el.text} />
-      </div>
-    );
+    const typed = { ...frame, ...(s ? textStyle(s) : {}) };
+    const inner = <RichText text={el.text} />;
     return el.href ? (
       <Link
         href={el.href}
-        className="ylf-canvas-link"
-        style={{ textDecoration: 'none' }}
+        className={['ylf-canvas-link', layerClass, el.text === 'View Gallery' ? 'ylf-view-gallery' : '']
+          .filter(Boolean)
+          .join(' ')}
+        style={{ ...typed, textDecoration: 'none', cursor: 'pointer' }}
         {...externalProps(el.href)}
       >
-        {content}
+        {inner}
       </Link>
     ) : (
-      content
+      <div style={typed} className={layerClass}>
+        {inner}
+      </div>
     );
   }
 
@@ -367,17 +380,25 @@ function Block({ block, mode, scale }: { block: CanvasBlock; mode: Mode; scale: 
   const [state, setState] = useState(0);
   const height = mode === 'd' ? block.dh : block.mh;
 
-  const shared = groups ? block.els.filter((e) => !groups.some((p) => e.sid.startsWith(p))) : block.els;
-  const active = groups ? block.els.filter((e) => e.sid.startsWith(groups[state])) : [];
+  const grouped = groups
+    ? block.els.filter((e) => groups.some((p) => e.sid.startsWith(p)))
+    : [];
+  const shared = groups
+    ? block.els.filter((e) => !groups.some((p) => e.sid.startsWith(p)))
+    : block.els;
+  const activePrefix = groups?.[state];
+  const active = activePrefix ? grouped.filter((e) => e.sid.startsWith(activePrefix)) : [];
   const visible = [...shared, ...active];
+  const drawn = groups ? [...shared, ...grouped] : shared;
 
   const cycle = block.autoAdvanceMs;
   const count = groups?.length ?? 0;
+  const [paused, setPaused] = useState(false);
   useEffect(() => {
-    if (!cycle || count < 2) return;
+    if (!cycle || count < 2 || paused) return;
     const t = setInterval(() => setState((v) => (v + 1) % count), cycle);
     return () => clearInterval(t);
-  }, [cycle, count]);
+  }, [cycle, count, paused]);
 
   const onArrow = (dir: 'prev' | 'next') => {
     if (!groups) return;
@@ -403,6 +424,8 @@ function Block({ block, mode, scale }: { block: CanvasBlock; mode: Mode; scale: 
   return (
     <section
       id={block.slug}
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
       style={{
         // Keeps in-page anchors clear of the fixed header.
         scrollMarginTop: mode === 'd' ? 103 : 54,
@@ -430,8 +453,10 @@ function Block({ block, mode, scale }: { block: CanvasBlock; mode: Mode; scale: 
           transformOrigin: 'top center',
         }}
       >
-        {visible.map((el) => {
+        {drawn.map((el) => {
           const bandIndex = bands.indexOf(el);
+          const layered = !!groups && grouped.includes(el);
+          const shown = !layered || (!!activePrefix && el.sid.startsWith(activePrefix));
           return (
             <Element
               key={el.sid}
@@ -445,6 +470,8 @@ function Block({ block, mode, scale }: { block: CanvasBlock; mode: Mode; scale: 
                 bandIndex < 0 ? undefined : bandIndex % 2 === 0 ? 'forward' : 'reverse'
               }
               onArrow={onArrow}
+              layered={layered}
+              shown={shown}
             />
           );
         })}

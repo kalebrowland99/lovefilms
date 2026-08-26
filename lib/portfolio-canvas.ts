@@ -1,8 +1,79 @@
 // Generated from the Showit canvas: exact geometry, 1200px desktop / 320px mobile.
-import type { CanvasBlock } from '@/lib/showit-canvas';
+import type { CanvasBlock, CanvasEl, CanvasStyle } from '@/lib/showit-canvas';
 import { PHOTO_HERO, PHOTO_HIGHLIGHTS, PHOTO_GRID_LARGE, PHOTO_GRID_SMALL, PHOTO_REVIEW_A, PHOTO_REVIEW_B } from '@/lib/site-photos';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
 import { DANIEL_AND_EMILY, INSTAGRAM_FILMS, filmGridBlocks } from '@/lib/films';
+import { FEATURED_LARGE, FEATURED_SMALL, GALLERIES, galleryPath } from '@/lib/galleries';
+
+const DISPLAY_WHITE: CanvasStyle = {
+  ff: 'display', fs: 80, lh: 1, ls: '0em', ta: 'center', tt: 'none',
+  c: 'rgba(255,255,255,1)', fst: 'normal', fw: 400,
+};
+const DISPLAY_WHITE_M: CanvasStyle = { ...DISPLAY_WHITE, fs: 42 };
+const BODY_WHITE: CanvasStyle = {
+  ff: 'sans', fs: 17, lh: 1.6, ls: '0em', ta: 'center', tt: 'none',
+  c: 'rgba(255,255,255,1)', fst: 'normal', fw: 300,
+};
+const BODY_WHITE_M: CanvasStyle = { ...BODY_WHITE, fs: 14 };
+
+function photographyIntroBlock(): CanvasBlock {
+  const states = GALLERIES.map((g) => `featured-3_${g.slug}_`);
+  const els: CanvasEl[] = GALLERIES.flatMap((g) => {
+    const p = `featured-3_${g.slug}_`;
+    const href = galleryPath(g.slug);
+    return [
+      {
+        sid: `${p}bg`,
+        kind: 'image',
+        d: { l: 0, t: 0, w: 1200, h: 651, op: 0.42 },
+        m: { l: 0, t: 0, w: 320, h: 499, op: 0.42 },
+        imgs: [g.cover],
+      },
+      {
+        sid: `${p}0`,
+        kind: 'text',
+        d: { l: 185, t: 217, w: 830, h: 77 },
+        m: { l: 19, t: 141, w: 283, h: 77 },
+        href,
+        text: `{{i}}${g.title}{{/i}}`,
+        ds: DISPLAY_WHITE,
+        ms: DISPLAY_WHITE_M,
+      },
+      {
+        sid: `${p}1`,
+        kind: 'text',
+        d: { l: 362, t: 314, w: 476, h: 65 },
+        m: { l: 28, t: 245, w: 264, h: 70 },
+        text: g.blurb,
+        ds: BODY_WHITE,
+        ms: BODY_WHITE_M,
+      },
+      {
+        sid: `${p}2`,
+        kind: 'text',
+        d: { l: 500, t: 398, w: 200, h: 40 },
+        m: { l: 60, t: 332, w: 200, h: 36 },
+        href,
+        text: 'View Gallery',
+        ds: BODY_WHITE,
+        ms: BODY_WHITE_M,
+      },
+    ];
+  });
+  els.push(
+    { sid: 'featured-3_1', kind: 'icon', d: { l: 1101, t: 304, w: 41, h: 40 }, m: { l: 266, t: 448, w: 36, h: 44 } },
+    { sid: 'featured-3_2', kind: 'icon', d: { l: 58, t: 304, w: 41, h: 40 }, m: { l: 19, t: 448, w: 36, h: 44 } },
+  );
+  return {
+    slug: 'featured-3',
+    dh: 651,
+    mh: 499,
+    bg: 'rgba(7,7,7,1)',
+    states,
+    autoAdvanceMs: 5200,
+    els,
+  };
+}
 
 export const PORTFOLIO_BLOCKS: CanvasBlock[] = [
   { slug: "hero", dh: 1345, mh: 731, bg: "rgba(7,7,7,1)", els: [
@@ -39,36 +110,25 @@ export const PORTFOLIO_BLOCKS: CanvasBlock[] = [
     { sid: "review_0", kind: "text", d: {l:178, t:48, w:845, h:155}, m: {l:37, t:43, w:246, h:199}, text: "“Your Love Films is INCREDIBLE! We loved working with them in every way for our engagement films and wedding. They always give great direction and posing for film, but also capture the unstaged moments that reflect the emotions of the day.”", ds: {"ff": "display", "fs": 30.0, "lh": 1.1, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 20.0, "lh": 1.1, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
     { sid: "review_1", kind: "text", d: {l:449, t:217, w:302, h:46}, m: {l:80, t:264, w:161, h:17}, text: "— TIFFANY + ANDREW", ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 11.0, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
   ]},
-  { slug: "featured-3", dh: 651, mh: 499, bg: "rgba(7,7,7,1)", states: ["featured-3_featured-1_", "featured-3_featured-1-1_"], els: [
-    { sid: "featured-3_featured-1_0", kind: "text", d: {l:185, t:217, w:830, h:77}, m: {l:19, t:141, w:283, h:77}, href: "https://www.instagram.com/yourlovefilms", text: "{{i}}Wedding{{/i}} Portraits", ds: {"ff": "display", "fs": 80.0, "lh": 1.0, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 42.0, "lh": 1.0, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-3_featured-1_1", kind: "text", d: {l:362, t:314, w:476, h:65}, m: {l:28, t:245, w:264, h:70}, text: "Garden light, forest walks, and the quiet in-between of the day.", ds: {"ff": "sans", "fs": 17, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300}, ms: {"ff": "sans", "fs": 14, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300} },
-    { sid: "featured-3_featured-1_2", kind: "text", d: {l:513, t:403, w:175, h:21}, m: {l:79, t:337, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "View Gallery", ds: {"ff": "sans", "fs": 17, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300}, ms: {"ff": "sans", "fs": 14, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300} },
-    { sid: "featured-3_featured-1_3", kind: "line", d: {l:550, t:430, w:102, h:1}, m: {l:118, t:360, w:85, h:1}, stroke: "rgba(255,255,255,0.9)" },
-    { sid: "featured-3_featured-1-1_0", kind: "text", d: {l:185, t:217, w:830, h:77}, m: {l:19, t:141, w:283, h:77}, href: "https://www.instagram.com/yourlovefilms", text: "Wedding Photography", ds: {"ff": "display", "fs": 80.0, "lh": 1.0, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 42.0, "lh": 1.0, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-3_featured-1-1_1", kind: "text", d: {l:362, t:314, w:476, h:65}, m: {l:27, t:245, w:266, h:70}, text: "Stills built around soft light, movement, and the quiet details of your day.", ds: {"ff": "sans", "fs": 17, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300}, ms: {"ff": "sans", "fs": 14, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300} },
-    { sid: "featured-3_featured-1-1_2", kind: "line", d: {l:549, t:430, w:103, h:1}, m: {l:118, t:360, w:85, h:1}, stroke: "rgba(255,255,255,0.9)" },
-    { sid: "featured-3_featured-1-1_3", kind: "text", d: {l:513, t:403, w:175, h:21}, m: {l:79, t:337, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "View Gallery", ds: {"ff": "sans", "fs": 17, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300}, ms: {"ff": "sans", "fs": 14, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300} },
-    { sid: "featured-3_1", kind: "icon", d: {l:1101, t:304, w:41, h:40}, m: {l:266, t:448, w:36, h:44} },
-    { sid: "featured-3_2", kind: "icon", d: {l:58, t:304, w:41, h:40}, m: {l:19, t:448, w:36, h:44} },
-  ]},
+  photographyIntroBlock(),
   { slug: "featured-4", dh: 860, mh: 939, bg: "rgba(249,249,245,1)", els: [
-    { sid: "featured-4_0", kind: "image", d: {l:75, t:0, w:500, h:654}, m: {l:39, t:33, w:240, h:320}, href: "https://www.instagram.com/yourlovefilms", label: "Golden hour garden portraits", imgs: [PHOTO_GRID_LARGE[0]] },
-    { sid: "featured-4_1", kind: "text", d: {l:75, t:690, w:320, h:21}, m: {l:39, t:377, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "IN THE GARDEN", ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-4_2", kind: "text", d: {l:75, t:725, w:401, h:52}, m: {l:39, t:405, w:236, h:48}, href: "https://www.instagram.com/yourlovefilms", text: "Golden Hour Portraits", ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
-    { sid: "featured-4_3", kind: "image", d: {l:626, t:0, w:500, h:654}, m: {l:38, t:486, w:240, h:320}, href: "https://www.instagram.com/yourlovefilms", label: "Forest wedding portraits", imgs: [PHOTO_GRID_LARGE[1]] },
-    { sid: "featured-4_4", kind: "text", d: {l:626, t:690, w:320, h:21}, m: {l:38, t:826, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "AMONG THE PINES", ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-4_5", kind: "text", d: {l:626, t:729, w:476, h:52}, m: {l:38, t:855, w:208, h:49}, href: "https://www.instagram.com/yourlovefilms", text: "Wedding Day Portraits", ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+    { sid: "featured-4_0", kind: "image", d: {l:75, t:0, w:500, h:654}, m: {l:39, t:33, w:240, h:320}, href: galleryPath(FEATURED_LARGE[0].slug), label: FEATURED_LARGE[0].title, imgs: [PHOTO_GRID_LARGE[0]] },
+    { sid: "featured-4_1", kind: "text", d: {l:75, t:690, w:320, h:21}, m: {l:39, t:377, w:163, h:19}, href: galleryPath(FEATURED_LARGE[0].slug), text: FEATURED_LARGE[0].kicker, ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-4_2", kind: "text", d: {l:75, t:725, w:401, h:52}, m: {l:39, t:405, w:236, h:48}, href: galleryPath(FEATURED_LARGE[0].slug), text: FEATURED_LARGE[0].title, ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+    { sid: "featured-4_3", kind: "image", d: {l:626, t:0, w:500, h:654}, m: {l:38, t:486, w:240, h:320}, href: galleryPath(FEATURED_LARGE[1].slug), label: FEATURED_LARGE[1].title, imgs: [PHOTO_GRID_LARGE[1]] },
+    { sid: "featured-4_4", kind: "text", d: {l:626, t:690, w:320, h:21}, m: {l:38, t:826, w:163, h:19}, href: galleryPath(FEATURED_LARGE[1].slug), text: "AMONG THE PINES", ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-4_5", kind: "text", d: {l:626, t:729, w:476, h:52}, m: {l:38, t:855, w:208, h:49}, href: galleryPath(FEATURED_LARGE[1].slug), text: FEATURED_LARGE[1].title, ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
   ]},
   { slug: "featured-5", dh: 597, mh: 1065, bg: "rgba(249,249,245,1)", els: [
-    { sid: "featured-5_0", kind: "image", d: {l:75, t:0, w:308, h:409}, m: {l:43, t:22, w:230, h:230}, href: "https://www.instagram.com/yourlovefilms", label: "Black and white wedding portraits", imgs: [PHOTO_GRID_SMALL[0]] },
-    { sid: "featured-5_1", kind: "text", d: {l:75, t:449, w:320, h:21}, m: {l:43, t:272, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "ON THE PATH", ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-5_2", kind: "text", d: {l:75, t:478, w:313, h:52}, m: {l:43, t:300, w:208, h:22}, href: "https://www.instagram.com/yourlovefilms", text: "Black & White Portraits", ds: {"ff": "display", "fs": 24.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
-    { sid: "featured-5_3", kind: "image", d: {l:447, t:0, w:308, h:409}, m: {l:43, t:364, w:230, h:230}, href: "https://www.instagram.com/yourlovefilms", label: "Editorial garden portraits", imgs: [PHOTO_GRID_SMALL[1]] },
-    { sid: "featured-5_4", kind: "text", d: {l:447, t:449, w:320, h:21}, m: {l:43, t:614, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "EDITORIAL", ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-5_5", kind: "text", d: {l:447, t:478, w:313, h:52}, m: {l:43, t:642, w:208, h:22}, href: "https://www.instagram.com/yourlovefilms", text: "Garden Wedding Stills", ds: {"ff": "display", "fs": 24.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
-    { sid: "featured-5_6", kind: "image", d: {l:818, t:0, w:308, h:409}, m: {l:43, t:706, w:230, h:230}, href: "https://www.instagram.com/yourlovefilms", label: "Playful forest wedding portraits", imgs: [PHOTO_GRID_SMALL[2]] },
-    { sid: "featured-5_7", kind: "text", d: {l:818, t:449, w:320, h:21}, m: {l:43, t:956, w:163, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "IN THE PINES", ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
-    { sid: "featured-5_8", kind: "text", d: {l:818, t:478, w:313, h:52}, m: {l:43, t:983, w:230, h:20}, href: "https://www.instagram.com/yourlovefilms", text: "Playful Wedding Portraits", ds: {"ff": "display", "fs": 24.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+    { sid: "featured-5_0", kind: "image", d: {l:75, t:0, w:308, h:409}, m: {l:43, t:22, w:230, h:230}, href: galleryPath(FEATURED_SMALL[0].slug), label: FEATURED_SMALL[0].title, imgs: [PHOTO_GRID_SMALL[0]] },
+    { sid: "featured-5_1", kind: "text", d: {l:75, t:449, w:320, h:21}, m: {l:43, t:272, w:163, h:19}, href: galleryPath(FEATURED_SMALL[0].slug), text: FEATURED_SMALL[0].kicker, ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-5_2", kind: "text", d: {l:75, t:478, w:313, h:52}, m: {l:43, t:300, w:208, h:22}, href: galleryPath(FEATURED_SMALL[0].slug), text: FEATURED_SMALL[0].title, ds: {"ff": "display", "fs": 24.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+    { sid: "featured-5_3", kind: "image", d: {l:447, t:0, w:308, h:409}, m: {l:43, t:364, w:230, h:230}, href: galleryPath(FEATURED_SMALL[1].slug), label: FEATURED_SMALL[1].title, imgs: [PHOTO_GRID_SMALL[1]] },
+    { sid: "featured-5_4", kind: "text", d: {l:447, t:449, w:320, h:21}, m: {l:43, t:614, w:163, h:19}, href: galleryPath(FEATURED_SMALL[1].slug), text: FEATURED_SMALL[1].kicker, ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-5_5", kind: "text", d: {l:447, t:478, w:313, h:52}, m: {l:43, t:642, w:208, h:22}, href: galleryPath(FEATURED_SMALL[1].slug), text: FEATURED_SMALL[1].title, ds: {"ff": "display", "fs": 24.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+    { sid: "featured-5_6", kind: "image", d: {l:818, t:0, w:308, h:409}, m: {l:43, t:706, w:230, h:230}, href: galleryPath(FEATURED_SMALL[2].slug), label: FEATURED_SMALL[2].title, imgs: [PHOTO_GRID_SMALL[2]] },
+    { sid: "featured-5_7", kind: "text", d: {l:818, t:449, w:320, h:21}, m: {l:43, t:956, w:163, h:19}, href: galleryPath(FEATURED_SMALL[2].slug), text: FEATURED_SMALL[2].kicker, ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-5_8", kind: "text", d: {l:818, t:478, w:313, h:52}, m: {l:43, t:983, w:230, h:20}, href: galleryPath(FEATURED_SMALL[2].slug), text: FEATURED_SMALL[2].title, ds: {"ff": "display", "fs": 24.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
   ]},
   { slug: "reviews-on-green", dh: 634, mh: 618, bg: "rgba(34,34,34,1)", states: ["reviews-on-green_review-1_", "reviews-on-green_review-2_"], els: [
     { sid: "reviews-on-green_review-1_0", kind: "image", d: {l:898, t:0, w:306, h:447}, m: {l:226, t:0, w:96, h:124}, imgs: [PHOTO_REVIEW_A[0]] },

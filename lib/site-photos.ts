@@ -38,7 +38,7 @@ export const PHOTO_OFFERINGS = [c1(11), c3(1), c5(1), c4(7), c6(5)];
 
 export const PHOTO_EXPLORE = [c2(4), c4(1), c6(5)];
 
-export const PHOTO_STORIES = [c5(2), c5(3), c5(5), c5(11), c5(14)];
+export const PHOTO_STORIES = [c7(1), c5(15), c3(1)];
 
 export const PHOTO_HOME_MARQUEE_A = [
   c1(1), c1(26), c1(27), c1(24), c2(3), c4(5),
