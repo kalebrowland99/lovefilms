@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FONT_VAR } from '@/components/blocks/showit-canvas';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
+import { FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/social';
 
 /** Height of the fixed nav bar, per breakpoint. */
 export const CANVAS_HEADER_HEIGHT = { mobile: 54, desktop: 103 };
@@ -139,15 +140,25 @@ export function CanvasHeader() {
             Book a Call
           </a>
 
-          <a
-            href="https://instagram.com/yourlovefilms"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute bottom-10 left-8 text-[12px] uppercase tracking-[0.15em] text-white/60"
-            style={{ fontFamily: FONT_VAR.engraved }}
-          >
-            Instagram /
-          </a>
+          <div className="absolute bottom-10 left-8 flex items-center gap-2 text-[12px] uppercase tracking-[0.15em] text-white/60" style={{ fontFamily: FONT_VAR.engraved }}>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Instagram
+            </a>
+            <span aria-hidden>/</span>
+            <a
+              href={FACEBOOK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Facebook
+            </a>
+          </div>
         </div>
       )}
     </>

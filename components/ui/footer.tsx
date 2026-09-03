@@ -3,14 +3,14 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { IconBrandInstagram } from '@tabler/icons-react';
+import { IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
-
-const INSTAGRAM_URL = 'https://instagram.com/yourlovefilms';
+import { FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/social';
 
 const TICKER_ITEMS = [
   { label: 'Follow along on Instagram', href: INSTAGRAM_URL, external: true },
+  { label: 'Follow along on Facebook', href: FACEBOOK_URL, external: true },
   { label: 'Reserve your date', href: CALENDLY_BOOKING_URL, external: true },
 ] as const;
 
@@ -69,15 +69,26 @@ export const Footer = ({ className }: { className?: string }) => {
             />
           </Link>
           <p className="text-[#070707]/60 text-sm mb-4">Capturing love stories nationwide</p>
-          <a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className="text-[#070707]/60 hover:text-[#070707] transition-colors"
-          >
-            <IconBrandInstagram size={24} />
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="text-[#070707]/60 hover:text-[#070707] transition-colors"
+            >
+              <IconBrandInstagram size={24} />
+            </a>
+            <a
+              href={FACEBOOK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="text-[#070707]/60 hover:text-[#070707] transition-colors"
+            >
+              <IconBrandFacebook size={24} />
+            </a>
+          </div>
         </div>
 
         <div className="text-center md:text-left">
