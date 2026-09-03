@@ -4,7 +4,7 @@ import { CanvasHeader } from '@/components/ui/canvas-header';
 import { Footer } from '@/components/ui/footer';
 import { BookingSection } from '@/components/blocks/booking-section';
 import { LOVE_STATES } from '@/lib/service-areas';
-import { getLocationCopyForRequest } from '@/lib/location-copy';
+import { getLocationCopyForRequest } from '@/lib/get-visitor-location';
 
 export const metadata: Metadata = {
   title: 'The Experience | Your Love Films',

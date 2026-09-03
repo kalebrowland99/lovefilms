@@ -1,5 +1,3 @@
-import { cache } from 'react';
-import { getVisitorLocation } from '@/lib/get-visitor-location';
 import type { VisitorLocation } from '@/lib/visitor-location';
 
 export type LocationCopy = VisitorLocation & {
@@ -65,10 +63,6 @@ export function getLocationCopy(location: VisitorLocation): LocationCopy {
       : 'Our team serves weddings across the country, and any necessary travel is already included in your package.',
   };
 }
-
-export const getLocationCopyForRequest = cache(async () => {
-  return getLocationCopy(await getVisitorLocation());
-});
 
 export const NATIONWIDE_COPY = getLocationCopy({
   visitorState: null,

@@ -10,6 +10,7 @@ import {
   type VisitorLocation,
 } from '@/lib/visitor-location';
 import { stateFromAbbreviation } from '@/lib/us-states';
+import { getLocationCopy } from '@/lib/location-copy';
 
 export const getVisitorLocation = cache(async (): Promise<VisitorLocation> => {
   await connection();
@@ -25,4 +26,8 @@ export const getVisitorLocation = cache(async (): Promise<VisitorLocation> => {
     country: h.get('x-vercel-ip-country'),
     region: h.get('x-vercel-ip-country-region'),
   });
+});
+
+export const getLocationCopyForRequest = cache(async () => {
+  return getLocationCopy(await getVisitorLocation());
 });

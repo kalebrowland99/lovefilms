@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_Garamond, Inter, Cinzel } from "next/font/google";
 import Script from "next/script";
 import { VisitorLocationProvider } from "@/components/visitor-location-provider";
-import { getLocationCopyForRequest } from "@/lib/location-copy";
+import { getLocationCopyForRequest } from "@/lib/get-visitor-location";
 import "./globals.css";
 
 const playfair = Playfair_Display({
