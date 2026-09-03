@@ -139,13 +139,13 @@ function getDefaultTemplates(): any {
     "timing": "5 minutes after inquiry",
     "content": {
       "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
-      "paragraph1": "I'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message me if you need a time outside the available slots:",
+      "paragraph1": "We'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message us if you need a time outside the available slots:",
       "callToAction": "Schedule Your Call",
       "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
-      "paragraph2": "If you'd like to review my package and pricing info before our call, you can find my Price and Info Guide attached to this email. We'll also go over it together during our call! I've included both desktop and mobile versions for easy viewing.",
-      "paragraph3": "*A quick note: I cannot hold your date until a contract is signed and the booking is made. I book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films!",
-      "paragraph4": "I'm so excited to get started!",
-      "footer": "Thank you for reaching out, {{name}}, and I can't wait to work with you!\n\nBest,\nYour Love Films",
+      "paragraph2": "If you'd like to review our packages and pricing before our call, you can find our Price and Info Guide attached to this email. We'll also go over it together during our call! We've included both desktop and mobile versions for easy viewing.",
+      "paragraph3": "*A quick note: We cannot hold your date until a contract is signed and the booking is made. We book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films and photographs!",
+      "paragraph4": "We're so excited to get started!",
+      "footer": "Thank you for reaching out, {{name}}, and we can't wait to work with you!\n\nBest,\nYour Love Films",
         "attachmentUrl": ""
     }
     },
@@ -174,8 +174,8 @@ function getDefaultTemplates(): any {
     "timing": "1 day after manual enrollment",
     "content": {
       "greeting": "Hi {{name}},",
-      "paragraph1": "Just wanted to follow up from yesterday and see if you have any questions about my wedding videography services!",
-      "paragraph2": "I'd love to learn more about your wedding plans and see how I can help capture your special day.",
+      "paragraph1": "Just wanted to follow up from yesterday and see if you have any questions about our wedding photography and videography!",
+      "paragraph2": "We'd love to learn more about your wedding plans and talk through how our team would capture your day.",
       "callToAction": "Schedule a Call",
       "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Looking forward to connecting!\n\nBest,\nYour Love Films"
@@ -189,8 +189,8 @@ function getDefaultTemplates(): any {
     "timing": "3 days after manual enrollment",
     "content": {
       "greeting": "Hi {{name}},",
-      "paragraph1": "I wanted to reach out again and see if you're still considering videography for your wedding.",
-      "paragraph2": "I know planning a wedding can be overwhelming with so many decisions to make! I'm here to answer any questions and make this process as easy as possible for you.",
+      "paragraph1": "We wanted to reach out again and see if you're still considering photography and videography for your wedding.",
+      "paragraph2": "We know planning a wedding can be overwhelming with so many decisions to make! Our team is here to answer any questions and make this as easy as possible for you.",
       "paragraph3": "Would love to chat more about your vision for the day!",
       "callToAction": "Let's Talk",
       "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
@@ -199,14 +199,14 @@ function getDefaultTemplates(): any {
   },
   "manualFollowupDay4": {
     "name": "Manual Follow-up Day 4: $100 Deposit Lock",
-    "subject": "Should I release your wedding date?",
+    "subject": "Should we release your wedding date?",
     "enabled": true,
     "sendTo": "inquirer",
     "timing": "4 days after manual enrollment",
     "content": {
       "greeting": "Hey {{name}},",
       "paragraph1": "Just wanted to check in.",
-      "paragraph2": "I've had another couple ask about your wedding date, so I can't guarantee availability much longer without a retainer in place.",
+      "paragraph2": "We've had another couple ask about your wedding date, so we can't guarantee availability much longer without a retainer in place.",
       "paragraph3": "If you still want it, you can lock it in with the $100 retainer and we'll officially secure the date.",
       "paragraph4": "If not, totally okay (I just want to respect everyone's timeline and keep things fair).",
       "callToAction": "Lock In My Date",
@@ -223,7 +223,7 @@ function getDefaultTemplates(): any {
     "content": {
       "greeting": "Hi {{name}},",
       "paragraph1": "Just wanted to give you a heads up that wedding dates are filling up quickly, especially for {{weddingDate}}!",
-      "paragraph2": "I'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, I'd love to get you on my calendar.",
+      "paragraph2": "We'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, we'd love to get you on our calendar.",
       "paragraph3": "No pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.",
       "callToAction": "Check My Availability",
       "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
@@ -232,15 +232,15 @@ function getDefaultTemplates(): any {
   },
   "manualFollowupDay10": {
     "name": "Manual Follow-up Day 10",
-    "subject": "Should I release your wedding date?",
+    "subject": "Should we release your wedding date?",
     "enabled": true,
     "sendTo": "inquirer",
     "timing": "10 days after manual enrollment",
     "content": {
       "greeting": "{{name}},",
-      "paragraph1": "Quick check-in: I've been holding your date for you, but I have another couple asking about the same weekend.",
-      "paragraph2": "and they're willing to put down a $100 retainer today. I don't want to pressure you, but I also don't want you to lose the date if you were still planning to book.",
-      "paragraph3": "Can I hold it for another 24 hours? Or should I let it go?",
+      "paragraph1": "Quick check-in: We've been holding your date for you, but we have another couple asking about the same weekend.",
+      "paragraph2": "and they're willing to put down a $100 retainer today. We don't want to pressure you, but we also don't want you to lose the date if you were still planning to book.",
+      "paragraph3": "Can we hold it for another 24 hours? Or should we let it go?",
       "callToAction": "Yes, Hold It",
       "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
       "footer": "Either way, no worries. Just want to respect your timeline (and theirs)."
@@ -254,9 +254,9 @@ function getDefaultTemplates(): any {
     "timing": "14 days after manual enrollment",
     "content": {
       "greeting": "Hi {{name}},",
-      "paragraph1": "This will be my last follow-up email - I don't want to be a bother!",
-      "paragraph2": "If you're still interested in wedding videography, my door is always open. Feel free to reach out anytime if your plans change or if you have questions down the road.",
-      "paragraph3": "I wish you nothing but the best for your wedding day and hope it's everything you've dreamed of!",
+      "paragraph1": "This will be our last follow-up email — we don't want to be a bother!",
+      "paragraph2": "If you're still interested in wedding photography and videography, our door is always open. Feel free to reach out anytime if your plans change or if you have questions down the road.",
+      "paragraph3": "We wish you nothing but the best for your wedding day and hope it's everything you've dreamed of!",
       "footer": "Warmest regards,\nYour Love Films"
     }
     }

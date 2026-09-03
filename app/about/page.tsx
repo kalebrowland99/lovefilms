@@ -3,14 +3,17 @@ import { CanvasHeader } from '@/components/ui/canvas-header';
 import { PreCallVideo } from '@/components/ui/pre-call-video';
 import { CalendlyEmbed } from '@/components/ui/calendly-embed';
 import { Footer } from '@/components/ui/footer';
+import { getLocationCopyForRequest } from '@/lib/location-copy';
 
 export const metadata: Metadata = {
   title: 'About the Team | Your Love Films',
   description:
-    'Your Love Films — cinematic wedding videography and photography for couples nationwide. Watch our intro video and book a quick call.',
+    'Your Love Films — cinematic wedding photography and videography for couples nationwide. Watch our intro video and book a quick call.',
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const copy = await getLocationCopyForRequest();
+
   return (
     <>
       <CanvasHeader />
@@ -26,9 +29,7 @@ export default function AboutPage() {
               Hey — we&rsquo;re Your Love Films
             </h1>
             <p className="mt-6 text-lg md:text-xl leading-relaxed text-neutral-600 dark:text-neutral-400">
-              We film and photograph weddings for couples nationwide. Before we
-              hop on a call, here&rsquo;s a short video on how we work and what
-              it&rsquo;s like to have us there on your day.
+              {copy.aboutIntro}
             </p>
           </div>
         </section>

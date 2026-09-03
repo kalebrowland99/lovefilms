@@ -7,6 +7,7 @@ import { IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
 import { FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/social';
+import { useLocationCopy } from '@/components/visitor-location-provider';
 
 const TICKER_ITEMS = [
   { label: 'Follow along on Instagram', href: INSTAGRAM_URL, external: true },
@@ -54,6 +55,7 @@ function TickerTrack({ hidden }: { hidden?: boolean }) {
 
 export const Footer = ({ className }: { className?: string }) => {
   const currentYear = new Date().getFullYear();
+  const { footerTagline: tagline } = useLocationCopy();
 
   return (
     <footer className={cn('bg-[#f9f9f5] text-[#070707]', className)}>
@@ -68,7 +70,7 @@ export const Footer = ({ className }: { className?: string }) => {
               className="h-10 md:h-14 w-auto object-contain mb-2"
             />
           </Link>
-          <p className="text-[#070707]/60 text-sm mb-4">Capturing love stories nationwide</p>
+          <p className="text-[#070707]/60 text-sm mb-4">{tagline}</p>
           <div className="flex items-center gap-4">
             <a
               href={INSTAGRAM_URL}

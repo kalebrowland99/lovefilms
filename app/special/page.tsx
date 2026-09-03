@@ -4,8 +4,11 @@ import { useEffect } from 'react';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { BookingSection } from '@/components/blocks/booking-section';
+import { useLocationCopy } from '@/components/visitor-location-provider';
 
 export default function SpecialPricingPage() {
+  const copy = useLocationCopy();
+
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
 
@@ -34,7 +37,7 @@ export default function SpecialPricingPage() {
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <p className="text-white text-sm md:text-base tracking-[0.3em] uppercase mb-6 font-light">
-            WEDDING VIDEOGRAPHY PRICING
+            WEDDING PHOTOGRAPHY & VIDEOGRAPHY PRICING
           </p>
           <h1 className="text-white text-5xl md:text-7xl lg:text-8xl font-serif mb-4 leading-tight tracking-tight">
             TIMELESS FILMS.
@@ -376,8 +379,8 @@ export default function SpecialPricingPage() {
               
               <div>
                 <div className="mb-6">
-                  <p className="text-lg mb-2">• Traveling fee - $1,200</p>
-                  <p className="text-sm text-gray-300">(applies to destination weddings outside primary service areas)</p>
+                  <p className="text-lg mb-2">• Travel included when needed</p>
+                  <p className="text-sm text-gray-300">(no surprise travel fees — we handle the logistics)</p>
                 </div>
                 <div className="mb-6">
                   <p className="text-lg mb-2">• Overtime Rate/hour - $450</p>
@@ -428,15 +431,11 @@ export default function SpecialPricingPage() {
         <div className="relative z-10 max-w-3xl mx-auto px-4 py-20">
           <div className="text-white space-y-8">
             <p className="text-xl md:text-2xl leading-relaxed">
-              We proudly serve couples nationwide — from California and Texas to Florida, New York, Georgia, North Carolina, Colorado, Arizona, Virginia, Hawaii, and everywhere in between.
+              {copy.servingBody}
             </p>
 
             <p className="text-xl md:text-2xl leading-relaxed">
-              Whether your wedding is in wine country, on the coast, in the mountains, or in your hometown, we travel to bring your story to life.
-            </p>
-
-            <p className="text-sm md:text-base mt-8 text-gray-300">
-              **For destination weddings outside our primary service areas, a travel fee may apply to cover transportation, lodging, and logistics for our team.
+              {copy.travelLine} {copy.travelBody}
             </p>
           </div>
         </div>

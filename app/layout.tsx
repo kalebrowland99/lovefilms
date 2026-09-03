@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_Garamond, Inter, Cinzel } from "next/font/google";
 import Script from "next/script";
+import { VisitorLocationProvider } from "@/components/visitor-location-provider";
+import { getLocationCopyForRequest } from "@/lib/location-copy";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -28,15 +30,24 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Your Love Films | Wedding Videography & Photography Nationwide",
-  description: "Cinematic wedding videography and photography for couples nationwide. Capturing your love story on film and in photographs, wherever you say I do.",
+  title: "Your Love Films | Wedding Photography & Videography Nationwide",
+  description:
+    "Cinematic wedding photography and videography for couples nationwide. Capturing your love story in photographs and on film, wherever you say I do.",
+  openGraph: {
+    title: "Your Love Films | Wedding Photography & Videography Nationwide",
+    description:
+      "Cinematic wedding photography and videography for couples nationwide. Capturing your love story in photographs and on film, wherever you say I do.",
+    type: "website",
+  },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locationCopy = await getLocationCopyForRequest();
+
   return (
     <html lang="en">
       <body
@@ -91,7 +102,9 @@ export default function RootLayout({
           `}
         </Script>
 
-        {children}
+        <VisitorLocationProvider copy={locationCopy}>
+          {children}
+        </VisitorLocationProvider>
         <Script 
           src="https://player.vimeo.com/api/player.js" 
           strategy="lazyOnload"

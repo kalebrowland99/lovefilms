@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLocationCopy } from '@/components/visitor-location-provider';
 
 const loveNotes = [
   {
@@ -33,6 +34,7 @@ const loveNotes = [
 
 export function LoveNotes() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { socialProof } = useLocationCopy();
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? loveNotes.length - 1 : prev - 1));
@@ -52,6 +54,9 @@ export function LoveNotes() {
             <h2 className="text-5xl md:text-7xl font-serif tracking-tight text-neutral-800 mb-4">
               LOVE<br />NOTES
             </h2>
+            <p className="text-base md:text-lg font-serif text-neutral-700 mb-4">
+              {socialProof}
+            </p>
             <p className="text-sm font-serif italic text-neutral-600 mb-8">
               {currentNote.names}
             </p>

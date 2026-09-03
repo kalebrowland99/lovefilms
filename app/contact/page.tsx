@@ -50,7 +50,7 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-[#d9d4c8] rounded-2xl p-6 md:p-12 mb-8">
             <h2 className="text-2xl md:text-4xl font-serif font-normal text-center mb-4 md:mb-6 text-neutral-800 leading-tight">
-              A Rare Wedding Videography Opportunity for 2026–2027 Couples!
+              A Rare Wedding Photography & Videography Opportunity for 2026–2027 Couples!
             </h2>
 
             <p className="text-base md:text-lg font-serif text-neutral-800 mb-4 md:mb-6">
@@ -61,7 +61,7 @@ export default function ContactPage() {
               <div className="flex items-start gap-2 md:gap-3">
                 <span className="text-xl md:text-2xl font-serif flex-shrink-0">✓</span>
                 <p className="text-base md:text-lg font-serif text-neutral-800">
-                  $1,000 off my most popular wedding videography collection
+                  $1,000 off our most popular wedding photography & videography collection
                 </p>
               </div>
               <div className="flex items-start gap-2 md:gap-3">
@@ -150,7 +150,7 @@ export default function ContactPage() {
               <div className="flex items-start gap-2 md:gap-3">
                 <span className="text-[#8b8370] text-lg md:text-xl font-serif flex-shrink-0">✔</span>
                 <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300">
-                  $1,000 off my most popular wedding videography collection
+                  $1,000 off our most popular wedding photography & videography collection
                 </p>
               </div>
               <div className="flex items-start gap-2 md:gap-3">
@@ -193,7 +193,7 @@ export default function ContactPage() {
                   2
                 </span>
                 <p className="text-base md:text-lg font-serif text-neutral-800 dark:text-neutral-300 pt-0.5 md:pt-1">
-                  I&apos;ll reach out with next steps
+                  We&apos;ll reach out with next steps
                 </p>
               </div>
             </div>

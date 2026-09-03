@@ -4,8 +4,10 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import Image from "next/image";
 import { IconBrandInstagram } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
+import { useLocationCopy } from "@/components/visitor-location-provider";
 
 export function InstagramScrollDemo({ className }: { className?: string }) {
+  const { instagramLocation } = useLocationCopy();
   return (
     <section className={cn("bg-white dark:bg-neutral-950 pb-10", className)}>
       <ContainerScroll
@@ -45,7 +47,7 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
               <div className="flex-1">
                 <h3 className="text-lg font-normal text-black dark:text-white">@yourlovefilms</h3>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Your Love Films</p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1">📍 Nationwide • 🎥 Wedding Films</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1">{instagramLocation}</p>
               </div>
             </div>
 

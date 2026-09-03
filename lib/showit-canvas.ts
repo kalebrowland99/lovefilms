@@ -62,3 +62,16 @@ export type CanvasBlock = {
   sticky?: boolean;
   zIndex?: number;
 };
+
+/** Swap authored canvas strings by element id. Values must already be sanitized copy. */
+export function withCanvasText(
+  blocks: CanvasBlock[],
+  updates: Record<string, string>,
+): CanvasBlock[] {
+  return blocks.map((block) => ({
+    ...block,
+    els: block.els.map((el) =>
+      updates[el.sid] !== undefined ? { ...el, text: updates[el.sid] } : el,
+    ),
+  }));
+}

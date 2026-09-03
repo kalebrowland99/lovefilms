@@ -19,13 +19,12 @@ export default function ExamplePage() {
             Capturing Your Story
           </h2>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
-            Welcome to our nationwide wedding videography and photography
-            service. We specialize in creating stunning visual stories that
-            capture the essence of your special moments.
+            Welcome to Your Love Films — a wedding photography and videography
+            team creating visual stories that capture the essence of your day.
           </p>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
-            From weddings to corporate events, our team brings years of
-            experience and a passion for storytelling to every project.
+            Our photographers and filmmakers tell one story together — photographs
+            and film, from the first look through the last dance.
           </p>
         </section>
 
@@ -34,12 +33,10 @@ export default function ExamplePage() {
             Our Services
           </h3>
           <ul className="space-y-3 text-lg text-gray-700 dark:text-gray-300">
+            <li>• Wedding Photography</li>
             <li>• Wedding Videography</li>
-            <li>• Corporate Events</li>
-            <li>• Commercial Productions</li>
-            <li>• Documentary Filmmaking</li>
-            <li>• Drone Footage</li>
-            <li>• Post-Production Editing</li>
+            <li>• Elopements</li>
+            <li>• Couple sessions</li>
           </ul>
         </section>
 

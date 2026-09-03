@@ -3,25 +3,25 @@ import Link from 'next/link';
 import { CanvasHeader } from '@/components/ui/canvas-header';
 import { Footer } from '@/components/ui/footer';
 import { BookingSection } from '@/components/blocks/booking-section';
-import { LetsTravel } from '@/components/blocks/lets-travel';
 import { LOVE_STATES } from '@/lib/service-areas';
+import { getLocationCopyForRequest } from '@/lib/location-copy';
 
 export const metadata: Metadata = {
   title: 'The Experience | Your Love Films',
   description:
-    'What it is like to work with Your Love Films — cinematic wedding videography and photography for couples nationwide, from the first call through delivery.',
+    'What it is like to work with Your Love Films — cinematic wedding photography and videography for couples nationwide, from the first call through delivery.',
 };
 
 const STEPS = [
   {
     n: '01',
     title: 'A conversation, not a pitch',
-    body: 'We start with a short call. You tell us the shape of the day — city hall, a mountain meadow, a ballroom, two ceremonies, a weekend with family from everywhere. We tell you honestly whether we are the right team, what we would film and photograph, and how we travel to you.',
+    body: 'We start with a short call. You tell us the shape of the day — city hall, a mountain meadow, a ballroom, two ceremonies, a weekend with family from everywhere. We tell you honestly whether we are the right team, what we would photograph and film, and how coverage comes together.',
   },
   {
     n: '02',
     title: 'Planning that actually stays with you',
-    body: 'Once you are booked, we stay in the details: timeline, lighting, family dynamics, the moments you do not want missed. You get one team for film and photographs, so coverage is coordinated instead of two vendors competing for the same aisle.',
+    body: 'Once you are booked, we stay in the details: timeline, lighting, family dynamics, the moments you do not want missed. You get one photography and videography team, so coverage is coordinated instead of two vendors competing for the same aisle.',
   },
   {
     n: '03',
@@ -31,11 +31,13 @@ const STEPS = [
   {
     n: '04',
     title: 'Work you can live with',
-    body: 'Highlight films, full-day films, and a gallery of photographs — delivered with revisions included. We are not a local-only studio with a travel upcharge as an afterthought. Nationwide is the work.',
+    body: 'Highlight films, full-day films, and a gallery of photographs — delivered with revisions included. No surprise travel fees — we handle the logistics. Any necessary travel is already included in your package.',
   },
 ];
 
-export default function ExperiencePage() {
+export default async function ExperiencePage() {
+  const copy = await getLocationCopyForRequest();
+
   return (
     <>
       <CanvasHeader />
@@ -48,14 +50,12 @@ export default function ExperiencePage() {
               the experience
             </p>
             <h1 className="mt-5 font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-[#070707]">
-              Wedding films{' '}
-              <em className="italic font-normal">and</em> photography, nationwide
+              {copy.experienceHeadlineBefore}{' '}
+              <em className="italic font-normal">{copy.experienceHeadlineAfter}</em>
             </h1>
             <p className="mt-8 mx-auto max-w-2xl text-lg md:text-xl leading-relaxed text-[#070707]/75">
-              We are a film and photo team for couples who get married wherever
-              love actually happens — not a Nashville studio that occasionally
-              travels. From the first call to the gallery, the work is built
-              around presence, not performance.
+              Our wedding team photographs and films your day as one story —
+              presence over performance, from the first call through the gallery.
             </p>
           </div>
         </section>
@@ -125,13 +125,10 @@ export default function ExperiencePage() {
               where we shoot
             </p>
             <h2 className="mt-4 font-serif text-3xl md:text-5xl leading-tight">
-              Nationwide — and a little beyond
+              {copy.servingHeading}
             </h2>
             <p className="mt-6 mx-auto max-w-2xl text-base md:text-lg leading-relaxed text-[#070707]/75">
-              We photograph and film weddings, elopements, and couple sessions
-              across the country. If your celebration is somewhere we have not
-              listed, ask. Destination work is part of the practice, not an
-              exception.
+              {copy.servingBody}
             </p>
             <ul className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm md:text-base uppercase tracking-[0.12em] text-[#070707]/70">
               {LOVE_STATES.map((state) => (
@@ -147,8 +144,6 @@ export default function ExperiencePage() {
             </Link>
           </div>
         </section>
-
-        <LetsTravel />
 
         <BookingSection
           id="booking"

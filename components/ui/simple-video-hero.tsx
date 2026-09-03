@@ -96,15 +96,15 @@ export function SimpleVideoHero({ videoSrc, title, subtitle }: SimpleVideoHeroPr
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-        {subtitle && (
-          <p className="text-2xl md:text-3xl text-white mb-4">
-            {subtitle}
-          </p>
-        )}
         {title && (
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-normal text-white">
             {title}
           </h1>
+        )}
+        {subtitle && (
+          <p className="mt-4 max-w-2xl text-lg md:text-2xl text-white/90">
+            {subtitle}
+          </p>
         )}
       </div>
 

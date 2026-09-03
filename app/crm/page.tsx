@@ -582,10 +582,10 @@ export default function EmailAdmin() {
       formData: {
         name: 'John Smith',
         email: 'john@example.com',
-        phone: '(615) 555-1234',
+        phone: '(555) 555-1234',
         fianceName: 'Jane Doe',
         weddingDate: 'June 15, 2026',
-        venue: 'The Breakers, Palm Beach',
+        venue: 'The Garden Venue',
         videographer: 'Not Yet'
       }
     };
@@ -1372,7 +1372,7 @@ export default function EmailAdmin() {
                     </button>
                   </div>
                   <p className="text-xs text-gray-600 mt-2">
-                    Test this template with sample data (John & Jane wedding at The Hermitage Hotel)
+                    Test this template with sample data (John & Jane wedding at The Garden Venue)
                   </p>
                 </div>
               </div>
@@ -1698,7 +1698,7 @@ export default function EmailAdmin() {
                       value={manualEnrollment.phone}
                       onChange={(e) => setManualEnrollment({...manualEnrollment, phone: e.target.value})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="(615) 555-1234"
+                      placeholder="(555) 555-1234"
                     />
                   </div>
 

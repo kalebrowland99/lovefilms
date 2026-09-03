@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         enabled: true,
         sendTo: "inquirer",
         timing: "1 day after manual enrollment",
-        content: "Hi {{name}},\n\nJust wanted to follow up from yesterday and see if you have any questions about my wedding videography services!\n\nI'd love to learn more about your wedding plans and see how I can help capture your special day.\n\nLooking forward to connecting!\n\nBest,\nYour Love Films",
+        content: "Hi {{name}},\n\nJust wanted to follow up from yesterday and see if you have any questions about our wedding photography and videography!\n\nWe'd love to learn more about your wedding plans and talk through how our team would capture your day.\n\nLooking forward to connecting!\n\nBest,\nYour Love Films",
         callToAction: "Schedule a Call",
         callToActionUrl: "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call"
       },
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         enabled: true,
         sendTo: "inquirer",
         timing: "3 days after manual enrollment",
-        content: "Hi {{name}},\n\nI wanted to reach out again and see if you're still considering videography for your wedding.\n\nI know planning a wedding can be overwhelming with so many decisions to make! I'm here to answer any questions and make this process as easy as possible for you.\n\nWould love to chat more about your vision for the day!\n\nBest,\nYour Love Films",
+        content: "Hi {{name}},\n\nWe wanted to reach out again and see if you're still considering photography and videography for your wedding.\n\nWe know planning a wedding can be overwhelming with so many decisions to make! Our team is here to answer any questions and make this as easy as possible for you.\n\nWould love to chat more about your vision for the day!\n\nBest,\nYour Love Films",
         callToAction: "Let's Talk",
         callToActionUrl: "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call"
       },
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
         enabled: true,
         sendTo: "inquirer",
         timing: "6 days after manual enrollment",
-        content: "Hi {{name}},\n\nJust wanted to give you a heads up that wedding dates are filling up quickly, especially for {{weddingDate}}!\n\nI'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, I'd love to get you on my calendar.\n\nNo pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.\n\nBest wishes,\nYour Love Films",
+        content: "Hi {{name}},\n\nJust wanted to give you a heads up that wedding dates are filling up quickly, especially for {{weddingDate}}!\n\nWe'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, we'd love to get you on our calendar.\n\nNo pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.\n\nBest wishes,\nYour Love Films",
         callToAction: "Check My Availability",
         callToActionUrl: "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call"
       },
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         enabled: true,
         sendTo: "inquirer",
         timing: "10 days after manual enrollment",
-        content: "Hi {{name}},\n\nI wanted to reach out one more time about videography for your wedding.\n\nI'm still here to answer any questions you might have, and I'd love to help you capture your special day!\n\nIf now isn't the right time or you've decided to go in a different direction, I completely understand. Just wanted to make sure I followed up!\n\nWishing you all the best with your wedding planning!\n\nBest,\nYour Love Films",
+        content: "Hi {{name}},\n\nWe wanted to reach out one more time about photography and videography for your wedding.\n\nOur team is still here to answer any questions you might have, and we'd love to help capture your day.\n\nIf now isn't the right time or you've decided to go in a different direction, we completely understand. Just wanted to make sure we followed up!\n\nWishing you all the best with your wedding planning!\n\nBest,\nYour Love Films",
         callToAction: "",
         callToActionUrl: ""
       },
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         enabled: true,
         sendTo: "inquirer",
         timing: "14 days after manual enrollment",
-        content: "Hi {{name}},\n\nThis will be my last follow-up email - I don't want to be a bother!\n\nIf you're still interested in wedding videography, my door is always open. Feel free to reach out anytime if your plans change or if you have questions down the road.\n\nI wish you nothing but the best for your wedding day and hope it's everything you've dreamed of!\n\nWarmest regards,\nYour Love Films",
+        content: "Hi {{name}},\n\nThis will be our last follow-up email — we don't want to be a bother!\n\nIf you're still interested in wedding photography and videography, our door is always open. Feel free to reach out anytime if your plans change or if you have questions down the road.\n\nWe wish you nothing but the best for your wedding day and hope it's everything you've dreamed of!\n\nWarmest regards,\nYour Love Films",
         callToAction: "",
         callToActionUrl: ""
       }

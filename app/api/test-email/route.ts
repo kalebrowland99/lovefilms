@@ -49,18 +49,18 @@ export async function POST(request: Request) {
     const sampleData = {
       name: 'John Smith',
       email: testEmail,
-      phone: '(615) 555-1234',
+      phone: '(555) 555-1234',
       fianceName: 'Jane Doe',
       weddingDate: 'June 15, 2026',
-      venue: 'The Hermitage Hotel, Nashville',
+      venue: 'The Garden Venue',
       videographer: 'Not Yet',
       formData: {
         name: 'John Smith',
         email: testEmail,
-        phone: '(615) 555-1234',
+        phone: '(555) 555-1234',
         fianceName: 'Jane Doe',
         weddingDate: 'June 15, 2026',
-        venue: 'The Hermitage Hotel, Nashville',
+        venue: 'The Garden Venue',
         videographer: 'Not Yet'
       }
     };
