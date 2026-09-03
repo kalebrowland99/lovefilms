@@ -195,7 +195,7 @@ export default function SpecialPricingPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">•</span>
-                    <span>2 Cinematographers</span>
+                    <span>Dual-camera coverage</span>
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">•</span>
@@ -259,7 +259,7 @@ export default function SpecialPricingPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">•</span>
-                    <span>2 Master cinematographers</span>
+                    <span>Master dual-camera coverage</span>
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">•</span>
@@ -319,7 +319,7 @@ export default function SpecialPricingPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">•</span>
-                    <span>2 Cinematographers</span>
+                    <span>Dual-camera coverage</span>
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">•</span>

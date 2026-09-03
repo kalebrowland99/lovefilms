@@ -105,9 +105,6 @@ export const Footer = ({ className }: { className?: string }) => {
             <Link href="/experience" className="hover:text-[#070707]">
               Experience
             </Link>
-            <Link href="/about" className="hover:text-[#070707]">
-              About
-            </Link>
           </nav>
           <p className="text-[#070707]/60 mt-6">
             Email:{' '}

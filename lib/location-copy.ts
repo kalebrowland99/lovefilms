@@ -14,7 +14,6 @@ export type LocationCopy = VisitorLocation & {
   footerTagline: string;
   approachHeadline: string;
   portfolioHeadline: string;
-  aboutIntro: string;
   experienceHeadlineBefore: string;
   experienceHeadlineAfter: string;
   servingHeading: string;
@@ -31,7 +30,7 @@ export function getLocationCopy(location: VisitorLocation): LocationCopy {
     ...location,
     heroTitle: state
       ? `Wedding Photography & Videography in ${state}`
-      : 'Wedding Photography & Videography Nationwide',
+      : 'Wedding Photography & Videography',
     heroSubtitle: state
       ? `Timeless photo and video coverage for weddings throughout ${state}.`
       : 'Timeless photo and video coverage for weddings across the country.',
@@ -47,23 +46,20 @@ export function getLocationCopy(location: VisitorLocation): LocationCopy {
       'Our team serves weddings across the country, and any necessary travel is already included in your package.',
     footerTagline: state
       ? `Wedding photography & videography in ${state}`
-      : 'Wedding photography & videography nationwide',
+      : 'Wedding photography & videography',
     approachHeadline: upper
       ? `CINEMATIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY IN ${upper}`
-      : 'CINEMATIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY NATIONWIDE',
+      : 'CINEMATIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY',
     portfolioHeadline: upper
       ? `ROMANTIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY IN ${upper}`
-      : 'ROMANTIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY NATIONWIDE {{i}}and{{/i}} BEYOND',
-    aboutIntro: state
-      ? `We are a wedding photography and videography team serving couples throughout ${state} and across the country. Before we hop on a call, here is a short video on how we work and what it is like to have us there on your day.`
-      : 'We are a wedding photography and videography team serving couples across the country. Before we hop on a call, here is a short video on how we work and what it is like to have us there on your day.',
+      : 'ROMANTIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY',
     experienceHeadlineBefore: 'Wedding films and photography',
-    experienceHeadlineAfter: state ? `in ${state}` : 'nationwide',
+    experienceHeadlineAfter: state ? `in ${state}` : '',
     servingHeading: state ? `Serving weddings throughout ${state}` : 'Serving weddings across the country',
     servingBody: state
       ? `Our ${state} wedding photography & videography team photographs and films weddings, elopements, and couple sessions throughout ${state} and beyond. Destination work is part of how we work, not an exception.`
       : 'Our team photographs and films weddings, elopements, and couple sessions across the country. If your celebration is somewhere we have not listed, ask. Destination work is part of how we work, not an exception.',
-    instagramLocation: state ? `📍 ${state} · Wedding Films` : '📍 Nationwide · Wedding Films',
+    instagramLocation: state ? `📍 ${state} · Wedding Films` : '📍 Wedding Films',
     letsTravelBody: state
       ? `Serving weddings throughout ${state} — and wherever your celebration takes you.`
       : 'Our team serves weddings across the country, and any necessary travel is already included in your package.',

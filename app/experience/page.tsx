@@ -9,7 +9,7 @@ import { getLocationCopyForRequest } from '@/lib/location-copy';
 export const metadata: Metadata = {
   title: 'The Experience | Your Love Films',
   description:
-    'What it is like to work with Your Love Films — cinematic wedding photography and videography for couples nationwide, from the first call through delivery.',
+    'What it is like to work with Your Love Films — cinematic wedding photography and videography, from the first call through delivery.',
 };
 
 const STEPS = [
@@ -50,8 +50,13 @@ export default async function ExperiencePage() {
               the experience
             </p>
             <h1 className="mt-5 font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-[#070707]">
-              {copy.experienceHeadlineBefore}{' '}
-              <em className="italic font-normal">{copy.experienceHeadlineAfter}</em>
+              {copy.experienceHeadlineBefore}
+              {copy.experienceHeadlineAfter ? (
+                <>
+                  {' '}
+                  <em className="italic font-normal">{copy.experienceHeadlineAfter}</em>
+                </>
+              ) : null}
             </h1>
             <p className="mt-8 mx-auto max-w-2xl text-lg md:text-xl leading-relaxed text-[#070707]/75">
               Our wedding team photographs and films your day as one story —

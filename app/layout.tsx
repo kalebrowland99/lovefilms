@@ -30,13 +30,13 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Your Love Films | Wedding Photography & Videography Nationwide",
+  title: "Your Love Films | Wedding Photography & Videography",
   description:
-    "Cinematic wedding photography and videography for couples nationwide. Capturing your love story in photographs and on film, wherever you say I do.",
+    "Cinematic wedding photography and videography. Capturing your love story in photographs and on film, wherever you say I do.",
   openGraph: {
-    title: "Your Love Films | Wedding Photography & Videography Nationwide",
+    title: "Your Love Films | Wedding Photography & Videography",
     description:
-      "Cinematic wedding photography and videography for couples nationwide. Capturing your love story in photographs and on film, wherever you say I do.",
+      "Cinematic wedding photography and videography. Capturing your love story in photographs and on film, wherever you say I do.",
     type: "website",
   },
 };

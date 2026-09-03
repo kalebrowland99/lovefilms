@@ -23,7 +23,7 @@ export default function ExamplePage() {
             team creating visual stories that capture the essence of your day.
           </p>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
-            Our photographers and filmmakers tell one story together — photographs
+            Our photographer and filmmaker tell one story together — photographs
             and film, from the first look through the last dance.
           </p>
         </section>
