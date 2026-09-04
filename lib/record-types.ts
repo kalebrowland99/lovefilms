@@ -23,6 +23,7 @@ export type OutlineSection = {
 export type OtterNotes = {
   title: string;
   summary: string;
+  eventDetails: { label: string; value: string }[];
   keyTakeaways: string[];
   actionItems: ActionItem[];
   outline: OutlineSection[];
@@ -52,6 +53,8 @@ export type LiveRecordSession = {
   listeners: string[];
   notes: OtterNotes | null;
   transcriber: 'deepgram' | 'browser' | 'unknown';
+  audioUrl?: string;
+  audioPath?: string;
 };
 
 export type RecordCapabilities = {
@@ -76,4 +79,5 @@ export type RecordHistoryItem = {
   utteranceCount: number;
   notes: OtterNotes | null;
   transcript: TranscriptUtterance[];
+  audioUrl?: string;
 };

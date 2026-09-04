@@ -1,5 +1,7 @@
 import { db, COLLECTIONS } from '@/lib/firebase';
 import { generateOtterNotes } from '@/lib/record-summary';
+import { downloadRecordingAudio, saveRecordingAudio } from '@/lib/record-audio';
+import { diarizeRecordingAudio } from '@/lib/record-diarize';
 import type {
   LiveRecordSession,
   PeerSignal,
@@ -44,6 +46,7 @@ function historyFromSession(session: LiveRecordSession): RecordHistoryItem {
     utteranceCount: session.utterances.length,
     notes: session.notes,
     transcript: session.utterances,
+    audioUrl: session.audioUrl,
   };
 }
 
@@ -284,7 +287,10 @@ export async function getAllSignals() {
   return readSignals();
 }
 
-export async function stopSession(hostId: string) {
+export async function stopSession(
+  hostId: string,
+  audio?: { data: Buffer; contentType: string; filename: string },
+) {
   const live = await readLiveFromFirebase();
   if (!live) throw new Error('No live recording.');
   if (live.hostId !== hostId) throw new Error('Only the recorder can stop this call.');
@@ -297,18 +303,60 @@ export async function stopSession(hostId: string) {
   };
   await writeLiveToFirebase(processing);
 
-  const notes = await generateOtterNotes(live.title, live.utterances);
+  let audioUrl = live.audioUrl;
+  let audioPath = live.audioPath;
+  let utterances = live.utterances;
+
+  if (audio?.data.length) {
+    const saved = await saveRecordingAudio(live.id, audio.data, audio.contentType);
+    if (saved) {
+      audioUrl = saved.audioUrl;
+      audioPath = saved.path;
+    }
+    try {
+      const diarized = await diarizeRecordingAudio(
+        audio.data,
+        audio.filename,
+        audio.contentType,
+      );
+      if (diarized?.length) utterances = diarized;
+    } catch (error) {
+      console.error('Speaker diarization skipped:', error);
+    }
+  } else if (audioPath) {
+    const buf = await downloadRecordingAudio(audioPath);
+    if (buf) {
+      try {
+        const diarized = await diarizeRecordingAudio(buf, `${live.id}.webm`, 'audio/webm');
+        if (diarized?.length) utterances = diarized;
+      } catch (error) {
+        console.error('Speaker diarization skipped:', error);
+      }
+    }
+  }
+
+  const notes = await generateOtterNotes(live.title, utterances);
   const ended: LiveRecordSession = {
     ...processing,
     status: 'ended',
     endedAt: Date.now(),
     updatedAt: Date.now(),
-    notes,
+    utterances,
+    notes: notes.title && live.title && live.title !== 'Consultation call'
+      ? { ...notes, title: notes.title }
+      : notes,
+    audioUrl,
+    audioPath,
   };
-  await writeLiveToFirebase(ended);
   await archiveSession(ended);
+  await writeLiveToFirebase(null);
   await writeSignals({});
   return ended;
+}
+
+export async function getRecording(id: string) {
+  const history = await readHistory();
+  return history.find((item) => item.id === id) ?? null;
 }
 
 export async function listHistory() {

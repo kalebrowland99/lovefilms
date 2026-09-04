@@ -6,6 +6,7 @@ import {
   getAllSignals,
   getLiveSession,
   getPeerSignal,
+  getRecording,
   heartbeat,
   joinListener,
   leaveListener,
@@ -14,6 +15,8 @@ import {
   stopSession,
 } from '@/lib/record-store';
 import type { RecordCapabilities } from '@/lib/record-types';
+
+export const maxDuration = 60;
 
 const ADMIN_PASSWORD = process.env.EMAIL_ADMIN_PASSWORD || 'ylf';
 
@@ -39,23 +42,33 @@ function unauthorized() {
 export async function GET(request: Request) {
   if (!checkAuth(request)) return unauthorized();
 
-const url = new URL(request.url);
-    const peerId = url.searchParams.get('peerId') || undefined;
-    const role = url.searchParams.get('role') === 'host' ? 'host' : 'listener';
+  const url = new URL(request.url);
+  const peerId = url.searchParams.get('peerId') || undefined;
+  const role = url.searchParams.get('role') === 'host' ? 'host' : 'listener';
 
   try {
+    const recordingId = url.searchParams.get('id');
+    if (recordingId) {
+      const recording = await getRecording(recordingId);
+      return NextResponse.json({
+        recording,
+        capabilities: capabilities(),
+      });
+    }
+
     const session = await getLiveSession();
     const roleIsHost = role === 'host';
     if (roleIsHost && peerId && session?.status === 'recording' && session.hostId === peerId) {
       await heartbeat(peerId);
     }
 
-    const history = session?.status === 'recording' ? [] : await listHistory();
+    const history = await listHistory();
+    const live = session?.status === 'recording' || session?.status === 'processing' ? session : null;
     const signals = peerId ? await getPeerSignal(peerId) : null;
     const signalsByPeer = roleIsHost ? await getAllSignals() : null;
 
     return NextResponse.json({
-      session,
+      session: live,
       signals,
       signalsByPeer,
       capabilities: capabilities(),

@@ -16,17 +16,18 @@ function transcriptText(utterances: TranscriptUtterance[]) {
 const SYSTEM_PROMPT = `You are Otter.ai-style meeting notes for a wedding film / photography consultation call.
 Return ONLY valid JSON with this shape:
 {
-  "title": "short descriptive title",
-  "summary": "2-3 paragraph recap in a warm, clear voice. Cover who, what they want, logistics, and where things landed.",
+  "title": "short descriptive title using couple or client names if known",
+  "summary": "2-3 sentence recap. Name the people on the call (Speaker 1 / Speaker 2 or real names if said). Cover what they want and where things landed.",
+  "eventDetails": [{"label": "Date", "value": "..."}, {"label": "Ceremony Location", "value": "..."}],
   "keyTakeaways": ["3-7 concrete bullets"],
   "actionItems": [{"text": "task", "owner": "optional name or role"}],
   "outline": [{"heading": "section name", "startMs": 0, "bullets": ["point"]}]
 }
 Rules:
+- Use speaker labels from the transcript. If names are spoken, use those names in the summary.
+- Event details should only include facts from the transcript (date, venue, timeline, style, budget, package).
 - Action items should be specific and follow-up ready.
-- Outline should follow the conversation chronologically.
-- If a field is unknown, omit the owner rather than inventing one.
-- Never invent facts that are not in the transcript.`;
+- Never invent facts that are not in the transcript. Omit unknown fields.`;
 
 async function completeJson(user: string): Promise<string | null> {
   if (process.env.OPENAI_API_KEY) {
@@ -144,6 +145,7 @@ function extractiveNotes(title: string, utterances: TranscriptUtterance[]): Otte
   return {
     title: title || 'Consultation call',
     summary,
+    eventDetails: [],
     keyTakeaways: keyTakeaways.length ? keyTakeaways : sentences.slice(0, 3),
     actionItems,
     outline,
@@ -189,6 +191,18 @@ function coerceNotes(raw: unknown, fallbackTitle: string, utterances: Transcript
   return {
     title: String(obj.title || fallbackTitle || fallback.title),
     summary: String(obj.summary || fallback.summary),
+    eventDetails: Array.isArray(obj.eventDetails)
+      ? obj.eventDetails
+          .map((item) => {
+            if (!item || typeof item !== 'object') return null;
+            const rec = item as { label?: unknown; value?: unknown };
+            const label = String(rec.label ?? '').trim();
+            const value = String(rec.value ?? '').trim();
+            if (!label || !value) return null;
+            return { label, value };
+          })
+          .filter((x): x is { label: string; value: string } => !!x)
+      : fallback.eventDetails,
     keyTakeaways: Array.isArray(obj.keyTakeaways)
       ? obj.keyTakeaways.map(String).filter(Boolean)
       : fallback.keyTakeaways,
@@ -213,6 +227,7 @@ export async function generateOtterNotes(
     return {
       title: title || 'Untitled recording',
       summary: 'No speech was captured in this recording.',
+      eventDetails: [],
       keyTakeaways: [],
       actionItems: [],
       outline: [],

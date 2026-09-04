@@ -26,6 +26,35 @@ export function formatClock(ms: number) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+export function formatDuration(ms: number) {
+  const total = Math.max(0, Math.round(ms / 1000));
+  if (total < 60) return `${total} sec`;
+  const m = Math.round(total / 60);
+  return `${m} min`;
+}
+
+export function formatFeedDate(ms: number) {
+  const d = new Date(ms);
+  const now = new Date();
+  const sameDay =
+    d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth() &&
+    d.getDate() === now.getDate();
+  if (sameDay) {
+    return `Today, ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+  }
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+export function formatCallWhen(ms: number) {
+  return new Date(ms).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
 export function speakerColor(speaker: string) {
   let hash = 0;
   for (let i = 0; i < speaker.length; i++) hash = speaker.charCodeAt(i) + ((hash << 5) - hash);

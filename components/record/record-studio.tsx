@@ -2,9 +2,29 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { Check, Download, Headphones, Mic, Pause, Radio, Square } from 'lucide-react';
-import { getOrCreateClientId, pollRecord, postRecord } from '@/lib/record-client';
-import { formatClock, iceConfig, pickRecorderMime, speakerColor } from '@/lib/record-media';
+import {
+  ArrowLeft,
+  Calendar,
+  Check,
+  Clock,
+  Copy,
+  Headphones,
+  Mic,
+  Pause,
+  Play,
+  Radio,
+  Square,
+} from 'lucide-react';
+import { finishRecording, getOrCreateClientId, pollRecord, postRecord } from '@/lib/record-client';
+import {
+  formatCallWhen,
+  formatClock,
+  formatDuration,
+  formatFeedDate,
+  iceConfig,
+  pickRecorderMime,
+  speakerColor,
+} from '@/lib/record-media';
 import type {
   LiveRecordSession,
   OtterNotes,
@@ -15,9 +35,11 @@ import type {
 } from '@/lib/record-types';
 
 type Role = 'idle' | 'host' | 'listener';
-type Tab = 'transcript' | 'notes';
+type View = 'home' | 'live' | 'detail';
+type DetailTab = 'summary' | 'transcript';
 
 const POLL_MS = 450;
+const SPEAKER_GAP_MS = 1600;
 
 function speechRecognitionCtor(): (new () => SpeechRecognitionLike) | null {
   if (typeof window === 'undefined') return null;
@@ -47,6 +69,40 @@ type SpeechRecognitionEventLike = {
   }>;
 };
 
+function toHistoryItem(session: LiveRecordSession, audioUrl?: string): RecordHistoryItem {
+  return {
+    id: session.id,
+    title: session.notes?.title || session.title,
+    startedAt: session.startedAt,
+    endedAt: session.endedAt ?? Date.now(),
+    durationMs: (session.endedAt ?? Date.now()) - session.startedAt,
+    utteranceCount: session.utterances.length,
+    notes: session.notes,
+    transcript: session.utterances,
+    audioUrl: audioUrl || session.audioUrl,
+  };
+}
+
+function avatarLetter(title: string) {
+  const cleaned = title.replace(/[^A-Za-z]/g, '');
+  return (cleaned[0] || 'R').toUpperCase();
+}
+
+function avatarColor(title: string) {
+  return speakerColor(title || 'R');
+}
+
+function groupHistory(items: RecordHistoryItem[]) {
+  const groups: { heading: string; items: RecordHistoryItem[] }[] = [];
+  for (const item of items) {
+    const heading = formatFeedDate(item.startedAt);
+    const last = groups[groups.length - 1];
+    if (last && last.heading === heading) last.items.push(item);
+    else groups.push({ heading, items: [item] });
+  }
+  return groups;
+}
+
 export function RecordStudio() {
   const [password, setPassword] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
@@ -64,12 +120,12 @@ export function RecordStudio() {
   const [busy, setBusy] = useState(false);
   const [listening, setListening] = useState(false);
   const [listenArmed, setListenArmed] = useState(false);
-  const [tab, setTab] = useState<Tab>('transcript');
+  const [view, setView] = useState<View>('home');
+  const [openCall, setOpenCall] = useState<RecordHistoryItem | null>(null);
+  const [detailTab, setDetailTab] = useState<DetailTab>('summary');
   const [elapsed, setElapsed] = useState(0);
   const [levels, setLevels] = useState<number[]>(() => Array(28).fill(4));
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
-  const [openHistoryId, setOpenHistoryId] = useState<string | null>(null);
-  const [dismissedId, setDismissedId] = useState<string | null>(null);
+  const [localAudioUrl, setLocalAudioUrl] = useState<string | null>(null);
 
   const passwordRef = useRef('');
   const clientIdRef = useRef('');
@@ -85,14 +141,37 @@ export function RecordStudio() {
   const remoteSet = useRef(new Set<string>());
   const seenIce = useRef(new Set<string>());
   const listenerPc = useRef<RTCPeerConnection | null>(null);
-  const audioEl = useRef<HTMLAudioElement | null>(null);
+  const liveAudioEl = useRef<HTMLAudioElement | null>(null);
   const listeningRef = useRef(false);
   const hostActiveRef = useRef(false);
   const transcribePosted = useRef(0);
+  const speakerTurnRef = useRef(1);
+  const lastFinalAtRef = useRef(0);
 
   useEffect(() => {
     passwordRef.current = password;
   }, [password]);
+
+  const applyPoll = useCallback((data: Awaited<ReturnType<typeof pollRecord>>, pollRole: Role) => {
+    setCapabilities(data.capabilities);
+    if (data.history) setHistory(data.history);
+    const live = data.session;
+    if (live && (live.status === 'recording' || live.status === 'processing')) {
+      setSession(live);
+      if (pollRole !== 'host' || live.status !== 'recording') {
+        setUtterances(live.utterances);
+        setInterim(live.interim || '');
+        setInterimSpeaker(live.interimSpeaker || 'Speaker 1');
+      }
+      if (!hostActiveRef.current && live.status === 'recording') setView('live');
+      return;
+    }
+    setSession(null);
+    if (!hostActiveRef.current) {
+      setInterim('');
+      if (pollRole !== 'host') setView((current) => (current === 'live' ? 'home' : current));
+    }
+  }, []);
 
   useEffect(() => {
     const id = getOrCreateClientId();
@@ -109,43 +188,15 @@ export function RecordStudio() {
         })
         .catch(() => undefined);
     }
-    // applyPoll is stable enough for the one-time session restore
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const visibleSession = session && session.id !== dismissedId ? session : null;
+  }, [applyPoll]);
 
   const role: Role = useMemo(() => {
-    if (visibleSession?.status === 'recording' || visibleSession?.status === 'processing') {
-      if (visibleSession.hostId === clientId) return 'host';
+    if (session?.status === 'recording' || session?.status === 'processing') {
+      if (session.hostId === clientId || hostActiveRef.current) return 'host';
       return 'listener';
     }
     return 'idle';
-  }, [visibleSession, clientId]);
-
-  const applyPoll = useCallback((data: Awaited<ReturnType<typeof pollRecord>>, pollRole: Role) => {
-    setCapabilities(data.capabilities);
-    if (data.history?.length) setHistory(data.history);
-    const live = data.session;
-    if (!live) {
-      setSession(null);
-      if (pollRole !== 'host') {
-        setUtterances([]);
-        setInterim('');
-      }
-      return;
-    }
-
-    setSession(live);
-
-    if (pollRole !== 'host' || live.status !== 'recording') {
-      setUtterances(live.utterances);
-      setInterim(live.interim || '');
-      setInterimSpeaker(live.interimSpeaker || 'Speaker 1');
-    }
-
-    if (live.status === 'ended' && live.notes) setTab('notes');
-  }, []);
+  }, [session, clientId]);
 
   useEffect(() => {
     if (!authed || !password) return;
@@ -185,7 +236,6 @@ export function RecordStudio() {
       cancelled = true;
       window.clearInterval(id);
     };
-    // Host peer wiring reads stream/PC refs; recreating the interval would drop ICE.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authed, password, applyPoll]);
 
@@ -194,6 +244,10 @@ export function RecordStudio() {
     const id = window.setInterval(() => setElapsed(Date.now() - session.startedAt), 250);
     return () => window.clearInterval(id);
   }, [session?.status, session?.startedAt]);
+
+  const displayedCall = openCall
+    ? history.find((item) => item.id === openCall.id) || openCall
+    : null;
 
   const drawLevels = useCallback(() => {
     const analyser = analyserRef.current;
@@ -231,6 +285,15 @@ export function RecordStudio() {
     await postRecord(passwordRef.current, { action: 'transcript', ...payload });
   }
 
+  function nextSpeaker() {
+    const now = Date.now();
+    if (lastFinalAtRef.current && now - lastFinalAtRef.current > SPEAKER_GAP_MS) {
+      speakerTurnRef.current = speakerTurnRef.current === 1 ? 2 : 1;
+    }
+    lastFinalAtRef.current = now;
+    return `Speaker ${speakerTurnRef.current}`;
+  }
+
   function pushLocalUtterance(text: string, speaker: string, startMs: number, endMs: number) {
     const utterance: TranscriptUtterance = {
       id: crypto.randomUUID(),
@@ -259,15 +322,18 @@ export function RecordStudio() {
         if (!piece) continue;
         if (event.results[i].isFinal) {
           const startMs = Date.now() - startedAtRef.current;
-          pushLocalUtterance(piece, 'Speaker 1', Math.max(0, startMs - 2500), startMs);
+          const speaker = nextSpeaker();
+          setInterimSpeaker(speaker);
+          pushLocalUtterance(piece, speaker, Math.max(0, startMs - 2500), startMs);
         } else {
           nextInterim += (nextInterim ? ' ' : '') + piece;
         }
       }
       if (nextInterim) {
+        const speaker = `Speaker ${speakerTurnRef.current}`;
         setInterim(nextInterim);
-        setInterimSpeaker('Speaker 1');
-        void postTranscript({ interim: nextInterim, interimSpeaker: 'Speaker 1' });
+        setInterimSpeaker(speaker);
+        void postTranscript({ interim: nextInterim, interimSpeaker: speaker });
       }
     };
     rec.onerror = (ev) => {
@@ -384,9 +450,9 @@ export function RecordStudio() {
     const pc = new RTCPeerConnection(iceConfig());
     pc.ontrack = (event) => {
       const media = event.streams[0] || new MediaStream([event.track]);
-      if (audioEl.current) {
-        audioEl.current.srcObject = media;
-        void audioEl.current.play().then(() => setListening(true));
+      if (liveAudioEl.current) {
+        liveAudioEl.current.srcObject = media;
+        void liveAudioEl.current.play().then(() => setListening(true));
       }
     };
     pc.onicecandidate = (event) => {
@@ -407,7 +473,7 @@ export function RecordStudio() {
     setListenArmed(false);
     listenerPc.current?.close();
     listenerPc.current = null;
-    if (audioEl.current) audioEl.current.srcObject = null;
+    if (liveAudioEl.current) liveAudioEl.current.srcObject = null;
     await postRecord(passwordRef.current, { action: 'leave', peerId: clientIdRef.current }).catch(() => undefined);
   }
 
@@ -432,9 +498,13 @@ export function RecordStudio() {
   async function startRecording() {
     setError('');
     setBusy(true);
-    setDownloadUrl(null);
-    setTab('transcript');
+    setLocalAudioUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     chunksRef.current = [];
+    speakerTurnRef.current = 1;
+    lastFinalAtRef.current = 0;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -446,9 +516,10 @@ export function RecordStudio() {
       streamRef.current = stream;
       startedAtRef.current = Date.now();
       hostActiveRef.current = true;
-      setDismissedId(null);
       setUtterances([]);
       setInterim('');
+      setView('live');
+      setOpenCall(null);
 
       startBrowserTranscription();
 
@@ -470,6 +541,7 @@ export function RecordStudio() {
       setSession(next);
     } catch (err) {
       teardownCapture();
+      setView('home');
       setError(err instanceof Error ? err.message : 'Could not start recording');
     } finally {
       setBusy(false);
@@ -493,21 +565,22 @@ export function RecordStudio() {
       });
       recRef.current = null;
       teardownCapture();
-      if (chunksRef.current.length) {
-        const blob = new Blob(chunksRef.current, { type: mime });
-        setDownloadUrl((prev) => {
-          if (prev) URL.revokeObjectURL(prev);
-          return URL.createObjectURL(blob);
-        });
-      }
-      const { session: next } = await postRecord<{ session: LiveRecordSession }>(passwordRef.current, {
-        action: 'stop',
-        hostId: clientIdRef.current,
+      const blob = chunksRef.current.length ? new Blob(chunksRef.current, { type: mime }) : undefined;
+      const blobUrl = blob ? URL.createObjectURL(blob) : null;
+      setLocalAudioUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return blobUrl;
       });
-      setSession(next);
-      if (next.notes) setTab('notes');
+      const { session: next } = await finishRecording(passwordRef.current, clientIdRef.current, blob);
+      const item = toHistoryItem(next, next.audioUrl || blobUrl || undefined);
+      setOpenCall(item);
+      setHistory((prev) => [item, ...prev.filter((row) => row.id !== item.id)]);
+      setSession(null);
+      setView('detail');
+      setDetailTab('summary');
     } catch (err) {
       teardownCapture();
+      setView('home');
       setError(err instanceof Error ? err.message : 'Could not stop recording');
     } finally {
       setBusy(false);
@@ -535,31 +608,30 @@ export function RecordStudio() {
     }
   }
 
-  const notes: OtterNotes | null = visibleSession?.notes ?? null;
-  const live = visibleSession?.status === 'recording';
-  const listenerCount = visibleSession?.listeners.length ?? 0;
+  const live = session?.status === 'recording';
+  const processing = session?.status === 'processing' || busy && view === 'live' && !live;
+  const listenerCount = session?.listeners.length ?? 0;
+  const playUrl = displayedCall?.audioUrl || localAudioUrl;
 
   if (!authed) {
     return (
-      <div className="min-h-screen bg-[#f6f4ef] text-[#070707] flex items-center justify-center px-4">
-        <form onSubmit={handleLogin} className="w-full max-w-md bg-white border border-black/10 rounded-2xl p-8 shadow-sm">
-          <p className="text-[11px] tracking-[0.2em] uppercase text-black/50">Your Love Films</p>
-          <h1 className="mt-2 font-[family-name:var(--font-serif-alt)] italic text-4xl">Record</h1>
-          <p className="mt-3 text-sm text-black/60">
-            Team access for live call recording, transcription, and notes.
-          </p>
+      <div className="min-h-screen bg-white text-[#111] flex items-center justify-center px-4">
+        <form onSubmit={handleLogin} className="w-full max-w-md border border-black/10 rounded-2xl p-8 shadow-sm">
+          <p className="text-[11px] tracking-[0.2em] uppercase text-black/45">Your Love Films</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Record</h1>
+          <p className="mt-3 text-sm text-black/60">Team access for live call recording, transcription, and notes.</p>
           <label className="block mt-6 text-sm">
             Password
             <input
               type="password"
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
-              className="mt-2 w-full rounded-lg border border-black/15 px-4 py-3 outline-none focus:border-black"
+              className="mt-2 w-full rounded-lg border border-black/15 px-4 py-3 outline-none focus:border-[#1876F2]"
               required
             />
           </label>
-          {authError ? <p className="mt-2 text-sm text-[#7A1F2B]">{authError}</p> : null}
-          <button type="submit" className="mt-6 w-full bg-[#070707] text-white py-3 rounded-lg font-medium">
+          {authError ? <p className="mt-2 text-sm text-[#C0392B]">{authError}</p> : null}
+          <button type="submit" className="mt-6 w-full bg-[#1876F2] text-white py-3 rounded-lg font-medium">
             Enter studio
           </button>
         </form>
@@ -568,176 +640,380 @@ export function RecordStudio() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f6f4ef] text-[#070707]">
-      <header className="sticky top-0 z-20 border-b border-black/10 bg-[#f6f4ef]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-8">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-[11px] tracking-[0.2em] uppercase text-black/50 hover:text-black">
-              YLF
-            </Link>
-            <span className="text-black/30">/</span>
-            <span className="font-[family-name:var(--font-serif-alt)] italic text-xl">Record</span>
+    <div className="min-h-screen bg-[#f7f7f8] text-[#111]">
+      <header className="sticky top-0 z-20 border-b border-black/8 bg-white">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 md:px-8">
+          <div className="flex min-w-0 items-center gap-3">
+            {view === 'detail' ? (
+              <button
+                onClick={() => {
+                  setView('home');
+                  setOpenCall(null);
+                }}
+                className="rounded-full p-2 text-black/60 hover:bg-black/5"
+                aria-label="Back to recordings"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            ) : (
+              <Link href="/" className="text-[11px] tracking-[0.18em] uppercase text-black/40 hover:text-black">
+                YLF
+              </Link>
+            )}
+            <span className="truncate text-lg font-semibold tracking-tight">
+              {view === 'detail' ? displayedCall?.title || 'Recording' : 'Recordings'}
+            </span>
             {live ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#7A1F2B] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C0392B] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
                 Live
               </span>
             ) : null}
           </div>
-          <div className="flex items-center gap-3 text-sm">
-            {live ? <span className="tabular-nums text-black/70">{formatClock(elapsed)}</span> : null}
+          <div className="flex items-center gap-2">
+            {live ? <span className="hidden tabular-nums text-sm text-black/55 md:inline">{formatClock(elapsed)}</span> : null}
             {role === 'host' && live ? (
               <button
                 onClick={stopRecording}
                 disabled={busy}
-                className="inline-flex items-center gap-2 rounded-full bg-[#7A1F2B] px-4 py-2 text-white"
+                className="inline-flex items-center gap-2 rounded-full bg-[#C0392B] px-4 py-2 text-sm font-medium text-white"
               >
                 <Square className="h-3.5 w-3.5 fill-current" />
                 Stop
+              </button>
+            ) : null}
+            {view === 'home' ? (
+              <button
+                onClick={startRecording}
+                disabled={busy}
+                className="inline-flex items-center gap-2 rounded-full bg-[#1876F2] px-4 py-2 text-sm font-medium text-white"
+              >
+                <Mic className="h-4 w-4" />
+                Record
               </button>
             ) : null}
           </div>
         </div>
       </header>
 
-      <audio ref={audioEl} autoPlay playsInline className="hidden" />
+      <audio ref={liveAudioEl} autoPlay playsInline className="hidden" />
 
-      <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
+      <main className="mx-auto max-w-5xl px-4 py-6 md:px-8">
         {error ? (
-          <div className="mb-6 rounded-lg border border-[#7A1F2B]/20 bg-[#7A1F2B]/8 px-4 py-3 text-sm text-[#7A1F2B]">
+          <div className="mb-6 rounded-lg border border-[#C0392B]/20 bg-[#C0392B]/8 px-4 py-3 text-sm text-[#C0392B]">
             {error}
           </div>
         ) : null}
 
-        {role === 'idle' && visibleSession?.status !== 'ended' ? (
-          <IdleStart
+        {view === 'home' ? (
+          <HomeFeed
             title={title}
             setTitle={setTitle}
-            onStart={startRecording}
-            busy={busy}
-            capabilities={capabilities}
             history={history}
-            openHistoryId={openHistoryId}
-            setOpenHistoryId={setOpenHistoryId}
+            capabilities={capabilities}
+            onOpen={(item) => {
+              setOpenCall(item);
+              setDetailTab('summary');
+              setView('detail');
+            }}
           />
         ) : null}
 
-        {visibleSession && (live || visibleSession.status === 'processing' || visibleSession.status === 'ended') ? (
-          <>
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-black/45">
-                  {role === 'listener' ? 'Listening in' : visibleSession.status === 'ended' ? 'Notes ready' : 'Recording'}
-                </p>
-                <h1 className="mt-1 font-[family-name:var(--font-serif-alt)] italic text-3xl md:text-4xl">
-                  {visibleSession.title}
-                </h1>
-                <p className="mt-2 text-sm text-black/55">
-                  {role === 'listener'
-                    ? 'You are reading the live transcript. Tap listen to hear the room audio.'
-                    : 'Phone on speaker, this tab open. Anyone else on /record sees this live.'}
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {role === 'listener' && live ? (
-                  listenArmed ? (
-                    <button
-                      onClick={stopListening}
-                      className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-4 py-2 text-sm"
-                    >
-                      <Pause className="h-4 w-4" />
-                      {listening ? 'Stop listening' : 'Connecting audio…'}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => void startListening()}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#070707] px-4 py-2 text-sm text-white"
-                    >
-                      <Headphones className="h-4 w-4" />
-                      Listen live
-                    </button>
-                  )
-                ) : null}
-                {downloadUrl ? (
-                  <a
-                    href={downloadUrl}
-                    download={`${visibleSession.title.replace(/\s+/g, '-').toLowerCase()}.webm`}
-                    className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-4 py-2 text-sm"
-                  >
-                    <Download className="h-4 w-4" />
-                    Audio
-                  </a>
-                ) : null}
-              </div>
-            </div>
-
-            {role === 'host' && live ? (
-              <div className="mb-6 flex h-12 items-end gap-[3px] rounded-xl bg-[#070707] px-4 py-2">
-                {levels.map((h, i) => (
-                  <span
-                    key={i}
-                    className="w-full rounded-full bg-[#f6f4ef]"
-                    style={{ height: `${h}px`, opacity: 0.35 + (h / 40) * 0.65 }}
-                  />
-                ))}
-              </div>
-            ) : null}
-
-            {listening ? (
-              <p className="mb-4 inline-flex items-center gap-2 text-sm text-[#1F4E5F]">
-                <Radio className="h-4 w-4" />
-                You are listening to the live recording
-              </p>
-            ) : null}
-
-            <div className="mb-4 flex gap-2">
-              <TabButton active={tab === 'transcript'} onClick={() => setTab('transcript')}>
-                Transcript
-              </TabButton>
-              <TabButton active={tab === 'notes'} onClick={() => setTab('notes')}>
-                Notes
-              </TabButton>
-              {listenerCount > 0 && live ? (
-                <span className="ml-auto self-center text-xs text-black/45">
-                  {listenerCount} on this page
-                </span>
-              ) : null}
-            </div>
-
-            {tab === 'transcript' ? (
-              <TranscriptPane
-                utterances={utterances}
-                interim={interim}
-                interimSpeaker={interimSpeaker}
-                live={live}
-                processing={visibleSession.status === 'processing'}
-              />
-            ) : (
-              <NotesPane notes={notes} processing={visibleSession.status === 'processing'} />
-            )}
-          </>
+        {view === 'live' && session ? (
+          <LiveCall
+            session={session}
+            role={role}
+            live={!!live}
+            processing={!!processing}
+            elapsed={elapsed}
+            levels={levels}
+            utterances={utterances}
+            interim={interim}
+            interimSpeaker={interimSpeaker}
+            listenerCount={listenerCount}
+            listening={listening}
+            listenArmed={listenArmed}
+            onListen={() => void startListening()}
+            onStopListen={() => void stopListening()}
+          />
         ) : null}
 
-        {role === 'idle' && visibleSession?.status === 'ended' ? (
-          <div className="mt-10">
-            <button
-              onClick={() => {
-                setDismissedId(visibleSession.id);
-                setUtterances([]);
-                setTab('transcript');
-              }}
-              className="rounded-full bg-[#070707] px-5 py-2.5 text-sm text-white"
-            >
-              New recording
-            </button>
-          </div>
+        {view === 'detail' && displayedCall ? (
+          <CallDetail
+            call={displayedCall}
+            tab={detailTab}
+            onTab={setDetailTab}
+            playUrl={playUrl}
+          />
         ) : null}
       </main>
     </div>
   );
 }
 
-function TabButton({
+function HomeFeed({
+  title,
+  setTitle,
+  history,
+  capabilities,
+  onOpen,
+}: {
+  title: string;
+  setTitle: (v: string) => void;
+  history: RecordHistoryItem[];
+  capabilities: RecordCapabilities | null;
+  onOpen: (item: RecordHistoryItem) => void;
+}) {
+  const groups = groupHistory(history);
+  return (
+    <div className="mx-auto max-w-3xl">
+      <div className="mb-8 rounded-2xl border border-black/8 bg-white p-5">
+        <label className="block text-sm text-black/55">
+          Call title
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Jessica Hewitt and Love Films"
+            className="mt-2 w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-[#1876F2]"
+          />
+        </label>
+        <p className="mt-3 text-xs text-black/40">
+          Put the phone on speaker, then tap Record. Chrome, Edge, or Safari.
+          {capabilities?.llm ? ' After you stop, AI labels speakers and writes the summary.' : ''}
+        </p>
+      </div>
+
+      {groups.length ? (
+        groups.map((group) => (
+          <section key={group.heading} className="mb-8">
+            <h2 className="mb-3 text-[15px] font-semibold text-black/80">{group.heading}</h2>
+            <div className="space-y-3">
+              {group.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onOpen(item)}
+                  className="flex w-full gap-4 rounded-2xl border border-black/8 bg-white p-4 text-left transition hover:border-black/20 hover:shadow-sm"
+                >
+                  <span
+                    className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
+                    style={{ background: avatarColor(item.title) }}
+                  >
+                    {avatarLetter(item.title)}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[17px] font-semibold">{item.title}</span>
+                    <span className="mt-0.5 block text-[13px] text-black/45">
+                      {new Date(item.startedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                      {' • '}
+                      {formatDuration(item.durationMs)}
+                      {' • Love Films'}
+                    </span>
+                    {item.notes?.summary ? (
+                      <span className="mt-2 block text-[14px] leading-relaxed text-black/70 line-clamp-3">
+                        {item.notes.summary}
+                      </span>
+                    ) : null}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </section>
+        ))
+      ) : (
+        <p className="py-16 text-center text-black/40">No recordings yet. Tap Record to capture a call.</p>
+      )}
+    </div>
+  );
+}
+
+function LiveCall({
+  session,
+  role,
+  live,
+  processing,
+  elapsed,
+  levels,
+  utterances,
+  interim,
+  interimSpeaker,
+  listenerCount,
+  listening,
+  listenArmed,
+  onListen,
+  onStopListen,
+}: {
+  session: LiveRecordSession;
+  role: Role;
+  live: boolean;
+  processing: boolean;
+  elapsed: number;
+  levels: number[];
+  utterances: TranscriptUtterance[];
+  interim: string;
+  interimSpeaker: string;
+  listenerCount: number;
+  listening: boolean;
+  listenArmed: boolean;
+  onListen: () => void;
+  onStopListen: () => void;
+}) {
+  return (
+    <div>
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-[12px] text-black/45">
+            {role === 'listener' ? 'Someone is recording' : processing ? 'Writing notes…' : 'Recording'}
+            {live ? ` · ${formatClock(elapsed)}` : ''}
+          </p>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight">{session.title}</h1>
+          <p className="mt-2 text-sm text-black/55">
+            {role === 'listener'
+              ? 'Live transcript is below. Optionally listen to the room audio.'
+              : 'Keep this tab open. After you stop, Speaker 1 / Speaker 2 is labeled from the audio.'}
+          </p>
+        </div>
+        {role === 'listener' && live ? (
+          listenArmed ? (
+            <button
+              onClick={onStopListen}
+              className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-4 py-2 text-sm"
+            >
+              <Pause className="h-4 w-4" />
+              {listening ? 'Stop listening' : 'Connecting audio…'}
+            </button>
+          ) : (
+            <button
+              onClick={onListen}
+              className="inline-flex items-center gap-2 rounded-full bg-[#1876F2] px-4 py-2 text-sm font-medium text-white"
+            >
+              <Headphones className="h-4 w-4" />
+              Listen live
+            </button>
+          )
+        ) : null}
+      </div>
+
+      {role === 'host' && live ? (
+        <div className="mb-6 flex h-12 items-end gap-[3px] rounded-xl bg-[#111] px-4 py-2">
+          {levels.map((h, i) => (
+            <span
+              key={i}
+              className="w-full rounded-full bg-white"
+              style={{ height: `${h}px`, opacity: 0.35 + (h / 40) * 0.65 }}
+            />
+          ))}
+        </div>
+      ) : null}
+
+      {listening ? (
+        <p className="mb-4 inline-flex items-center gap-2 text-sm text-[#1876F2]">
+          <Radio className="h-4 w-4" />
+          You are listening to the live recording
+        </p>
+      ) : null}
+
+      {listenerCount > 0 && live ? (
+        <p className="mb-3 text-xs text-black/40">{listenerCount} on this page</p>
+      ) : null}
+
+      <TranscriptPane
+        utterances={utterances}
+        interim={interim}
+        interimSpeaker={interimSpeaker}
+        live={live}
+        processing={processing}
+      />
+    </div>
+  );
+}
+
+function CallDetail({
+  call,
+  tab,
+  onTab,
+  playUrl,
+}: {
+  call: RecordHistoryItem;
+  tab: DetailTab;
+  onTab: (tab: DetailTab) => void;
+  playUrl: string | null;
+}) {
+  const [copied, setCopied] = useState(false);
+  const notes = call.notes;
+
+  async function copySummary() {
+    const text = [
+      notes?.title || call.title,
+      notes?.summary,
+      notes?.eventDetails?.map((d) => `${d.label}: ${d.value}`).join('\n'),
+      notes?.keyTakeaways?.map((k) => `• ${k}`).join('\n'),
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1500);
+  }
+
+  return (
+    <div className="pb-28">
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{call.title}</h1>
+        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-black/55">
+          <span className="inline-flex items-center gap-2">
+            <span
+              className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold text-white"
+              style={{ background: avatarColor(call.title) }}
+            >
+              {avatarLetter(call.title)}
+            </span>
+            Love Films
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Calendar className="h-3.5 w-3.5" />
+            {formatCallWhen(call.startedAt)}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
+            {formatDuration(call.durationMs)}
+          </span>
+          <button
+            onClick={() => void copySummary()}
+            className="inline-flex items-center gap-1.5 text-black/70 hover:text-black"
+          >
+            <Copy className="h-3.5 w-3.5" />
+            {copied ? 'Copied' : 'Copy summary'}
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-6 flex items-center gap-6 border-b border-black/10">
+        <TabLink active={tab === 'summary'} onClick={() => onTab('summary')}>
+          Summary
+        </TabLink>
+        <TabLink active={tab === 'transcript'} onClick={() => onTab('transcript')}>
+          Transcript
+        </TabLink>
+      </div>
+
+      {tab === 'summary' ? (
+        <NotesPane notes={notes} processing={false} />
+      ) : (
+        <TranscriptPane
+          utterances={call.transcript}
+          interim=""
+          interimSpeaker="Speaker 1"
+          live={false}
+          processing={false}
+        />
+      )}
+
+      <AudioPlayer key={playUrl || 'none'} src={playUrl} />
+    </div>
+  );
+}
+
+function TabLink({
   active,
   onClick,
   children,
@@ -748,13 +1024,78 @@ function TabButton({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`rounded-full px-4 py-1.5 text-sm ${
-        active ? 'bg-[#070707] text-white' : 'border border-black/15 bg-white text-black/70'
+      className={`-mb-px border-b-2 pb-3 text-[15px] font-medium ${
+        active ? 'border-[#1876F2] text-[#1876F2]' : 'border-transparent text-black/45 hover:text-black/70'
       }`}
     >
       {children}
     </button>
+  );
+}
+
+function AudioPlayer({ src }: { src: string | null }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  if (!src) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 border-t border-black/10 bg-white px-4 py-3 text-center text-sm text-black/40">
+        Audio is still processing, or was not saved for this call.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 border-t border-black/10 bg-white/95 backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 md:px-8">
+        <button
+          type="button"
+          onClick={() => {
+            const el = audioRef.current;
+            if (!el) return;
+            if (el.paused) {
+              void el.play();
+              setPlaying(true);
+            } else {
+              el.pause();
+              setPlaying(false);
+            }
+          }}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1876F2] text-white"
+          aria-label={playing ? 'Pause' : 'Play'}
+        >
+          {playing ? <Pause className="h-5 w-5 fill-current" /> : <Play className="ml-0.5 h-5 w-5 fill-current" />}
+        </button>
+        <span className="w-12 tabular-nums text-xs text-black/45">{formatClock(current * 1000)}</span>
+        <input
+          type="range"
+          min={0}
+          max={duration || 0}
+          step={0.1}
+          value={current}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            if (audioRef.current) audioRef.current.currentTime = value;
+            setCurrent(value);
+          }}
+          className="h-1.5 flex-1 accent-[#1876F2]"
+        />
+        <span className="w-12 text-right tabular-nums text-xs text-black/45">
+          {formatClock((duration || 0) * 1000)}
+        </span>
+        <audio
+          ref={audioRef}
+          src={src}
+          onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
+          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
+          onEnded={() => setPlaying(false)}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -773,38 +1114,38 @@ function TranscriptPane({
 }) {
   const bottom = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    bottom.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [utterances.length, interim]);
+    if (live) bottom.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [utterances.length, interim, live]);
 
   if (!utterances.length && !interim) {
     return (
-      <div className="rounded-2xl border border-black/10 bg-white px-6 py-16 text-center text-black/50">
-        {processing ? 'Finishing notes…' : live ? 'Waiting for speech…' : 'No transcript yet.'}
+      <div className="rounded-2xl border border-black/8 bg-white px-6 py-16 text-center text-black/45">
+        {processing ? 'Labeling speakers and writing notes…' : live ? 'Waiting for speech…' : 'No transcript yet.'}
       </div>
     );
   }
 
   return (
-    <div className="max-h-[70vh] space-y-5 overflow-y-auto rounded-2xl border border-black/10 bg-white p-5 md:p-8">
+    <div className="max-h-[70vh] space-y-5 overflow-y-auto rounded-2xl border border-black/8 bg-white p-5 md:p-8">
       {utterances.map((u) => (
         <article key={u.id} className="grid grid-cols-[72px_1fr] gap-4">
-          <div className="pt-1 text-xs tabular-nums text-black/40">{formatClock(u.startMs)}</div>
+          <div className="pt-1 text-xs tabular-nums text-black/35">{formatClock(u.startMs)}</div>
           <div>
-            <p className="text-xs font-medium" style={{ color: speakerColor(u.speaker) }}>
+            <p className="text-xs font-semibold" style={{ color: speakerColor(u.speaker) }}>
               {u.speaker}
             </p>
-            <p className="mt-1 text-[17px] leading-relaxed">{u.text}</p>
+            <p className="mt-1 text-[16px] leading-relaxed">{u.text}</p>
           </div>
         </article>
       ))}
       {interim ? (
-        <article className="grid grid-cols-[72px_1fr] gap-4 opacity-60">
-          <div className="pt-1 text-xs text-black/40">live</div>
+        <article className="grid grid-cols-[72px_1fr] gap-4 opacity-55">
+          <div className="pt-1 text-xs text-black/35">live</div>
           <div>
-            <p className="text-xs font-medium" style={{ color: speakerColor(interimSpeaker) }}>
+            <p className="text-xs font-semibold" style={{ color: speakerColor(interimSpeaker) }}>
               {interimSpeaker}
             </p>
-            <p className="mt-1 text-[17px] leading-relaxed">{interim}</p>
+            <p className="mt-1 text-[16px] leading-relaxed">{interim}</p>
           </div>
         </article>
       ) : null}
@@ -816,165 +1157,57 @@ function TranscriptPane({
 function NotesPane({ notes, processing }: { notes: OtterNotes | null; processing: boolean }) {
   if (processing && !notes) {
     return (
-      <div className="rounded-2xl border border-black/10 bg-white px-6 py-16 text-center text-black/50">
-        Writing Otter-style notes from the transcript…
+      <div className="rounded-2xl border border-black/8 bg-white px-6 py-16 text-center text-black/45">
+        Writing notes from the transcript…
       </div>
     );
   }
   if (!notes) {
     return (
-      <div className="rounded-2xl border border-black/10 bg-white px-6 py-16 text-center text-black/50">
-        Notes appear when the recording stops.
+      <div className="rounded-2xl border border-black/8 bg-white px-6 py-16 text-center text-black/45">
+        No summary for this recording.
       </div>
     );
   }
   return (
-    <div className="space-y-6 rounded-2xl border border-black/10 bg-white p-6 md:p-8">
-      <div>
-        <p className="text-[11px] uppercase tracking-[0.18em] text-black/45">Summary</p>
-        <h2 className="mt-2 font-[family-name:var(--font-serif-alt)] italic text-3xl">{notes.title}</h2>
-        <p className="mt-4 whitespace-pre-wrap text-[16px] leading-relaxed text-black/80">{notes.summary}</p>
-      </div>
+    <div className="space-y-8 rounded-2xl border border-black/8 bg-white p-6 md:p-8">
+      <section>
+        <h2 className="text-[15px] font-semibold">Overview</h2>
+        <p className="mt-3 whitespace-pre-wrap text-[16px] leading-relaxed text-black/80">{notes.summary}</p>
+      </section>
+      {notes.eventDetails?.length ? (
+        <section>
+          <h3 className="text-[15px] font-semibold">Event Details</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-[15px] leading-relaxed text-black/80">
+            {notes.eventDetails.map((item) => (
+              <li key={`${item.label}-${item.value}`}>
+                <span className="font-medium">{item.label}:</span> {item.value}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
       {notes.keyTakeaways.length ? (
         <section>
-          <h3 className="text-sm font-medium uppercase tracking-wide text-black/50">Key takeaways</h3>
-          <ul className="mt-3 space-y-2">
+          <h3 className="text-[15px] font-semibold">Key takeaways</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-[15px] leading-relaxed">
             {notes.keyTakeaways.map((item) => (
-              <li key={item} className="flex gap-2 text-[15px] leading-relaxed">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#070707]" />
-                {item}
-              </li>
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </section>
       ) : null}
       {notes.actionItems.length ? (
         <section>
-          <h3 className="text-sm font-medium uppercase tracking-wide text-black/50">Action items</h3>
+          <h3 className="text-[15px] font-semibold">Action items</h3>
           <ul className="mt-3 space-y-2">
             {notes.actionItems.map((item) => (
               <li key={item.text} className="flex gap-2 text-[15px]">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-black/40" />
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-black/35" />
                 <span>
                   {item.text}
                   {item.owner ? <span className="text-black/45"> — {item.owner}</span> : null}
                 </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-      {notes.outline.length ? (
-        <section>
-          <h3 className="text-sm font-medium uppercase tracking-wide text-black/45">Outline</h3>
-          <div className="mt-3 space-y-4">
-            {notes.outline.map((section) => (
-              <div key={`${section.startMs}-${section.heading}`}>
-                <p className="text-sm font-medium">
-                  <span className="mr-2 tabular-nums text-black/40">{formatClock(section.startMs)}</span>
-                  {section.heading}
-                </p>
-                <ul className="mt-1 space-y-1 pl-8 text-sm text-black/70">
-                  {section.bullets.map((b) => (
-                    <li key={b}>{b}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
-      <p className="text-xs text-black/35">
-        {notes.source === 'llm' ? 'AI notes' : 'Notes from the transcript. OPENAI_API_KEY on Vercel enables richer summaries.'}
-      </p>
-    </div>
-  );
-}
-
-function IdleStart({
-  title,
-  setTitle,
-  onStart,
-  busy,
-  capabilities,
-  history,
-  openHistoryId,
-  setOpenHistoryId,
-}: {
-  title: string;
-  setTitle: (v: string) => void;
-  onStart: () => void;
-  busy: boolean;
-  capabilities: RecordCapabilities | null;
-  history: RecordHistoryItem[];
-  openHistoryId: string | null;
-  setOpenHistoryId: (id: string | null) => void;
-}) {
-  return (
-    <div>
-      <div className="mx-auto max-w-xl text-center">
-        <h1 className="font-[family-name:var(--font-serif-alt)] italic text-5xl md:text-6xl">Record the call</h1>
-        <p className="mx-auto mt-4 max-w-md text-black/60">
-          Put the phone on speaker, then tap record. Live words appear here the way they do in Otter.
-          Anyone else who opens this page can read along and optionally listen.
-        </p>
-        <ol className="mx-auto mt-6 max-w-sm space-y-2 text-left text-sm text-black/55">
-          <li>1. Join the phone call and turn on speaker.</li>
-          <li>2. Keep this tab in the foreground.</li>
-          <li>3. Share yourlovefilms.com/record with whoever should follow along.</li>
-        </ol>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Sarah & James — consult"
-          className="mt-8 w-full rounded-full border border-black/15 bg-white px-5 py-3 text-center outline-none focus:border-black"
-        />
-        <button
-          onClick={onStart}
-          disabled={busy}
-          className="mt-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-[#7A1F2B] text-white shadow-lg transition hover:scale-[1.03] disabled:opacity-60"
-          aria-label="Start recording"
-        >
-          <Mic className="h-8 w-8" />
-        </button>
-        <p className="mt-3 text-xs text-black/40">
-          Uses your microphone (Chrome, Edge, or Safari)
-          {capabilities?.llm ? ' · AI notes after you stop' : ' · Add OPENAI_API_KEY on Vercel for AI notes'}
-        </p>
-      </div>
-
-      {history.length ? (
-        <section className="mt-16">
-          <h2 className="text-[11px] uppercase tracking-[0.18em] text-black/45">Past recordings</h2>
-          <ul className="mt-4 divide-y divide-black/10 border-y border-black/10">
-            {history.map((item) => (
-              <li key={item.id}>
-                <button
-                  className="flex w-full items-center justify-between gap-4 py-4 text-left"
-                  onClick={() => setOpenHistoryId(openHistoryId === item.id ? null : item.id)}
-                >
-                  <span>
-                    <span className="block font-medium">{item.title}</span>
-                    <span className="text-xs text-black/45">
-                      {new Date(item.startedAt).toLocaleString()} · {formatClock(item.durationMs)}
-                    </span>
-                  </span>
-                  <span className="text-xs text-black/40">{item.utteranceCount} lines</span>
-                </button>
-                {openHistoryId === item.id ? (
-                  <div className="pb-6">
-                    {item.notes ? <NotesPane notes={item.notes} processing={false} /> : null}
-                    <div className="mt-4">
-                      <TranscriptPane
-                        utterances={item.transcript}
-                        interim=""
-                        interimSpeaker="Speaker 1"
-                        live={false}
-                        processing={false}
-                      />
-                    </div>
-                  </div>
-                ) : null}
               </li>
             ))}
           </ul>

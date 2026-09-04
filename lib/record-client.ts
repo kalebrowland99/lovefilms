@@ -50,6 +50,22 @@ export async function postRecord<T = { session: LiveRecordSession | null }>(
   return parse<T>(res);
 }
 
+export async function finishRecording(
+  password: string,
+  hostId: string,
+  audio?: Blob,
+) {
+  const headers = { Authorization: `Bearer ${password}` };
+  if (audio && audio.size > 0) {
+    const form = new FormData();
+    form.append('hostId', hostId);
+    form.append('file', audio, audio.type.includes('mp4') ? 'recording.m4a' : 'recording.webm');
+    const res = await fetch('/api/record/audio', { method: 'POST', headers, body: form });
+    return parse<{ session: LiveRecordSession }>(res);
+  }
+  return postRecord<{ session: LiveRecordSession }>(password, { action: 'stop', hostId });
+}
+
 export function getOrCreateClientId() {
   if (typeof window === 'undefined') return '';
   const key = 'ylfRecordClientId';

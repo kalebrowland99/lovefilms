@@ -12,6 +12,7 @@ if (!getApps().length) {
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
           privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         }),
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'lovefilms-d618e.firebasestorage.app',
       });
       console.log('Firebase initialized with environment variables');
     } 
@@ -26,6 +27,7 @@ if (!getApps().length) {
           const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
           initializeApp({
             credential: cert(serviceAccount),
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'lovefilms-d618e.firebasestorage.app',
           });
           console.log('Firebase initialized with service account file');
         } else {
