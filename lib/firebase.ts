@@ -52,6 +52,8 @@ export const COLLECTIONS = {
   AUTOMATION_SETTINGS: 'automation_settings',
   EMAIL_TEMPLATES: 'email_templates',
   SCHEDULED_EMAILS: 'scheduled_emails',
+  RECORD_SESSIONS: 'record_sessions',
+  RECORDINGS: 'recordings',
 } as const;
 
 // Single document IDs for global settings
