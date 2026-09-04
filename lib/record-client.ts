@@ -52,18 +52,46 @@ export async function postRecord<T = { session: LiveRecordSession | null }>(
 
 export async function finishRecording(
   password: string,
-  hostId: string,
-  audio?: Blob,
+  input: {
+    hostId: string;
+    utterances: unknown[];
+    title: string;
+    startedAt: number;
+    sessionId?: string;
+    audio?: Blob;
+  },
 ) {
-  const headers = { Authorization: `Bearer ${password}` };
-  if (audio && audio.size > 0) {
-    const form = new FormData();
-    form.append('hostId', hostId);
-    form.append('file', audio, audio.type.includes('mp4') ? 'recording.m4a' : 'recording.webm');
-    const res = await fetch('/api/record/audio', { method: 'POST', headers, body: form });
-    return parse<{ session: LiveRecordSession }>(res);
+  const { session } = await postRecord<{ session: LiveRecordSession }>(password, {
+    action: 'stop',
+    hostId: input.hostId,
+    utterances: input.utterances,
+    title: input.title,
+    startedAt: input.startedAt,
+    sessionId: input.sessionId,
+  });
+
+  if (input.audio && input.audio.size > 0) {
+    try {
+      const form = new FormData();
+      form.append('recordingId', session.id);
+      form.append(
+        'file',
+        input.audio,
+        input.audio.type.includes('mp4') ? 'recording.m4a' : 'recording.webm',
+      );
+      const res = await fetch('/api/record/audio', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${password}` },
+        body: form,
+      });
+      const data = await parse<{ recording: import('@/lib/record-types').RecordHistoryItem }>(res);
+      return { session, recording: data.recording };
+    } catch (error) {
+      console.error('Audio attach failed; transcript was still saved:', error);
+    }
   }
-  return postRecord<{ session: LiveRecordSession }>(password, { action: 'stop', hostId });
+
+  return { session };
 }
 
 export function getOrCreateClientId() {

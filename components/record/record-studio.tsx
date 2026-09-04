@@ -29,7 +29,6 @@ import type {
   LiveRecordSession,
   OtterNotes,
   PeerSignal,
-  RecordCapabilities,
   RecordHistoryItem,
   TranscriptUtterance,
 } from '@/lib/record-types';
@@ -114,7 +113,6 @@ export function RecordStudio() {
   const [utterances, setUtterances] = useState<TranscriptUtterance[]>([]);
   const [interim, setInterim] = useState('');
   const [interimSpeaker, setInterimSpeaker] = useState('Speaker 1');
-  const [capabilities, setCapabilities] = useState<RecordCapabilities | null>(null);
   const [history, setHistory] = useState<RecordHistoryItem[]>([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -147,13 +145,14 @@ export function RecordStudio() {
   const transcribePosted = useRef(0);
   const speakerTurnRef = useRef(1);
   const lastFinalAtRef = useRef(0);
+  const utterancesRef = useRef<TranscriptUtterance[]>([]);
+  utterancesRef.current = utterances;
 
   useEffect(() => {
     passwordRef.current = password;
   }, [password]);
 
   const applyPoll = useCallback((data: Awaited<ReturnType<typeof pollRecord>>, pollRole: Role) => {
-    setCapabilities(data.capabilities);
     if (data.history) setHistory(data.history);
     const live = data.session;
     if (live && (live.status === 'recording' || live.status === 'processing')) {
@@ -551,9 +550,10 @@ export function RecordStudio() {
   async function stopRecording() {
     setBusy(true);
     setError('');
-    hostActiveRef.current = false;
     try {
       const mime = recRef.current?.mimeType || pickRecorderMime() || 'audio/webm';
+      recognitionRef.current?.stop();
+      recognitionRef.current = null;
       await new Promise<void>((resolve) => {
         const rec = recRef.current;
         if (!rec || rec.state === 'inactive') {
@@ -564,15 +564,31 @@ export function RecordStudio() {
         rec.stop();
       });
       recRef.current = null;
-      teardownCapture();
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+
       const blob = chunksRef.current.length ? new Blob(chunksRef.current, { type: mime }) : undefined;
       const blobUrl = blob ? URL.createObjectURL(blob) : null;
       setLocalAudioUrl((prev) => {
         if (prev) URL.revokeObjectURL(prev);
         return blobUrl;
       });
-      const { session: next } = await finishRecording(passwordRef.current, clientIdRef.current, blob);
-      const item = toHistoryItem(next, next.audioUrl || blobUrl || undefined);
+
+      const saved = await finishRecording(passwordRef.current, {
+        hostId: clientIdRef.current,
+        utterances: utterancesRef.current,
+        title: title.trim() || session?.title || 'Consultation call',
+        startedAt: session?.startedAt || startedAtRef.current,
+        sessionId: session?.id,
+        audio: blob,
+      });
+
+      hostActiveRef.current = false;
+      teardownCapture();
+
+      const item =
+        saved.recording ||
+        toHistoryItem(saved.session, saved.session.audioUrl || blobUrl || undefined);
       setOpenCall(item);
       setHistory((prev) => [item, ...prev.filter((row) => row.id !== item.id)]);
       setSession(null);
@@ -710,7 +726,6 @@ export function RecordStudio() {
             title={title}
             setTitle={setTitle}
             history={history}
-            capabilities={capabilities}
             onOpen={(item) => {
               setOpenCall(item);
               setDetailTab('summary');
@@ -755,13 +770,11 @@ function HomeFeed({
   title,
   setTitle,
   history,
-  capabilities,
   onOpen,
 }: {
   title: string;
   setTitle: (v: string) => void;
   history: RecordHistoryItem[];
-  capabilities: RecordCapabilities | null;
   onOpen: (item: RecordHistoryItem) => void;
 }) {
   const groups = groupHistory(history);
@@ -773,14 +786,10 @@ function HomeFeed({
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Jessica Hewitt and Love Films"
+            placeholder="Example: Heather and Hannah"
             className="mt-2 w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-[#1876F2]"
           />
         </label>
-        <p className="mt-3 text-xs text-black/40">
-          Put the phone on speaker, then tap Record. Chrome, Edge, or Safari.
-          {capabilities?.llm ? ' After you stop, AI labels speakers and writes the summary.' : ''}
-        </p>
       </div>
 
       {groups.length ? (

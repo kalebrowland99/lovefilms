@@ -58,7 +58,8 @@ export async function GET(request: Request) {
 
     const session = await getLiveSession();
     const roleIsHost = role === 'host';
-    if (roleIsHost && peerId && session?.status === 'recording' && session.hostId === peerId) {
+    if (roleIsHost && peerId && session?.hostId === peerId &&
+      (session.status === 'recording' || session.status === 'processing')) {
       await heartbeat(peerId);
     }
 
@@ -132,7 +133,12 @@ export async function POST(request: Request) {
     }
 
     if (action === 'stop') {
-      const session = await stopSession(String(body.hostId || ''));
+      const session = await stopSession(String(body.hostId || ''), {
+        utterances: Array.isArray(body.utterances) ? body.utterances : undefined,
+        title: body.title ? String(body.title) : undefined,
+        startedAt: typeof body.startedAt === 'number' ? body.startedAt : undefined,
+        sessionId: body.sessionId ? String(body.sessionId) : undefined,
+      });
       return NextResponse.json({ session });
     }
 

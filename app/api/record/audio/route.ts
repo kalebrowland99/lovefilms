@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { stopSession } from '@/lib/record-store';
+import { attachRecordingAudio } from '@/lib/record-store';
+import type { RecordHistoryItem } from '@/lib/record-types';
 
 export const maxDuration = 60;
 
@@ -13,26 +14,23 @@ export async function POST(request: Request) {
 
   try {
     const form = await request.formData();
-    const hostId = String(form.get('hostId') || '');
+    const recordingId = String(form.get('recordingId') || '');
     const file = form.get('file');
-    if (!hostId) {
-      return NextResponse.json({ error: 'hostId required' }, { status: 400 });
+    if (!recordingId) {
+      return NextResponse.json({ error: 'recordingId required' }, { status: 400 });
+    }
+    if (!file || !(file instanceof File) || file.size === 0) {
+      return NextResponse.json({ error: 'Audio file required' }, { status: 400 });
     }
 
-    let audio: { data: Buffer; contentType: string; filename: string } | undefined;
-    if (file && file instanceof File && file.size > 0) {
-      const bytes = Buffer.from(await file.arrayBuffer());
-      audio = {
-        data: bytes,
-        contentType: file.type || 'audio/webm',
-        filename: file.name || 'recording.webm',
-      };
-    }
-
-    const session = await stopSession(hostId, audio);
-    return NextResponse.json({ session });
+    const recording: RecordHistoryItem = await attachRecordingAudio(recordingId, {
+      data: Buffer.from(await file.arrayBuffer()),
+      contentType: file.type || 'audio/webm',
+      filename: file.name || 'recording.webm',
+    });
+    return NextResponse.json({ recording });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to finish recording';
+    const message = error instanceof Error ? error.message : 'Failed to save audio';
     console.error('POST /api/record/audio', error);
     return NextResponse.json({ error: message }, { status: 400 });
   }
