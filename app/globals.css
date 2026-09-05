@@ -253,3 +253,14 @@ html {
   background: transparent;
   color: #f9f9f5;
 }
+
+.ylf-reveal {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.ylf-reveal:hover {
+  opacity: 0.65;
+}

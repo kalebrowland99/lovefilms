@@ -11,6 +11,8 @@ const c4 = (n: number) => ph(`c4-${String(n).padStart(2, '0')}`);
 const c3 = (n: number) => ph(`c3-${String(n).padStart(2, '0')}`);
 const c2 = (n: number) => ph(`c2-${String(n).padStart(2, '0')}`);
 const c1 = (n: number) => ph(`c1-${String(n).padStart(2, '0')}`);
+const c8 = (n: number) => ph(`c8-${String(n).padStart(2, '0')}`);
+const c9 = (n: number) => ph(`c9-${String(n).padStart(2, '0')}`);
 
 /** Portfolio hero — couple 7 leads, interleaved with other sets. */
 export const PHOTO_HERO = [
@@ -20,12 +22,13 @@ export const PHOTO_HERO = [
 
 /** Wide highlights band — landscapes plus mixed couples, no back-to-back duplicates. */
 export const PHOTO_HIGHLIGHTS = [
-  c1(1), c1(26), c7(1), c2(3), c4(5), c5(16),
-  c6(4), c3(8), c1(24), c4(8), c2(2), c5(12), c7(4), c1(27),
+  c1(1), c8(8), c1(26), c9(27), c7(1), c2(3), c4(5), c8(12),
+  c5(16), c6(4), c9(3), c3(8), c1(24), c4(8), c2(2), c5(12), c7(4), c1(27),
 ];
 
 export const PHOTO_GRID_LARGE = [c7(1), c7(3)];
 export const PHOTO_GRID_SMALL = [c5(15), c4(7), c3(1)];
+export const PHOTO_GRID_NEW = [c9(27), c8(10)];
 
 /** Review collages — three different couples per slide. */
 export const PHOTO_REVIEW_A = [c7(1), c3(8), c6(1)];

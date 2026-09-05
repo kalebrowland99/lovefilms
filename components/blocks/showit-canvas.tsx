@@ -217,6 +217,7 @@ function Element({
   onArrow,
   shown = true,
   layered = false,
+  onReveal,
 }: {
   el: CanvasEl;
   mode: Mode;
@@ -228,6 +229,7 @@ function Element({
   onArrow?: (dir: 'prev' | 'next') => void;
   shown?: boolean;
   layered?: boolean;
+  onReveal?: (key: string) => void;
 }) {
   const box = mode === 'd' ? el.d : el.m;
   if (box.hide || !box.w) return null;
@@ -309,6 +311,18 @@ function Element({
     const s = mode === 'd' ? el.ds : el.ms;
     const typed = { ...frame, ...(s ? textStyle(s) : {}) };
     const inner = <RichText text={el.text} />;
+    if (el.reveal) {
+      return (
+        <button
+          type="button"
+          className={['ylf-reveal', layerClass].filter(Boolean).join(' ')}
+          style={{ ...typed, textDecoration: 'none' }}
+          onClick={() => onReveal?.(el.reveal!)}
+        >
+          {inner}
+        </button>
+      );
+    }
     return el.href ? (
       <Link
         href={el.href}
@@ -342,21 +356,36 @@ function Element({
 
   if (el.button) {
     const outline = el.button.variant === 'outline';
+    const pillClass = outline ? 'ylf-pill-outline' : 'ylf-pill-solid';
+    const pillStyle = {
+      ...frame,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: FONT_VAR.display,
+      fontSize: mode === 'd' ? 15 : 13,
+      textDecoration: 'none',
+      borderRadius: 100,
+    } as React.CSSProperties;
+    if (el.button.reveal) {
+      return (
+        <button
+          type="button"
+          className={pillClass}
+          style={{ ...pillStyle, cursor: 'pointer' }}
+          onClick={() => onReveal?.(el.button!.reveal!)}
+        >
+          {el.button.label}
+        </button>
+      );
+    }
+    if (!el.button.href) return null;
     return (
       <Link
         href={el.button.href}
         {...externalProps(el.button.href)}
-        className={outline ? 'ylf-pill-outline' : 'ylf-pill-solid'}
-        style={{
-          ...frame,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: FONT_VAR.display,
-          fontSize: mode === 'd' ? 15 : 13,
-          textDecoration: 'none',
-          borderRadius: 100,
-        }}
+        className={pillClass}
+        style={pillStyle}
       >
         {el.button.label}
       </Link>
@@ -375,7 +404,17 @@ function arrowToneFor(bg?: string | null) {
   return luma < 0.5 ? 'rgba(255,255,255,0.85)' : 'rgba(7,7,7,0.85)';
 }
 
-function Block({ block, mode, scale }: { block: CanvasBlock; mode: Mode; scale: number }) {
+function Block({
+  block,
+  mode,
+  scale,
+  onReveal,
+}: {
+  block: CanvasBlock;
+  mode: Mode;
+  scale: number;
+  onReveal?: (key: string) => void;
+}) {
   const groups = block.states;
   const [state, setState] = useState(0);
   const height = mode === 'd' ? block.dh : block.mh;
@@ -472,6 +511,7 @@ function Block({ block, mode, scale }: { block: CanvasBlock; mode: Mode; scale: 
               onArrow={onArrow}
               layered={layered}
               shown={shown}
+              onReveal={onReveal}
             />
           );
         })}
@@ -490,13 +530,28 @@ export function ShowitCanvas({
   background?: string;
 }) {
   const state = useCanvasMode();
+  const [revealed, setRevealed] = useState<Set<string>>(() => new Set());
+  const onReveal = (key: string) => {
+    setRevealed((prev) => {
+      if (prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  };
   if (!state) return null;
+
+  const visible = blocks.filter((b) => {
+    if (b.reveal && !revealed.has(b.reveal)) return false;
+    if (b.hideWhen && revealed.has(b.hideWhen)) return false;
+    return true;
+  });
 
   return (
     <div style={{ backgroundColor: background, position: 'relative' }}>
       {before?.(state.mode, state.scale)}
-      {blocks.map((b) => (
-        <Block key={b.slug} block={b} mode={state.mode} scale={state.scale} />
+      {visible.map((b) => (
+        <Block key={b.slug} block={b} mode={state.mode} scale={state.scale} onReveal={onReveal} />
       ))}
     </div>
   );

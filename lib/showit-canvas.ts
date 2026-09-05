@@ -44,7 +44,9 @@ export type CanvasEl = {
   /** Accessible name for links whose only content is imagery. */
   label?: string;
   /** Pill button rendered in place of an empty box element. */
-  button?: { label: string; href: string; variant: 'solid' | 'outline' };
+  button?: { label: string; href?: string; variant: 'solid' | 'outline'; reveal?: string };
+  /** Clicking this element expands blocks tagged with the same reveal key. */
+  reveal?: string;
 };
 
 export type CanvasBlock = {
@@ -61,6 +63,10 @@ export type CanvasBlock = {
   /** Showit `locking: { side: 'st' }` — pins to the top while later blocks scroll over. */
   sticky?: boolean;
   zIndex?: number;
+  /** Hidden until a matching `reveal` control is clicked. */
+  reveal?: string;
+  /** Hidden after the matching reveal key has been opened. */
+  hideWhen?: string;
 };
 
 /** Swap authored canvas strings by element id. Values must already be sanitized copy. */

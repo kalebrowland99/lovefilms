@@ -1,9 +1,9 @@
 // Generated from the Showit canvas: exact geometry, 1200px desktop / 320px mobile.
 import type { CanvasBlock, CanvasEl, CanvasStyle } from '@/lib/showit-canvas';
-import { PHOTO_HERO, PHOTO_HIGHLIGHTS, PHOTO_GRID_LARGE, PHOTO_GRID_SMALL, PHOTO_REVIEW_A, PHOTO_REVIEW_B } from '@/lib/site-photos';
+import { PHOTO_HERO, PHOTO_HIGHLIGHTS, PHOTO_GRID_LARGE, PHOTO_GRID_SMALL, PHOTO_GRID_NEW, PHOTO_REVIEW_A, PHOTO_REVIEW_B } from '@/lib/site-photos';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
 import { DANIEL_AND_EMILY, INSTAGRAM_FILMS, filmGridBlocks } from '@/lib/films';
-import { FEATURED_LARGE, FEATURED_SMALL, GALLERIES, galleryPath } from '@/lib/galleries';
+import { FEATURED_LARGE, FEATURED_NEW, FEATURED_SMALL, GALLERIES, galleryPath } from '@/lib/galleries';
 
 const DISPLAY_WHITE: CanvasStyle = {
   ff: 'display', fs: 80, lh: 1, ls: '0em', ta: 'center', tt: 'none',
@@ -81,17 +81,15 @@ export const PORTFOLIO_BLOCKS: CanvasBlock[] = [
     { sid: "hero_1", kind: "text", d: {l:168, t:179, w:865, h:269}, m: {l:22, t:94, w:277, h:47}, text: "PORTFOLIO", ds: {"ff": "display", "fs": 150.0, "lh": 0.9, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 52.0, "lh": 0.9, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
     { sid: "hero_2", kind: "text", d: {l:162, t:554, w:126, h:20}, m: {l:109, t:92, w:125, h:21, hide:true}, text: "FILMS", href: "#films", ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 11, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
     { sid: "hero_3", kind: "line", d: {l:178, t:578, w:92, h:1}, m: {l:48, t:364, w:224, h:1, hide:true}, stroke: "rgba(255,255,255,1)" },
-    { sid: "hero_4", kind: "text", d: {l:901, t:554, w:146, h:20}, m: {l:151, t:474, w:102, h:17, hide:true}, text: "PHOTOGRAPHY", href: "#featured-4", ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 11, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
+    { sid: "hero_4", kind: "text", d: {l:901, t:554, w:146, h:20}, m: {l:151, t:474, w:102, h:17, hide:true}, text: "PHOTOGRAPHY", href: "#featured-6", ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 11, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
     { sid: "hero_5", kind: "line", d: {l:929, t:579, w:89, h:1}, m: {l:48, t:364, w:224, h:1, hide:true}, stroke: "rgba(255,255,255,1)" },
     { sid: "hero_6", kind: "text", d: {l:135, t:973, w:923, h:179, hide:true}, m: {l:16, t:399, w:289, h:178}, text: "WE MAKE TIMELESS FILMS {{i}}and{{/i}} PHOTOS {{i}}for{{/i}} BRIDES {{i}}and{{/i}} GROOMS {{i}}with{{/i}} CLASSIC STYLE.", ds: {"ff": "display", "fs": 62.0, "lh": 0.95, "ls": "0.01em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 32.0, "lh": 1.1, "ls": "0.01em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
     { sid: "hero_7", kind: "text", d: {l:139, t:953, w:923, h:179}, m: {l:26, t:417, w:289, h:213, hide:true}, text: "ROMANTIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY", ds: {"ff": "display", "fs": 62.0, "lh": 0.95, "ls": "0.01em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 32.0, "lh": 1.1, "ls": "0.01em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
     { sid: "hero_8", kind: "text", d: {l:394, t:1169, w:414, h:96}, m: {l:51, t:596, w:217, h:87}, text: "Every film and photograph here exudes modern romance and tells a beautiful story, capturing life’s most special moments with warmth and meaning.", ds: {"ff": "sans", "fs": 17, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300}, ms: {"ff": "sans", "fs": 14, "lh": 1.6, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300} },
   ]},
-  { slug: "highlights", dh: 750, mh: 463, bg: "rgba(7,7,7,1)", states: ["highlights_"], els: [
+  { slug: "highlights", dh: 750, mh: 463, bg: "rgba(7,7,7,1)", els: [
     { sid: "highlights_0", kind: "image", d: {l:0, t:114, w:1200, h:436, op:1}, m: {l:-183, t:51, w:686, h:206, op:1}, imgs: PHOTO_HIGHLIGHTS },
     { sid: "highlights_1", kind: "text", d: {l:81, t:589, w:371, h:17}, m: {l:32, t:305, w:98, h:19}, href: "https://www.instagram.com/yourlovefilms", text: "HIGHLIGHTS", ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 11, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 400} },
-    { sid: "highlights_2", kind: "icon", d: {l:1024, t:595, w:41, h:40}, m: {l:199, t:289, w:36, h:44} },
-    { sid: "highlights_3", kind: "icon", d: {l:1092, t:595, w:41, h:40}, m: {l:252, t:289, w:36, h:44} },
     { sid: "highlights_4", kind: "text", d: {l:81, t:635, w:476, h:65}, m: {l:32, t:346, w:259, h:66}, text: "Step into a gallery of timeless wedding stories—where candid moments, dreamy portraits, and elegant details come together. Here you’ll get a glimpse of real couples, heartfelt celebrations, and the artistry behind every love story we capture.", ds: {"ff": "sans", "fs": 12.0, "lh": 1.6, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300}, ms: {"ff": "sans", "fs": 10.0, "lh": 1.6, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(255,255,255,1)", "fst": "normal", "fw": 300} },
   ]},
   { slug: "films", dh: 177, mh: 76, bg: "rgba(249,249,245,1)", els: [
@@ -105,12 +103,45 @@ export const PORTFOLIO_BLOCKS: CanvasBlock[] = [
     { sid: "featured-1_4", kind: "text", d: {l:626, t:690, w:320, h:21}, m: {l:38, t:826, w:163, h:19}, href: INSTAGRAM_FILMS[0].url, text: INSTAGRAM_FILMS[0].location, ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
     { sid: "featured-1_5", kind: "text", d: {l:626, t:729, w:476, h:52}, m: {l:38, t:855, w:208, h:49}, href: INSTAGRAM_FILMS[0].url, text: INSTAGRAM_FILMS[0].couple, ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
   ]},
-  ...filmGridBlocks(INSTAGRAM_FILMS.slice(1), "films"),
+  ...(() => {
+    const rows = filmGridBlocks(INSTAGRAM_FILMS.slice(1), "films");
+    const preview = rows.slice(0, 1);
+    const rest = rows.slice(1).map((block) => ({ ...block, reveal: "more-films" }));
+    const viewMore: CanvasBlock = {
+      slug: "films-more",
+      dh: 140,
+      mh: 110,
+      bg: "rgba(249,249,245,1)",
+      hideWhen: "more-films",
+      els: [
+        {
+          sid: "films-more_0",
+          kind: "text",
+          d: { l: 450, t: 36, w: 300, h: 28 },
+          m: { l: 35, t: 28, w: 250, h: 24 },
+          text: "View More Films",
+          reveal: "more-films",
+          ds: { ff: "sans", fs: 17, lh: 1.6, ls: "0em", ta: "center", tt: "none", c: "rgba(7,7,7,0.8)", fst: "normal", fw: 400 },
+          ms: { ff: "sans", fs: 14, lh: 1.6, ls: "0em", ta: "center", tt: "none", c: "rgba(7,7,7,0.8)", fst: "normal", fw: 400 },
+        },
+        { sid: "films-more_1", kind: "line", d: { l: 528, t: 72, w: 144, h: 1 }, m: { l: 100, t: 58, w: 120, h: 1 }, stroke: "rgba(7,7,7,0.25)" },
+      ],
+    };
+    return [...preview, viewMore, ...rest];
+  })(),
   { slug: "review", dh: 342, mh: 358, bg: "rgba(249,249,245,1)", els: [
     { sid: "review_0", kind: "text", d: {l:178, t:48, w:845, h:155}, m: {l:37, t:43, w:246, h:199}, text: "“Your Love Films is INCREDIBLE! We loved working with them in every way for our engagement films and wedding. They always give great direction and posing for film, but also capture the unstaged moments that reflect the emotions of the day.”", ds: {"ff": "display", "fs": 30.0, "lh": 1.1, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "display", "fs": 20.0, "lh": 1.1, "ls": "0em", "ta": "center", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
     { sid: "review_1", kind: "text", d: {l:449, t:217, w:302, h:46}, m: {l:80, t:264, w:161, h:17}, text: "— TIFFANY + ANDREW", ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 11.0, "lh": 1.6, "ls": "0.1em", "ta": "center", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
   ]},
   photographyIntroBlock(),
+  { slug: "featured-6", dh: 860, mh: 939, bg: "rgba(249,249,245,1)", els: [
+    { sid: "featured-6_0", kind: "image", d: {l:75, t:0, w:500, h:654}, m: {l:39, t:33, w:240, h:320}, href: galleryPath(FEATURED_NEW[0].slug), label: FEATURED_NEW[0].title, imgs: [PHOTO_GRID_NEW[0]] },
+    { sid: "featured-6_1", kind: "text", d: {l:75, t:690, w:320, h:21}, m: {l:39, t:377, w:163, h:19}, href: galleryPath(FEATURED_NEW[0].slug), text: FEATURED_NEW[0].kicker, ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-6_2", kind: "text", d: {l:75, t:725, w:401, h:52}, m: {l:39, t:405, w:236, h:48}, href: galleryPath(FEATURED_NEW[0].slug), text: FEATURED_NEW[0].title, ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+    { sid: "featured-6_3", kind: "image", d: {l:626, t:0, w:500, h:654}, m: {l:38, t:486, w:240, h:320}, href: galleryPath(FEATURED_NEW[1].slug), label: FEATURED_NEW[1].title, imgs: [PHOTO_GRID_NEW[1]] },
+    { sid: "featured-6_4", kind: "text", d: {l:626, t:690, w:320, h:21}, m: {l:38, t:826, w:163, h:19}, href: galleryPath(FEATURED_NEW[1].slug), text: FEATURED_NEW[1].kicker, ds: {"ff": "engraved", "fs": 13.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },
+    { sid: "featured-6_5", kind: "text", d: {l:626, t:729, w:476, h:52}, m: {l:38, t:855, w:208, h:49}, href: galleryPath(FEATURED_NEW[1].slug), text: FEATURED_NEW[1].title, ds: {"ff": "display", "fs": 28.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400}, ms: {"ff": "display", "fs": 22.0, "lh": 1.1, "ls": "0em", "ta": "left", "tt": "none", "c": "rgba(7,7,7,1)", "fst": "italic", "fw": 400} },
+  ]},
   { slug: "featured-4", dh: 860, mh: 939, bg: "rgba(249,249,245,1)", els: [
     { sid: "featured-4_0", kind: "image", d: {l:75, t:0, w:500, h:654}, m: {l:39, t:33, w:240, h:320}, href: galleryPath(FEATURED_LARGE[0].slug), label: FEATURED_LARGE[0].title, imgs: [PHOTO_GRID_LARGE[0]] },
     { sid: "featured-4_1", kind: "text", d: {l:75, t:690, w:320, h:21}, m: {l:39, t:377, w:163, h:19}, href: galleryPath(FEATURED_LARGE[0].slug), text: FEATURED_LARGE[0].kicker, ds: {"ff": "engraved", "fs": 13, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400}, ms: {"ff": "engraved", "fs": 10.0, "lh": 1.6, "ls": "0.1em", "ta": "left", "tt": "uppercase", "c": "rgba(7,7,7,1)", "fst": "normal", "fw": 400} },

@@ -20,6 +20,14 @@ export type CoupleGallery = {
 
 export const GALLERIES: CoupleGallery[] = [
   {
+    slug: 'noelle-and-grant',
+    kicker: 'AFTER DARK',
+    title: 'Noelle & Grant',
+    blurb: 'String lights at the altar, a laugh mid-vow, and a sparkler walk into the night.',
+    cover: ph(9, 27),
+    photos: series(9, 46),
+  },
+  {
     slug: 'claire-and-bennett',
     kicker: 'IN THE GARDEN',
     title: 'Claire & Bennett',
@@ -75,6 +83,14 @@ export const GALLERIES: CoupleGallery[] = [
     cover: ph(1, 11),
     photos: series(1, 30),
   },
+  {
+    slug: 'valentina-and-diego',
+    kicker: 'THE FLORAL ARCH',
+    title: 'Valentina & Diego',
+    blurb: 'A billowing veil, a wall of flowers, and warm lights in the trees.',
+    cover: ph(8, 8),
+    photos: series(8, 18),
+  },
 ];
 
 export function galleryPath(slug: string) {
@@ -86,5 +102,8 @@ export function galleryBySlug(slug: string) {
 }
 
 /** Couples featured as photography cards on /portfolio. */
-export const FEATURED_LARGE = [GALLERIES[0], GALLERIES[0]] as const; // both frames are couple 7
-export const FEATURED_SMALL = [GALLERIES[1], GALLERIES[2], GALLERIES[3]] as const;
+export const FEATURED_LARGE = [GALLERIES[1], GALLERIES[1]] as const; // both frames are couple 7
+export const FEATURED_SMALL = [GALLERIES[2], GALLERIES[3], GALLERIES[4]] as const;
+export const FEATURED_NEW = GALLERIES.filter((g) =>
+  g.slug === 'noelle-and-grant' || g.slug === 'valentina-and-diego',
+) as [CoupleGallery, CoupleGallery];
