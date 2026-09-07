@@ -52,9 +52,8 @@ export function getLocationCopy(location: VisitorLocation): LocationCopy {
     portfolioHeadline: upper
       ? `ROMANTIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY IN ${upper}`
       : 'ROMANTIC WEDDING FILMS {{i}}and{{/i}} PHOTOGRAPHY',
-    aboutIntro: state
-      ? `We are a wedding photography and videography team serving couples throughout ${state}, with free travel ✈️. Before we hop on a call, here is a short video on how we work and what it is like to have us there on your day.`
-      : 'We are a wedding photography and videography team with free travel ✈️. Before we hop on a call, here is a short video on how we work and what it is like to have us there on your day.',
+    aboutIntro:
+      'We are a wedding photography and videography team with free travel ✈️. Before we hop on a call, here is a short video on how we work and what it is like to have us there on your day.',
     experienceHeadlineBefore: 'Wedding films and photography',
     experienceHeadlineAfter: state ? `in ${state}` : '',
     servingHeading: state ? `Serving weddings throughout ${state}` : 'Serving weddings across the country',
