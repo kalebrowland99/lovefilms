@@ -9,6 +9,7 @@ import {
 } from '@/lib/press';
 import { COUPLE_TESTIMONIALS } from '@/lib/testimonials';
 import { ViralInstagramCard } from '@/components/blocks/viral-instagram-card';
+import { PreCallVideo } from '@/components/ui/pre-call-video';
 
 declare global {
   interface Window {
@@ -52,7 +53,7 @@ export function CallConfirmedContent() {
             Congrats! Your Call Has Been Booked.
           </h1>
           <p className="text-base md:text-lg font-sans font-semibold text-neutral-800 leading-relaxed max-w-2xl mx-auto">
-            IMPORTANT: Complete The Step Below Now. If You Don&apos;t,
+            IMPORTANT: Complete The 2 Steps Below Now. If You Don&apos;t,
             We&apos;ll Be Forced To Cancel Your Call And Give Your Slot To
             Someone Else.
           </p>
@@ -63,9 +64,27 @@ export function CallConfirmedContent() {
         <section className="mb-12 md:mb-14">
           <h2
             id="step-1"
+            className="text-center text-2xl md:text-3xl font-serif text-neutral-900 mb-2"
+          >
+            <span className="text-[#8b8370]">Step 1:</span> Watch The Video Below
+          </h2>
+          <p className="text-center text-lg md:text-xl font-serif text-neutral-700 mb-6">
+            What To Expect Before Your Wedding Shoot Consultation
+          </p>
+
+          <PreCallVideo />
+
+          <p className="text-center text-xl md:text-2xl font-serif font-medium text-neutral-900 mt-6 md:mt-8 leading-snug max-w-2xl mx-auto">
+            Make sure your fiancé is on the call with you.
+          </p>
+        </section>
+
+        <section className="mb-12 md:mb-14">
+          <h2
+            id="step-2"
             className="text-center text-2xl md:text-3xl font-serif text-neutral-900 mb-6"
           >
-            <span className="text-[#8b8370]">Step 1:</span> Confirm Your Call
+            <span className="text-[#8b8370]">Step 2:</span> Confirm Your Call
           </h2>
 
           <div className="rounded-2xl border border-[#E8DED2] bg-white p-5 md:p-8 shadow-sm">
@@ -117,7 +136,7 @@ export function CallConfirmedContent() {
             What Couples Say About Us
           </h2>
           <p className="text-center text-base md:text-lg font-sans text-neutral-600 mb-8">
-            Real words from couples we&apos;ve filmed across the country
+            Real words from couples we&apos;ve filmed — with free travel ✈️
           </p>
 
           <div className="grid gap-4 md:gap-5 sm:grid-cols-2 mb-10 md:mb-12">
