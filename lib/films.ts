@@ -28,7 +28,7 @@ export const DANIEL_AND_EMILY: Film = {
  */
 const FILM_SOURCES: (Omit<Film, 'url'> & { file: string })[] = [
   { file: 'post1.mp4', couple: 'Sophie & Miles', location: 'Big Sur, California' },
-  { file: 'post2.mp4', couple: 'Hannah & Theo', location: 'Charleston, South Carolina' },
+  { file: 'post2.mp4', couple: 'Hannah & Theo', location: 'Villa del Balbianello, Italy' },
   { file: 'post4.mp4', couple: 'Camille & Jonas', location: 'Sedona, Arizona' },
   { file: 'post5.mp4', couple: 'Maya & Elliot', location: 'Telluride, Colorado' },
   { file: 'post6.mp4', couple: 'Naomi & Caleb', location: 'Savannah, Georgia' },
