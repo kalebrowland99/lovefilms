@@ -36,7 +36,7 @@ const FILM_SOURCES: (Omit<Film, 'url'> & { file: string })[] = [
   { file: 'post8.mp4', couple: 'Adaeze & Marcus', location: 'Chicago, Illinois' },
   { file: 'post9.mp4', couple: 'Rosalie & Ben', location: 'Kennebunkport, Maine' },
   { file: 'post10.mp4', couple: 'Leila & Sam', location: 'Marfa, Texas' },
-  { file: 'post11.mp4', couple: 'Georgia & Owen', location: 'Asheville, North Carolina' },
+  { file: 'post11.mp4', couple: 'Georgia & Owen', location: 'Villa Ottolenghi Wedekind, Italy' },
   { file: 'post12.mp4', couple: 'Wren & Tobias', location: 'Olympic Peninsula, Washington' },
   { file: 'post13.mp4', couple: 'Simone & Andre', location: 'New Orleans, Louisiana' },
   { file: 'post14.mp4', couple: 'Talia & Jesse', location: 'Amalfi Coast, Italy' },
