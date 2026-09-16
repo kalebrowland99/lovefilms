@@ -15,7 +15,29 @@ import {
   Radio,
   Square,
 } from 'lucide-react';
-import { finishRecording, getOrCreateClientId, pollRecord, postRecord } from '@/lib/record-client';
+import {
+  finishRecording,
+  getOrCreateClientId,
+  pollRecord,
+  postRecord,
+  recoverPendingRecording,
+  uploadRecordingAudio,
+} from '@/lib/record-client';
+import {
+  describeGetUserMediaError,
+  liveTrack,
+  recorderSupportError,
+  rmsLevel,
+  playbackSupportMessage,
+  type CaptureAlert,
+} from '@/lib/record-health';
+import {
+  deletePendingRecording,
+  listPendingRecordings,
+  pendingBlob,
+  savePendingRecording,
+  type PendingRecording,
+} from '@/lib/record-idb';
 import {
   formatCallWhen,
   formatClock,
@@ -124,6 +146,9 @@ export function RecordStudio() {
   const [elapsed, setElapsed] = useState(0);
   const [levels, setLevels] = useState<number[]>(() => Array(28).fill(4));
   const [localAudioUrl, setLocalAudioUrl] = useState<string | null>(null);
+  const [captureAlert, setCaptureAlert] = useState<CaptureAlert | null>(null);
+  const [pendingRecover, setPendingRecover] = useState<PendingRecording | null>(null);
+  const [retryingAudio, setRetryingAudio] = useState(false);
 
   const passwordRef = useRef('');
   const clientIdRef = useRef('');
@@ -147,13 +172,39 @@ export function RecordStudio() {
   const lastFinalAtRef = useRef(0);
   const utterancesRef = useRef<TranscriptUtterance[]>([]);
   utterancesRef.current = utterances;
+  const titleRef = useRef('');
+  const sessionIdRef = useRef('');
+  const bytesRef = useRef(0);
+  const silentTicksRef = useRef(0);
+  const healthTimerRef = useRef<number | null>(null);
+  const persistTimerRef = useRef<number | null>(null);
+  const backupWarningRef = useRef(false);
 
   useEffect(() => {
     passwordRef.current = password;
   }, [password]);
 
+  useEffect(() => {
+    titleRef.current = title;
+  }, [title]);
+
+  useEffect(() => {
+    sessionIdRef.current = session?.id || sessionIdRef.current;
+  }, [session?.id]);
+
   const applyPoll = useCallback((data: Awaited<ReturnType<typeof pollRecord>>, pollRole: Role) => {
-    if (data.history) setHistory(data.history);
+    if (data.history) {
+      setHistory((prev) => {
+        const locals = new Map(prev.map((item) => [item.id, item]));
+        return data.history.map((item) => {
+          const local = locals.get(item.id);
+          if (local?.audioUrl && !item.audioUrl) {
+            return { ...item, audioUrl: local.audioUrl, audioReady: local.audioReady, audioBytes: local.audioBytes };
+          }
+          return item;
+        });
+      });
+    }
     const live = data.session;
     if (live && (live.status === 'recording' || live.status === 'processing')) {
       setSession(live);
@@ -188,6 +239,111 @@ export function RecordStudio() {
         .catch(() => undefined);
     }
   }, [applyPoll]);
+
+  async function persistPending(complete = false) {
+    const id = sessionIdRef.current;
+    if (!id || (!hostActiveRef.current && !complete)) return;
+    const mime = recRef.current?.mimeType || pickRecorderMime() || 'audio/webm';
+    const record: PendingRecording = {
+      id,
+      mime,
+      chunks: chunksRef.current.slice(),
+      blob: complete && chunksRef.current.length ? new Blob(chunksRef.current, { type: mime }) : undefined,
+      hostId: clientIdRef.current,
+      title: titleRef.current.trim() || 'Consultation call',
+      startedAt: startedAtRef.current,
+      utterances: utterancesRef.current,
+      createdAt: Date.now(),
+      complete,
+    };
+    try {
+      await savePendingRecording(record);
+    } catch (error) {
+      if (!backupWarningRef.current) {
+        backupWarningRef.current = true;
+        setCaptureAlert({
+          level: 'warn',
+          message:
+            'Could not save a local audio backup on this device. Keep this tab open until you tap Stop, or the file may be lost.',
+        });
+      }
+      console.error('IndexedDB backup failed:', error);
+    }
+  }
+
+  function schedulePersist() {
+    if (persistTimerRef.current) return;
+    persistTimerRef.current = window.setTimeout(() => {
+      persistTimerRef.current = null;
+      void persistPending(false);
+    }, 1500);
+  }
+
+  function stopHealthWatch() {
+    if (healthTimerRef.current) {
+      window.clearInterval(healthTimerRef.current);
+      healthTimerRef.current = null;
+    }
+  }
+
+  function watchCaptureHealth() {
+    stopHealthWatch();
+    silentTicksRef.current = 0;
+    healthTimerRef.current = window.setInterval(() => {
+      if (!hostActiveRef.current) return;
+      const rec = recRef.current;
+      const track = liveTrack(rec?.stream || streamRef.current);
+      if (rec && rec.state === 'paused') {
+        try {
+          rec.resume();
+        } catch {
+          /* ignore */
+        }
+        setCaptureAlert({
+          level: 'warn',
+          message: 'The recorder paused (often when the laptop sleeps). It was resumed — confirm the waveform is moving.',
+        });
+      }
+      if (rec && rec.state === 'inactive' && hostActiveRef.current) {
+        setCaptureAlert({
+          level: 'error',
+          message: 'The browser stopped the recorder. Tap Stop now so we can save whatever was captured.',
+        });
+      }
+      if (!track || track.readyState !== 'live') {
+        setCaptureAlert({
+          level: 'error',
+          message: 'The microphone disconnected. Bluetooth drop, unplugged headset, or another app took the mic. Tap Stop and start a new recording.',
+        });
+        return;
+      }
+      if (track.muted) {
+        setCaptureAlert({
+          level: 'warn',
+          message: 'The microphone is muted at the OS/browser level. Unmute it or this file will be silent.',
+        });
+      }
+      if (bytesRef.current < 64 && Date.now() - startedAtRef.current > 4000) {
+        rec?.requestData?.();
+        setCaptureAlert({
+          level: 'error',
+          message: 'No audio bytes yet. The recorder is running but empty — check the mic and keep this tab in the foreground.',
+        });
+      }
+      const analyser = analyserRef.current;
+      if (analyser && Date.now() - startedAtRef.current > 5000) {
+        const rms = rmsLevel(analyser);
+        if (rms < 0.008) silentTicksRef.current += 1;
+        else silentTicksRef.current = 0;
+        if (silentTicksRef.current >= 12) {
+          setCaptureAlert({
+            level: 'warn',
+            message: 'Almost no sound for 12 seconds. Wrong input device, mute switch, or the couple is too far from the mic.',
+          });
+        }
+      }
+    }, 1000);
+  }
 
   const role: Role = useMemo(() => {
     if (session?.status === 'recording' || session?.status === 'processing') {
@@ -239,6 +395,51 @@ export function RecordStudio() {
   }, [authed, password, applyPoll]);
 
   useEffect(() => {
+    if (!authed) return;
+    let cancelled = false;
+    listPendingRecordings()
+      .then((rows) => {
+        if (cancelled) return;
+        const recoverable = rows.find((row) => pendingBlob(row)?.size);
+        setPendingRecover(recoverable || null);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [authed]);
+
+  useEffect(() => {
+    const onHide = () => {
+      if (!hostActiveRef.current) return;
+      recRef.current?.requestData?.();
+      void persistPending(false);
+      if (document.hidden) {
+        setCaptureAlert({
+          level: 'warn',
+          message:
+            'This tab is in the background. iPhone Safari and some laptops pause MediaRecorder when you switch apps — keep Record in the foreground.',
+        });
+      }
+    };
+    const onUnload = (event: BeforeUnloadEvent) => {
+      if (!hostActiveRef.current) return;
+      recRef.current?.requestData?.();
+      void persistPending(false);
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', onHide);
+    window.addEventListener('beforeunload', onUnload);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onHide);
+      window.removeEventListener('beforeunload', onUnload);
+    };
+  }, []);
+
+  useEffect(() => {
     if (session?.status !== 'recording' || !session.startedAt) return;
     const id = window.setInterval(() => setElapsed(Date.now() - session.startedAt), 250);
     return () => window.clearInterval(id);
@@ -268,6 +469,7 @@ export function RecordStudio() {
   async function attachAnalyser(stream: MediaStream) {
     const ctx = new AudioContext();
     audioCtxRef.current = ctx;
+    if (ctx.state === 'suspended') await ctx.resume().catch(() => undefined);
     const source = ctx.createMediaStreamSource(stream);
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 256;
@@ -478,9 +680,17 @@ export function RecordStudio() {
 
   function teardownCapture() {
     hostActiveRef.current = false;
+    stopHealthWatch();
+    if (persistTimerRef.current) {
+      window.clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
     recognitionRef.current?.stop();
     recognitionRef.current = null;
-    if (recRef.current && recRef.current.state !== 'inactive') recRef.current.stop();
+    if (recRef.current) {
+      recRef.current.stream.getTracks().forEach((t) => t.stop());
+      if (recRef.current.state !== 'inactive') recRef.current.stop();
+    }
     recRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
@@ -496,39 +706,97 @@ export function RecordStudio() {
 
   async function startRecording() {
     setError('');
+    setCaptureAlert(null);
     setBusy(true);
     setLocalAudioUrl((prev) => {
       if (prev) URL.revokeObjectURL(prev);
       return null;
     });
     chunksRef.current = [];
+    bytesRef.current = 0;
+    backupWarningRef.current = false;
     speakerTurnRef.current = 1;
     lastFinalAtRef.current = 0;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
+      const blocked = recorderSupportError();
+      if (blocked) throw new Error(blocked);
+      const mime = pickRecorderMime();
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
+        });
+      } catch (err) {
+        throw new Error(describeGetUserMediaError(err));
+      }
+      const track = liveTrack(stream);
+      if (!track) throw new Error('The browser opened but did not attach a live microphone track.');
+      track.onended = () => {
+        setCaptureAlert({
+          level: 'error',
+          message: 'Microphone track ended while recording. Tap Stop so we can save any audio already captured.',
+        });
+      };
+      track.onmute = () => {
+        setCaptureAlert({
+          level: 'warn',
+          message: 'Microphone muted. Unmute hardware/OS mute or this recording will be silent.',
+        });
+      };
       streamRef.current = stream;
       startedAtRef.current = Date.now();
+      sessionIdRef.current = crypto.randomUUID();
       hostActiveRef.current = true;
       setUtterances([]);
       setInterim('');
       setView('live');
       setOpenCall(null);
 
-      startBrowserTranscription();
+      try {
+        startBrowserTranscription();
+      } catch (err) {
+        setCaptureAlert({
+          level: 'warn',
+          message: `${err instanceof Error ? err.message : 'Live transcript is unavailable.'} Audio is still recording.`,
+        });
+      }
 
-      const mime = pickRecorderMime();
-      const recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+      const recordStream = stream.clone();
+      const recordTrack = liveTrack(recordStream);
+      if (recordTrack) {
+        recordTrack.onended = () => {
+          setCaptureAlert({
+            level: 'error',
+            message: 'The recorder lost its microphone track. Tap Stop so we can save any audio already captured.',
+          });
+        };
+      }
+      const recorder = new MediaRecorder(recordStream, mime ? { mimeType: mime } : undefined);
       recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunksRef.current.push(event.data);
+        if (event.data.size > 0) {
+          chunksRef.current.push(event.data);
+          bytesRef.current += event.data.size;
+          schedulePersist();
+        }
+      };
+      recorder.onerror = (event) => {
+        const name = (event as Event & { error?: { name?: string } }).error?.name || 'unknown';
+        setCaptureAlert({
+          level: 'error',
+          message: `The recorder crashed (${name}). Tap Stop immediately. A local backup is kept if the browser allowed it.`,
+        });
       };
       recorder.start(1000);
+      if (recorder.state !== 'recording') {
+        throw new Error(`MediaRecorder is ${recorder.state}, not recording. Try Chrome, or reload this tab.`);
+      }
       recRef.current = recorder;
+      watchCaptureHealth();
+      void persistPending(false);
 
       await attachAnalyser(stream);
       const { session: next } = await postRecord<{ session: LiveRecordSession }>(passwordRef.current, {
@@ -536,8 +804,11 @@ export function RecordStudio() {
         hostId: clientIdRef.current,
         title: title.trim() || 'Consultation call',
         transcriber: 'browser',
+        sessionId: sessionIdRef.current,
       });
       setSession(next);
+      sessionIdRef.current = next.id;
+      void persistPending(false);
     } catch (err) {
       teardownCapture();
       setView('home');
@@ -551,6 +822,7 @@ export function RecordStudio() {
     setBusy(true);
     setError('');
     try {
+      recRef.current?.requestData?.();
       const mime = recRef.current?.mimeType || pickRecorderMime() || 'audio/webm';
       recognitionRef.current?.stop();
       recognitionRef.current = null;
@@ -560,15 +832,24 @@ export function RecordStudio() {
           resolve();
           return;
         }
-        rec.addEventListener('stop', () => resolve(), { once: true });
+        const timer = window.setTimeout(resolve, 4000);
+        rec.addEventListener(
+          'stop',
+          () => {
+            window.clearTimeout(timer);
+            window.setTimeout(resolve, 80);
+          },
+          { once: true },
+        );
         rec.stop();
       });
+      recRef.current?.stream.getTracks().forEach((t) => t.stop());
       recRef.current = null;
       streamRef.current?.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
 
       const blob = chunksRef.current.length ? new Blob(chunksRef.current, { type: mime }) : undefined;
-      const blobUrl = blob ? URL.createObjectURL(blob) : null;
+      const blobUrl = blob && blob.size > 0 ? URL.createObjectURL(blob) : null;
       setLocalAudioUrl((prev) => {
         if (prev) URL.revokeObjectURL(prev);
         return blobUrl;
@@ -583,23 +864,140 @@ export function RecordStudio() {
         audio: blob,
       });
 
+      if (sessionIdRef.current) {
+        await persistPending(true);
+        if (!saved.audioError) {
+          await deletePendingRecording(sessionIdRef.current).catch(() => undefined);
+          setPendingRecover(null);
+        }
+      }
+
       hostActiveRef.current = false;
       teardownCapture();
 
+      const baseSession = saved.session || session;
       const item =
         saved.recording ||
-        toHistoryItem(saved.session, saved.session.audioUrl || blobUrl || undefined);
+        (baseSession
+          ? toHistoryItem(baseSession, baseSession.audioUrl || blobUrl || undefined)
+          : {
+              id: sessionIdRef.current || crypto.randomUUID(),
+              title: title.trim() || 'Consultation call',
+              startedAt: startedAtRef.current,
+              endedAt: Date.now(),
+              durationMs: Date.now() - startedAtRef.current,
+              utteranceCount: utterancesRef.current.length,
+              notes: null,
+              transcript: utterancesRef.current,
+              audioUrl: blobUrl || undefined,
+              audioReady: false,
+            });
+      if (saved.audioError) {
+        item.audioReady = false;
+      } else {
+        item.audioReady = true;
+      }
       setOpenCall(item);
       setHistory((prev) => [item, ...prev.filter((row) => row.id !== item.id)]);
       setSession(null);
       setView('detail');
       setDetailTab('summary');
+      if (saved.audioError) {
+        setError(
+          `${saved.audioError} Transcript was saved. Keep this tab open — a local copy is on this device for retry.`,
+        );
+      } else {
+        setCaptureAlert(null);
+      }
     } catch (err) {
+      const mime = recRef.current?.mimeType || pickRecorderMime() || 'audio/webm';
+      const blob = chunksRef.current.length ? new Blob(chunksRef.current, { type: mime }) : undefined;
+      const blobUrl = blob && blob.size > 0 ? URL.createObjectURL(blob) : null;
+      if (blobUrl) {
+        setLocalAudioUrl((prev) => {
+          if (prev) URL.revokeObjectURL(prev);
+          return blobUrl;
+        });
+      }
+      void persistPending(true);
       teardownCapture();
-      setView('home');
       setError(err instanceof Error ? err.message : 'Could not stop recording');
+      if (blobUrl) {
+        setView('detail');
+        setOpenCall((current) =>
+          current || {
+            id: sessionIdRef.current || crypto.randomUUID(),
+            title: title.trim() || 'Consultation call',
+            startedAt: startedAtRef.current,
+            endedAt: Date.now(),
+            durationMs: Date.now() - startedAtRef.current,
+            utteranceCount: utterancesRef.current.length,
+            notes: null,
+            transcript: utterancesRef.current,
+            audioUrl: blobUrl,
+            audioReady: false,
+          },
+        );
+      } else {
+        setView('home');
+      }
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function retryCloudSave() {
+    const id = openCall?.id || pendingRecover?.id;
+    const blob =
+      (localAudioUrl
+        ? await fetch(localAudioUrl)
+            .then((r) => r.blob())
+            .catch(() => undefined)
+        : undefined) || (pendingRecover ? pendingBlob(pendingRecover) : undefined);
+    if (!id || !blob) {
+      setError('No local audio to retry. The file was never captured on this device.');
+      return;
+    }
+    setRetryingAudio(true);
+    try {
+      const data = await uploadRecordingAudio(passwordRef.current, id, blob);
+      setOpenCall(data.recording);
+      setHistory((prev) => [data.recording, ...prev.filter((row) => row.id !== data.recording.id)]);
+      await deletePendingRecording(id).catch(() => undefined);
+      setPendingRecover(null);
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Retry failed');
+    } finally {
+      setRetryingAudio(false);
+    }
+  }
+
+  async function recoverInterrupted() {
+    if (!pendingRecover) return;
+    setRetryingAudio(true);
+    try {
+      const saved = await recoverPendingRecording(passwordRef.current, pendingRecover);
+      const blob = pendingBlob(pendingRecover);
+      const blobUrl = blob ? URL.createObjectURL(blob) : null;
+      setLocalAudioUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return blobUrl;
+      });
+      const item =
+        saved.recording ||
+        (saved.session ? toHistoryItem(saved.session, blobUrl || undefined) : null);
+      if (item) {
+        setOpenCall(item);
+        setHistory((prev) => [item, ...prev.filter((row) => row.id !== item.id)]);
+        setView('detail');
+      }
+      if (saved.audioError) setError(saved.audioError);
+      else setPendingRecover(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not recover saved audio');
+    } finally {
+      setRetryingAudio(false);
     }
   }
 
@@ -627,7 +1025,7 @@ export function RecordStudio() {
   const live = session?.status === 'recording';
   const processing = session?.status === 'processing' || busy && view === 'live' && !live;
   const listenerCount = session?.listeners.length ?? 0;
-  const playUrl = displayedCall?.audioUrl || localAudioUrl;
+  const playUrl = localAudioUrl || displayedCall?.audioUrl || null;
 
   if (!authed) {
     return (
@@ -717,7 +1115,46 @@ export function RecordStudio() {
       <main className="mx-auto max-w-5xl px-4 py-6 md:px-8">
         {error ? (
           <div className="mb-6 rounded-lg border border-[#C0392B]/20 bg-[#C0392B]/8 px-4 py-3 text-sm text-[#C0392B]">
-            {error}
+            <p>{error}</p>
+            {localAudioUrl || pendingRecover ? (
+              <button
+                type="button"
+                onClick={() => void retryCloudSave()}
+                disabled={retryingAudio}
+                className="mt-2 text-sm font-medium underline"
+              >
+                {retryingAudio ? 'Retrying save…' : 'Retry saving audio to the cloud'}
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+
+        {captureAlert ? (
+          <div
+            className={`mb-6 rounded-lg px-4 py-3 text-sm ${
+              captureAlert.level === 'error'
+                ? 'border border-[#C0392B]/20 bg-[#C0392B]/8 text-[#C0392B]'
+                : 'border border-amber-500/30 bg-amber-50 text-amber-950'
+            }`}
+          >
+            {captureAlert.message}
+          </div>
+        ) : null}
+
+        {pendingRecover && view === 'home' ? (
+          <div className="mb-6 rounded-lg border border-[#1876F2]/20 bg-[#1876F2]/8 px-4 py-3 text-sm">
+            <p>
+              Unsaved audio from “{pendingRecover.title}” is still on this device
+              {pendingRecover.complete ? ' (cloud save did not finish)' : ' (the tab closed mid-call)'}.
+            </p>
+            <button
+              type="button"
+              onClick={() => void recoverInterrupted()}
+              disabled={retryingAudio}
+              className="mt-2 font-medium text-[#1876F2] underline"
+            >
+              {retryingAudio ? 'Restoring…' : 'Restore and save it now'}
+            </button>
           </div>
         ) : null}
 
@@ -759,6 +1196,9 @@ export function RecordStudio() {
             tab={detailTab}
             onTab={setDetailTab}
             playUrl={playUrl}
+            localOnly={Boolean(localAudioUrl && !displayedCall.audioUrl)}
+            onRetrySave={localAudioUrl || pendingRecover ? () => void retryCloudSave() : undefined}
+            retrying={retryingAudio}
           />
         ) : null}
       </main>
@@ -941,11 +1381,17 @@ function CallDetail({
   tab,
   onTab,
   playUrl,
+  localOnly,
+  onRetrySave,
+  retrying,
 }: {
   call: RecordHistoryItem;
   tab: DetailTab;
   onTab: (tab: DetailTab) => void;
   playUrl: string | null;
+  localOnly?: boolean;
+  onRetrySave?: () => void;
+  retrying?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
   const notes = call.notes;
@@ -1017,7 +1463,13 @@ function CallDetail({
         />
       )}
 
-      <AudioPlayer key={playUrl || 'none'} src={playUrl} />
+      <AudioPlayer
+        key={playUrl || 'none'}
+        src={playUrl}
+        localOnly={localOnly}
+        onRetrySave={onRetrySave}
+        retrying={retrying}
+      />
     </div>
   );
 }
@@ -1044,22 +1496,56 @@ function TabLink({
   );
 }
 
-function AudioPlayer({ src }: { src: string | null }) {
+function AudioPlayer({
+  src,
+  localOnly,
+  onRetrySave,
+  retrying,
+}: {
+  src: string | null;
+  localOnly?: boolean;
+  onRetrySave?: () => void;
+  retrying?: boolean;
+}) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [playError, setPlayError] = useState('');
+  const [compat, setCompat] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCompat(src ? playbackSupportMessage(src) : null);
+    setPlayError('');
+    setPlaying(false);
+    setCurrent(0);
+    setDuration(0);
+  }, [src]);
 
   if (!src) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 border-t border-black/10 bg-white px-4 py-3 text-center text-sm text-black/40">
-        Audio is still processing, or was not saved for this call.
+      <div className="fixed bottom-0 left-0 right-0 border-t border-black/10 bg-white px-4 py-3 text-center text-sm text-black/55">
+        No playable audio for this call. If you just recorded, the capture failed before any bytes were stored — check
+        the mic and keep the Record tab open next time.
       </div>
     );
   }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 border-t border-black/10 bg-white/95 backdrop-blur">
+      {playError || compat || localOnly ? (
+        <div className="border-b border-black/8 px-4 py-2 text-center text-xs text-[#C0392B] md:px-8">
+          {playError || compat || 'Playing a copy from this device only — cloud save did not finish.'}{' '}
+          {onRetrySave ? (
+            <button type="button" className="underline" onClick={onRetrySave} disabled={retrying}>
+              {retrying ? 'Retrying…' : 'Retry cloud save'}
+            </button>
+          ) : null}{' '}
+          <a href={src} download="recording" className="underline">
+            Download
+          </a>
+        </div>
+      ) : null}
       <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 md:px-8">
         <button
           type="button"
@@ -1067,8 +1553,21 @@ function AudioPlayer({ src }: { src: string | null }) {
             const el = audioRef.current;
             if (!el) return;
             if (el.paused) {
-              void el.play();
-              setPlaying(true);
+              void el
+                .play()
+                .then(() => {
+                  setPlaying(true);
+                  setPlayError('');
+                })
+                .catch((err: unknown) => {
+                  setPlaying(false);
+                  const name = err instanceof DOMException ? err.name : '';
+                  if (name === 'NotAllowedError') {
+                    setPlayError('Playback was blocked. Tap Play again (browsers require a tap).');
+                    return;
+                  }
+                  setPlayError('This file could not be played. Download it or open it in Chrome.');
+                });
             } else {
               el.pause();
               setPlaying(false);
@@ -1083,24 +1582,38 @@ function AudioPlayer({ src }: { src: string | null }) {
         <input
           type="range"
           min={0}
-          max={duration || 0}
+          max={Number.isFinite(duration) ? duration : 0}
           step={0.1}
           value={current}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (audioRef.current) audioRef.current.currentTime = value;
+            if (audioRef.current && Number.isFinite(value)) audioRef.current.currentTime = value;
             setCurrent(value);
           }}
           className="h-1.5 flex-1 accent-[#1876F2]"
         />
         <span className="w-12 text-right tabular-nums text-xs text-black/45">
-          {formatClock((duration || 0) * 1000)}
+          {Number.isFinite(duration) ? formatClock(duration * 1000) : '--:--'}
         </span>
         <audio
           ref={audioRef}
           src={src}
+          preload="metadata"
           onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
-          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
+          onLoadedMetadata={(e) => {
+            const next = e.currentTarget.duration;
+            setDuration(Number.isFinite(next) ? next : 0);
+            if (!Number.isFinite(next)) {
+              setPlayError('Duration is unknown (common with WebM). Playback may still work — tap Play. Seeking may not.');
+            }
+          }}
+          onError={() => {
+            setPlaying(false);
+            setPlayError('The audio file failed to load or decode. Try Download, or open this page in Chrome.');
+          }}
+          onStalled={() => {
+            setPlayError('Audio stalled while loading. Check the network, then tap Play again.');
+          }}
           onEnded={() => setPlaying(false)}
         />
       </div>

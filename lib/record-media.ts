@@ -8,13 +8,19 @@ export function iceConfig(): RTCConfiguration {
 
 export function pickRecorderMime() {
   if (typeof MediaRecorder === 'undefined') return '';
+  const probe = typeof Audio !== 'undefined' ? new Audio() : null;
   const candidates = [
-    'audio/webm;codecs=opus',
-    'audio/webm',
     'audio/mp4',
     'audio/aac',
+    'audio/webm;codecs=opus',
+    'audio/webm',
   ];
-  return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || '';
+  const playable = candidates.filter((type) => {
+    if (!MediaRecorder.isTypeSupported(type)) return false;
+    if (!probe) return true;
+    return Boolean(probe.canPlayType(type.split(';')[0]));
+  });
+  return playable[0] || candidates.find((type) => MediaRecorder.isTypeSupported(type)) || '';
 }
 
 export function formatClock(ms: number) {

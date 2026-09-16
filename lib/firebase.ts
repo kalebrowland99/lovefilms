@@ -56,6 +56,7 @@ export const COLLECTIONS = {
   SCHEDULED_EMAILS: 'scheduled_emails',
   RECORD_SESSIONS: 'record_sessions',
   RECORDINGS: 'recordings',
+  RECORD_UPLOADS: 'record_uploads',
 } as const;
 
 // Single document IDs for global settings

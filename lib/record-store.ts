@@ -1,6 +1,11 @@
 import { db, COLLECTIONS } from '@/lib/firebase';
 import { generateOtterNotes } from '@/lib/record-summary';
-import { saveRecordingAudio } from '@/lib/record-audio';
+import {
+  downloadRecordingAudio,
+  readUploadSession,
+  saveRecordingAudio,
+  verifyAndPublishAudio,
+} from '@/lib/record-audio';
 import { diarizeRecordingAudio } from '@/lib/record-diarize';
 import type {
   LiveRecordSession,
@@ -47,6 +52,9 @@ function historyFromSession(session: LiveRecordSession): RecordHistoryItem {
     notes: session.notes,
     transcript: session.utterances,
     audioUrl: session.audioUrl,
+    audioPath: session.audioPath,
+    audioBytes: session.audioBytes,
+    audioReady: session.audioReady,
   };
 }
 
@@ -141,6 +149,7 @@ export async function startSession(input: {
   hostId: string;
   title: string;
   transcriber: LiveRecordSession['transcriber'];
+  sessionId?: string;
 }): Promise<LiveRecordSession> {
   const existing = expireIfNeeded(await readLiveFromFirebase());
   if (existing?.status === 'recording' && existing.hostId !== input.hostId) {
@@ -152,7 +161,7 @@ export async function startSession(input: {
 
   const now = Date.now();
   const session: LiveRecordSession = {
-    id: newId(),
+    id: input.sessionId?.trim() || newId(),
     hostId: input.hostId,
     title: input.title.trim() || 'Consultation call',
     status: 'recording',
@@ -384,38 +393,63 @@ export async function attachRecordingAudio(
   const existing = await getRecording(recordingId);
   if (!existing) throw new Error('Recording not found.');
 
-  let audioUrl = existing.audioUrl;
-  try {
-    const saved = await saveRecordingAudio(recordingId, audio.data, audio.contentType);
-    if (saved) audioUrl = saved.audioUrl;
-  } catch (error) {
-    console.error('Audio upload failed:', error);
-  }
+  const saved = await saveRecordingAudio(recordingId, audio.data, audio.contentType);
+  return afterAudioSaved(recordingId, existing, saved, audio);
+}
 
-  let transcript = existing.transcript;
-  let notes = existing.notes;
+async function afterAudioSaved(
+  recordingId: string,
+  existing: RecordHistoryItem,
+  saved: { path: string; audioUrl: string; bytes: number },
+  audio?: { data: Buffer; contentType: string; filename: string },
+) {
+  let next: RecordHistoryItem = {
+    ...existing,
+    audioUrl: saved.audioUrl,
+    audioPath: saved.path,
+    audioBytes: saved.bytes,
+    audioReady: true,
+  };
+  await writeHistoryItem(next);
+
   try {
+    if (!audio?.data) return next;
     const diarized = await diarizeRecordingAudio(audio.data, audio.filename, audio.contentType);
     if (diarized?.length) {
-      transcript = diarized;
-      notes = await generateOtterNotes(existing.title, transcript);
+      let notes = await generateOtterNotes(existing.title, diarized);
       if (existing.title && existing.title !== 'Consultation call') {
         notes = { ...notes, title: existing.title };
       }
+      next = {
+        ...next,
+        transcript: diarized,
+        notes,
+        utteranceCount: diarized.length,
+      };
+      await writeHistoryItem(next);
     }
   } catch (error) {
     console.error('Speaker diarization skipped:', error);
   }
 
-  const next: RecordHistoryItem = {
-    ...existing,
-    audioUrl,
-    transcript,
-    notes,
-    utteranceCount: transcript.length,
-  };
-  await writeHistoryItem(next);
   return next;
+}
+
+export async function attachPublishedAudio(recordingId: string) {
+  const existing = await getRecording(recordingId);
+  if (!existing) throw new Error('Recording not found.');
+  const session = await readUploadSession(recordingId);
+  if (!session) throw new Error('No audio upload session found for this recording.');
+  const published = await verifyAndPublishAudio(session.path, session.byteLength);
+  const data = await downloadRecordingAudio(session.path);
+  return afterAudioSaved(
+    recordingId,
+    existing,
+    published,
+    data
+      ? { data, contentType: session.contentType, filename: `recording.${session.path.split('.').pop() || 'webm'}` }
+      : undefined,
+  );
 }
 
 export async function getRecording(id: string) {

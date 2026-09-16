@@ -93,6 +93,7 @@ export async function POST(request: Request) {
         hostId: String(body.hostId || ''),
         title: String(body.title || ''),
         transcriber: 'browser',
+        sessionId: body.sessionId ? String(body.sessionId) : undefined,
       });
       return NextResponse.json({ session, capabilities: capabilities() });
     }

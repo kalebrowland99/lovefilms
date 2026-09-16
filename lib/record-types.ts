@@ -55,6 +55,8 @@ export type LiveRecordSession = {
   transcriber: 'deepgram' | 'browser' | 'unknown';
   audioUrl?: string;
   audioPath?: string;
+  audioBytes?: number;
+  audioReady?: boolean;
 };
 
 export type RecordCapabilities = {
@@ -80,4 +82,7 @@ export type RecordHistoryItem = {
   notes: OtterNotes | null;
   transcript: TranscriptUtterance[];
   audioUrl?: string;
+  audioPath?: string;
+  audioBytes?: number;
+  audioReady?: boolean;
 };
