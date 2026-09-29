@@ -4,7 +4,7 @@ import { CallConfirmedContent } from '@/components/blocks/call-confirmed-content
 export const metadata: Metadata = {
   title: 'Your Call Has Been Booked | Your Love Films',
   description:
-    'Complete the 2 steps below to confirm your wedding film consultation call.',
+    'Confirm your wedding film consultation, then tell us what you think of the portfolio for the price.',
   robots: { index: false, follow: false },
 };
 

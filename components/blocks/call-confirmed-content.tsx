@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
+import { GOOGLE_REVIEW_URL } from '@/lib/social';
 import {
   BRIDES_ON_A_MISSION_QUOTE,
   BRIDES_ON_A_MISSION_URL,
@@ -53,7 +54,7 @@ export function CallConfirmedContent() {
             Congrats! Your Call Has Been Booked.
           </h1>
           <p className="text-base md:text-lg font-sans font-semibold text-neutral-800 leading-relaxed max-w-2xl mx-auto">
-            IMPORTANT: Complete The 2 Steps Below Now. If You Don&apos;t,
+            IMPORTANT: Complete Steps 1 And 2 Below Now. If You Don&apos;t,
             We&apos;ll Be Forced To Cancel Your Call And Give Your Slot To
             Someone Else.
           </p>
@@ -128,6 +129,32 @@ export function CallConfirmedContent() {
                 </figcaption>
               </figure>
             </div>
+          </div>
+        </section>
+
+        <section className="mb-12 md:mb-14">
+          <h2
+            id="step-3"
+            className="text-center text-2xl md:text-3xl font-serif text-neutral-900 mb-6"
+          >
+            <span className="text-[#8b8370]">Step 3:</span> Before our call,
+            could you please leave a quick Google review with your thoughts on
+            our portfolio and the value we provide for the price?
+          </h2>
+
+          <div className="rounded-2xl border border-[#E8DED2] bg-white p-5 md:p-8 shadow-sm text-center">
+            <p className="text-base md:text-lg font-sans text-neutral-700 leading-relaxed">
+              A sentence or two is enough. It helps the next couple realize our
+              value for the price!
+            </p>
+            <a
+              href={GOOGLE_REVIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3.5 text-sm md:text-base font-sans font-medium text-white transition-colors hover:bg-[#8b8370]"
+            >
+              Leave a Google review
+            </a>
           </div>
         </section>
 
