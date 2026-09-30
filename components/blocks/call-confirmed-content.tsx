@@ -51,7 +51,7 @@ export function CallConfirmedContent() {
       <main className="max-w-3xl mx-auto px-4 py-10 md:py-14">
         <header className="text-center mb-8 md:mb-10">
           <h1 className="text-3xl md:text-[2.75rem] font-serif leading-tight text-neutral-900 mb-4">
-            Congrats! Your Call Has Been Booked.
+            Congrats! Your Voice Call Has Been Booked.
           </h1>
           <p className="text-base md:text-lg font-sans font-semibold text-neutral-800 leading-relaxed max-w-2xl mx-auto">
             IMPORTANT: Complete Steps 1 And 2 Below Now. If You Don&apos;t,
@@ -68,6 +68,7 @@ export function CallConfirmedContent() {
             className="text-center text-2xl md:text-3xl font-serif text-neutral-900 mb-2"
           >
             <span className="text-[#8b8370]">Step 1:</span> Watch The Video Below
+            For Wedding Bonus
           </h2>
           <p className="text-center text-lg md:text-xl font-serif text-neutral-700 mb-6">
             What To Expect Before Your Wedding Shoot Consultation
@@ -137,15 +138,16 @@ export function CallConfirmedContent() {
             id="step-3"
             className="text-center text-2xl md:text-3xl font-serif text-neutral-900 mb-6"
           >
-            <span className="text-[#8b8370]">Step 3:</span> Before our call,
-            could you please leave a quick Google review with your thoughts on
-            our portfolio and the value we provide for the price?
+            <span className="text-[#8b8370]">Last Step:</span> Optional Bonus
           </h2>
 
           <div className="rounded-2xl border border-[#E8DED2] bg-white p-5 md:p-8 shadow-sm text-center">
             <p className="text-base md:text-lg font-sans text-neutral-700 leading-relaxed">
-              A sentence or two is enough. It helps the next couple realize our
-              value for the price!
+              We would love to offer you a special bonus as a thank you for
+              your time! Could you please let us know if our pricing aligns
+              with the value we&apos;re providing (photography + videography +
+              content creation for $3500). This will help newer couples compare plans
+              between vendors!
             </p>
             <a
               href={GOOGLE_REVIEW_URL}
@@ -153,7 +155,7 @@ export function CallConfirmedContent() {
               rel="noopener noreferrer"
               className="mt-6 inline-flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3.5 text-sm md:text-base font-sans font-medium text-white transition-colors hover:bg-[#8b8370]"
             >
-              Leave a Google review
+              Sure, lets do it!
             </a>
           </div>
         </section>
