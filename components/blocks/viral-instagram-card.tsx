@@ -8,6 +8,7 @@ import {
   VIRAL_INSTAGRAM_LIKES,
   VIRAL_INSTAGRAM_POST_URL,
 } from '@/lib/press';
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/social';
 
 export function ViralInstagramCard() {
   return (
@@ -19,16 +20,16 @@ export function ViralInstagramCard() {
         </p>
         <p className="font-serif text-sm md:text-base text-neutral-600 leading-relaxed mb-4">
           {VIRAL_INSTAGRAM_LIKES} likes on Instagram — we helped shoot this
-          cinematic moment.{' '}
+          cinematic moment. Follow{' '}
           <a
-            href="https://instagram.com/yourlovefilms"
+            href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-neutral-800 underline underline-offset-2 decoration-[#E8DED2] hover:text-[#8b8370] hover:decoration-[#8b8370]"
           >
-            @yourlovefilms
-          </a>{' '}
-          is tagged in the post.
+            @{INSTAGRAM_HANDLE}
+          </a>
+          .
         </p>
         <div className="min-w-0 overflow-hidden rounded-xl">
           <InstagramEmbed

@@ -141,7 +141,7 @@ function getDefaultTemplates(): any {
       "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
       "paragraph1": "We'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message us if you need a time outside the available slots:",
       "callToAction": "Schedule Your Call",
-      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
+      "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
       "paragraph2": "If you'd like to review our packages and pricing before our call, you can find our Price and Info Guide attached to this email. We'll also go over it together during our call! We've included both desktop and mobile versions for easy viewing.",
       "paragraph3": "*A quick note: We cannot hold your date until a contract is signed and the booking is made. We book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films and photographs!",
       "paragraph4": "We're so excited to get started!",
@@ -177,7 +177,7 @@ function getDefaultTemplates(): any {
       "paragraph1": "Just wanted to follow up from yesterday and see if you have any questions about our wedding photography and videography!",
       "paragraph2": "We'd love to learn more about your wedding plans and talk through how our team would capture your day.",
       "callToAction": "Schedule a Call",
-      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
+      "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
       "footer": "Looking forward to connecting!\n\nBest,\nYour Love Films"
     }
   },
@@ -193,7 +193,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "We know planning a wedding can be overwhelming with so many decisions to make! Our team is here to answer any questions and make this as easy as possible for you.",
       "paragraph3": "Would love to chat more about your vision for the day!",
       "callToAction": "Let's Talk",
-      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
+      "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
       "footer": "Best,\nYour Love Films"
     }
   },
@@ -210,7 +210,7 @@ function getDefaultTemplates(): any {
       "paragraph3": "If you still want it, you can lock it in with the $100 retainer and we'll officially secure the date.",
       "paragraph4": "If not, totally okay (I just want to respect everyone's timeline and keep things fair).",
       "callToAction": "Lock In My Date",
-      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
+      "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
       "footer": "Let me know what feels right for you 🤍"
     }
   },
@@ -226,7 +226,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "We'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, we'd love to get you on our calendar.",
       "paragraph3": "No pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.",
       "callToAction": "Check My Availability",
-      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
+      "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
       "footer": "Best wishes,\nYour Love Films"
     }
   },
@@ -242,7 +242,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "and they're willing to put down a $100 retainer today. We don't want to pressure you, but we also don't want you to lose the date if you were still planning to book.",
       "paragraph3": "Can we hold it for another 24 hours? Or should we let it go?",
       "callToAction": "Yes, Hold It",
-      "callToActionUrl": "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call",
+      "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
       "footer": "Either way, no worries. Just want to respect your timeline (and theirs)."
     }
   },

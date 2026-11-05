@@ -5,6 +5,7 @@ import Image from "next/image";
 import { IconBrandInstagram } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useLocationCopy } from "@/components/visitor-location-provider";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
 
 export function InstagramScrollDemo({ className }: { className?: string }) {
   const { instagramLocation } = useLocationCopy();
@@ -23,7 +24,7 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
         }
       >
         <a
-          href="https://instagram.com/yourlovefilms"
+          href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="block h-full w-full cursor-pointer bg-white dark:bg-neutral-950 overflow-hidden"
@@ -45,8 +46,8 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-normal text-black dark:text-white">@yourlovefilms</h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Your Love Films</p>
+                <h3 className="text-lg font-normal text-black dark:text-white">@{INSTAGRAM_HANDLE}</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">The Love Team</p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1">{instagramLocation}</p>
               </div>
             </div>
@@ -54,15 +55,11 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
             {/* Stats */}
             <div className="flex justify-around mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
               <div className="text-center">
-                <div className="font-normal text-black dark:text-white">247</div>
-                <div className="text-xs text-neutral-600 dark:text-neutral-400">Posts</div>
-              </div>
-              <div className="text-center">
-                <div className="font-normal text-black dark:text-white">12.5K</div>
+                <div className="font-normal text-black dark:text-white">215K</div>
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">Followers</div>
               </div>
               <div className="text-center">
-                <div className="font-normal text-black dark:text-white">892</div>
+                <div className="font-normal text-black dark:text-white">960</div>
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">Following</div>
               </div>
             </div>
@@ -92,13 +89,13 @@ export function InstagramScrollDemo({ className }: { className?: string }) {
         </a>
       </ContainerScroll>
       <a
-        href="https://instagram.com/yourlovefilms"
+        href={INSTAGRAM_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors duration-300 -mt-24 md:-mt-32"
       >
         <IconBrandInstagram className="h-6 w-6" />
-        <span className="text-lg font-normal">Tap to Visit @yourlovefilms</span>
+        <span className="text-lg font-normal">Tap to Visit @{INSTAGRAM_HANDLE}</span>
       </a>
     </section>
   );

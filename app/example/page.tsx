@@ -19,7 +19,7 @@ export default function ExamplePage() {
             Capturing Your Story
           </h2>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
-            Welcome to Your Love Films — a wedding photography and videography
+            Welcome to The Love Team — a wedding photography and videography
             team creating visual stories that capture the essence of your day.
           </p>
           <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">

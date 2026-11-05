@@ -5,11 +5,11 @@ import { BookingSection } from '@/components/blocks/booking-section';
 import { YoutubePreview } from '@/components/ui/youtube-preview';
 
 export const metadata: Metadata = {
-  title: 'The Vintage Edit | 48-Hour Bonus | Your Love Films',
+  title: 'The Vintage Edit | 48-Hour Bonus | The Love Team',
   description:
     'Book within 48 hours and receive a complimentary Super 8 vintage edit of your wedding film. Watch a preview of the look.',
   openGraph: {
-    title: 'The Vintage Edit | 48-Hour Bonus | Your Love Films',
+    title: 'The Vintage Edit | 48-Hour Bonus | The Love Team',
     description:
       'Book within 48 hours and receive a complimentary Super 8 vintage edit of your wedding film. Watch a preview of the look.',
     type: 'website',
@@ -45,7 +45,7 @@ export default function VintagePage() {
           <div className="mx-auto max-w-4xl">
             <YoutubePreview
               videoId={VINTAGE_EDIT_VIDEO_ID}
-              title="Super 8 vintage film preview — Your Love Films"
+              title="Super 8 vintage film preview — The Love Team"
             />
             <p className="mt-4 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
               Super 8 vintage film preview

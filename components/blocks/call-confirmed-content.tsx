@@ -210,7 +210,7 @@ export function CallConfirmedContent() {
         </section>
 
         <p className="text-xs md:text-sm font-sans text-neutral-500 text-center leading-relaxed">
-          © {new Date().getFullYear()} Your Love Films. All Rights Reserved.
+          © {new Date().getFullYear()} YOUR LOVE FILMS LLC (The Love Team). All rights reserved.
           <br />
           Need to reschedule?{' '}
           <a

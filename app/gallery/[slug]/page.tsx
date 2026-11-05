@@ -16,9 +16,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const gallery = galleryBySlug(slug);
-  if (!gallery) return { title: 'Gallery | Your Love Films' };
+  if (!gallery) return { title: 'Gallery | The Love Team' };
   return {
-    title: `${gallery.title} | Your Love Films`,
+    title: `${gallery.title} | The Love Team`,
     description: gallery.blurb,
   };
 }

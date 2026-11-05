@@ -7,9 +7,9 @@ import { LOVE_STATES } from '@/lib/service-areas';
 import { getLocationCopyForRequest } from '@/lib/get-visitor-location';
 
 export const metadata: Metadata = {
-  title: 'The Experience | Your Love Films',
+  title: 'The Experience | The Love Team',
   description:
-    'What it is like to work with Your Love Films — cinematic wedding photography and videography, from the first call through delivery.',
+    'What it is like to work with The Love Team — cinematic wedding photography and videography, from the first call through delivery.',
 };
 
 const STEPS = [

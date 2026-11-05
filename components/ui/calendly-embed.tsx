@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
 
-export const CALENDLY_URL =
-  'https://calendly.com/d/dv52-zpb-26d/love-films-quick-call';
+export const CALENDLY_URL = CALENDLY_BOOKING_URL;
 
 export function CalendlyEmbed({
   className,

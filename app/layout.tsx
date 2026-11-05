@@ -30,11 +30,11 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Your Love Films | Wedding Photography & Videography",
+  title: "The Love Team | Wedding Photography & Videography",
   description:
     "Cinematic wedding photography and videography. Capturing your love story in photographs and on film, wherever you say I do.",
   openGraph: {
-    title: "Your Love Films | Wedding Photography & Videography",
+    title: "The Love Team | Wedding Photography & Videography",
     description:
       "Cinematic wedding photography and videography. Capturing your love story in photographs and on film, wherever you say I do.",
     type: "website",

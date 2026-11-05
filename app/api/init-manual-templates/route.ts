@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         timing: "1 day after manual enrollment",
         content: "Hi {{name}},\n\nJust wanted to follow up from yesterday and see if you have any questions about our wedding photography and videography!\n\nWe'd love to learn more about your wedding plans and talk through how our team would capture your day.\n\nLooking forward to connecting!\n\nBest,\nYour Love Films",
         callToAction: "Schedule a Call",
-        callToActionUrl: "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call"
+        callToActionUrl: "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call"
       },
       manualFollowupDay3: {
         name: "Manual Follow-up Day 3",
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         timing: "3 days after manual enrollment",
         content: "Hi {{name}},\n\nWe wanted to reach out again and see if you're still considering photography and videography for your wedding.\n\nWe know planning a wedding can be overwhelming with so many decisions to make! Our team is here to answer any questions and make this as easy as possible for you.\n\nWould love to chat more about your vision for the day!\n\nBest,\nYour Love Films",
         callToAction: "Let's Talk",
-        callToActionUrl: "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call"
+        callToActionUrl: "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call"
       },
       manualFollowupDay6: {
         name: "Manual Follow-up Day 6",
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         timing: "6 days after manual enrollment",
         content: "Hi {{name}},\n\nJust wanted to give you a heads up that wedding dates are filling up quickly, especially for {{weddingDate}}!\n\nWe'd hate for you to miss out on having your wedding day captured beautifully. If you're still interested, we'd love to get you on our calendar.\n\nNo pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.\n\nBest wishes,\nYour Love Films",
         callToAction: "Check My Availability",
-        callToActionUrl: "https://calendly.com/d/dv52-zpb-26d/love-films-quick-call"
+        callToActionUrl: "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call"
       },
       manualFollowupDay10: {
         name: "Manual Follow-up Day 10",

@@ -6,9 +6,9 @@ import { Footer } from '@/components/ui/footer';
 import { getLocationCopyForRequest } from '@/lib/get-visitor-location';
 
 export const metadata: Metadata = {
-  title: 'About the Team | Your Love Films',
+  title: 'About the Team | The Love Team',
   description:
-    'Your Love Films — cinematic wedding photography and videography. Watch our intro video and book a quick call.',
+    'The Love Team — cinematic wedding photography and videography. Watch our intro video and book a quick call.',
 };
 
 export default async function AboutPage() {
@@ -26,7 +26,7 @@ export default async function AboutPage() {
               About the team
             </p>
             <h1 className="mt-5 font-serif text-4xl md:text-6xl leading-tight text-[#070707]">
-              Hey — we&rsquo;re Your Love Films
+              Hey — we&rsquo;re The Love Team
             </h1>
             <p className="mt-6 text-lg md:text-xl leading-relaxed text-[#070707]/75">
               {copy.aboutIntro}

@@ -6,12 +6,12 @@ import Link from 'next/link';
 import { IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
-import { FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/social';
+import { FACEBOOK_URL, INSTAGRAM_HANDLE, INSTAGRAM_URL, LEGAL_ENTITY } from '@/lib/social';
 import { useLocationCopy } from '@/components/visitor-location-provider';
 
 const TICKER_ITEMS = [
-  { label: 'Follow along on Instagram', href: INSTAGRAM_URL, external: true },
-  { label: 'Follow along on Facebook', href: FACEBOOK_URL, external: true },
+  { label: `Follow @${INSTAGRAM_HANDLE}`, href: INSTAGRAM_URL, external: true },
+  { label: 'Follow theloveteams', href: FACEBOOK_URL, external: true },
   { label: 'Reserve your date', href: CALENDLY_BOOKING_URL, external: true },
 ] as const;
 
@@ -76,7 +76,7 @@ export const Footer = ({ className }: { className?: string }) => {
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Instagram"
+              aria-label={`Instagram @${INSTAGRAM_HANDLE}`}
               className="text-[#070707]/60 hover:text-[#070707] transition-colors"
             >
               <IconBrandInstagram size={24} />
@@ -91,6 +91,14 @@ export const Footer = ({ className }: { className?: string }) => {
               <IconBrandFacebook size={24} />
             </a>
           </div>
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 text-sm text-[#070707]/70 hover:text-[#070707] underline underline-offset-2"
+          >
+            @{INSTAGRAM_HANDLE}
+          </a>
         </div>
 
         <div className="text-center md:text-left">
@@ -129,7 +137,7 @@ export const Footer = ({ className }: { className?: string }) => {
       </div>
 
       <div className="py-6 text-center text-sm text-[#070707]/50">
-        <p>&copy; {currentYear} Your Love Films. All rights reserved.</p>
+        <p>&copy; {currentYear} {LEGAL_ENTITY} (The Love Team). All rights reserved.</p>
       </div>
     </footer>
   );
