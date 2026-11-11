@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { CalendlyLanding } from '@/components/blocks/calendly-landing';
+import { visitorAreaName } from '@/lib/visitor-area';
 
 export const metadata: Metadata = {
   title: 'Book a Call | The Love Team',
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     '10 hours of photo, video, and content creation for $3500. $100 deposit to book a call with The Love Team.',
 };
 
-export default function CalendlyPage() {
-  return <CalendlyLanding />;
+export default async function CalendlyPage() {
+  const area = await visitorAreaName();
+  return <CalendlyLanding area={area} />;
 }

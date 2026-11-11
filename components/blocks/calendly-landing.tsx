@@ -34,37 +34,27 @@ const COUPLE_NOTES = [
   {
     names: 'Sarah & Marco',
     quote:
-      "We almost skipped photos and video to save money. So glad we didn't. They got our first look, my dad's speech, and our niece doing the cha cha slide. We watch the film all the time, and the photographs are the ones on our wall.",
-  },
-  {
-    names: 'Lauren & Chris',
-    quote:
-      "The highlight film felt like something we'd watch in a theater, and the photographs have the same feeling. They kept the real stuff: the flower girl taking off mid-aisle, Chris tearing up during vows, my brother giving a toast that made zero sense.",
+      'We were quoted more than this for photos alone. $3,500 covered photography, video, and the content clips for the whole day. We had planned to skip video to save money.',
   },
   {
     names: 'Nicole & Jake',
     quote:
-      "I'll be honest. I thought wedding video and a big photo team would feel cheesy. It didn't. Jake hates being on camera and said he barely noticed them. The film got us crying, and the portraits still feel like us.",
+      'Our budget meant we thought we had to pick photos or video. Getting both, plus the clips, for $3,500 was the one wedding cost that felt fair for what we actually got.',
   },
   {
     names: 'Priya & James',
     quote:
-      "We had two ceremonies and I was worried a team wouldn't know how to handle both. They asked thoughtful questions ahead of time, and the film and the photographs gave equal weight to both sides of our families.",
+      'We had two ceremonies and other teams wanted a travel fee on top. This was $3,500 for the full day, and both families are in the photographs and the film.',
   },
   {
     names: 'Emma & Ryan',
     quote:
-      "Our wedding was in Scottsdale and half our family flew in. The team stayed calm when the timeline ran late, got the film of my grandma on the dance floor, and the portraits from that night are the ones she asks to see.",
+      'Once we added video, the other quotes landed well above $3,500. We still got the portraits, the film, and the content from the reception. It was the better value.',
   },
   {
     names: 'Chloe & David',
     quote:
-      "What sold us was how natural the photographs felt, no awkward posing, no hovering, and the film has the audio from our vows. We'll keep both forever.",
-  },
-  {
-    names: 'Hannah & Matt',
-    quote:
-      "Our parents still text us clips from the first dance and the photograph of it. You can hear our niece whisper 'they're crying' in the film. Still makes us laugh every time.",
+      'The $100 deposit let us hold the date before the rest was saved. For the price, the photographs and the film were more than we expected from one package.',
   },
 ] as const;
 
@@ -86,19 +76,23 @@ function endOfThisMonth() {
   }).format(lastDay);
 }
 
-function buildQuestions() {
+function buildQuestions(area: string) {
   return [
     {
-      q: 'Are you local to us?',
-      a: "Yes. If this ad reached you, it's because we have a team in your area. Every major love state.",
+      q: `Do you have a team around ${area}?`,
+      a: `If our ad targeted you, it's because we're local around ${area}, with teams in every major love state!`,
     },
     {
-      q: 'What is included for $3500?',
-      a: '10 hours of video, 10 hours of photography, and 10 hours of content creation. It is a full day, so a quick call is the best way to walk through the nitty gritty.',
+      q: 'Is travel free?',
+      a: 'Yes. Travel is built into the $3,500, so there is no extra fee for the team to come to you.',
     },
     {
       q: 'What does it take to hold our date?',
       a: 'A $100 deposit secures your date.',
+    },
+    {
+      q: 'Can we pay over time?',
+      a: 'Yes. Through our partners Klarna and Afterpay, you can split the balance into payments over as long as 72 months.',
     },
     {
       q: 'When does the $3,500 deal expire?',
@@ -190,13 +184,27 @@ function PortfolioMedia() {
 function Fold({
   title,
   children,
+  startOpen = false,
+  compact = false,
 }: {
   title: string;
   children: ReactNode;
+  startOpen?: boolean;
+  compact?: boolean;
 }) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    if (startOpen && detailsRef.current) detailsRef.current.open = true;
+  }, [startOpen]);
+
   return (
-    <details className="group border-b border-[#E8DED2] bg-[#faf9f7]">
-      <summary className="mx-auto flex max-w-3xl cursor-pointer list-none items-center justify-between px-4 py-4 font-serif text-xl text-neutral-900 [&::-webkit-details-marker]:hidden">
+    <details ref={detailsRef} className="group border-b border-[#E8DED2] bg-[#faf9f7]">
+      <summary
+        className={`mx-auto flex max-w-3xl cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 text-left text-neutral-900 [&::-webkit-details-marker]:hidden ${
+          compact ? 'font-sans text-[15px] font-medium leading-snug md:text-base' : 'font-serif text-xl'
+        }`}
+      >
         {title}
         <ChevronDown className="h-5 w-5 shrink-0 text-[#8b8370] transition-transform group-open:rotate-180" />
       </summary>
@@ -205,26 +213,46 @@ function Fold({
   );
 }
 
-export function CalendlyLanding() {
-  const questions = buildQuestions();
+export function CalendlyLanding({ area }: { area: string }) {
+  const questions = buildQuestions(area);
   return (
     <div className="min-h-screen bg-[#faf9f7] text-neutral-800">
-      <section id="booking" className="scroll-mt-4 bg-[#faf9f7] px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-serif text-[1.35rem] leading-snug text-neutral-900 sm:text-3xl">
-            <span className="block">10 hours of photo, video, and content creation</span>
-            <span className="mt-1 block whitespace-nowrap text-[clamp(1.05rem,4.8vw,1.85rem)]">
-              for $3500 ($100 deposit)
-            </span>
-            <span className="mt-2 block font-sans text-sm font-normal text-neutral-600 sm:text-base">
-              book a call below
-            </span>
+      <section id="booking" className="scroll-mt-4 bg-[#faf9f7] px-5 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]">
+        <div className="mx-auto max-w-xl text-center">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[#8b8370]">
+            Limited Time
+          </p>
+          <h1 className="mt-3 font-serif text-[1.7rem] font-normal leading-[1.12] tracking-[-0.015em] text-neutral-950 sm:text-[2.35rem] sm:leading-[1.08]">
+            10 hours of photo, video,
+            <span className="italic"> and content creation</span>
           </h1>
+          <div className="mx-auto mt-4 h-px w-8 bg-[#c4b8a4]" aria-hidden />
+          <p className="mt-3 whitespace-nowrap font-serif leading-none text-neutral-950">
+            <span className="text-[clamp(1.2rem,5.4vw,1.85rem)] tracking-tight">for $3,500</span>
+            <span className="ml-2 align-middle font-sans text-[0.62em] font-normal tracking-normal text-neutral-500">
+              ($100 deposit)
+            </span>
+          </p>
+          <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500">
+            Book a call below
+          </p>
         </div>
-        <div className="mx-auto mt-3 max-w-3xl overflow-hidden bg-white">
+        <div className="mx-auto mt-5 max-w-3xl overflow-hidden bg-white">
           <CalendlyEmbed url={CALENDLY_INLINE_URL} minHeight={640} />
         </div>
       </section>
+
+      <Fold title="What's included in the $3500 package?" compact startOpen>
+        <div className="mx-auto max-w-3xl px-4 pb-6">
+          <Image
+            src="/halo-signature-package.png"
+            alt="$3500 HALO Signature package. $100 to reserve the date. Photography, videography, and content creation coverage, plus bonuses if booked within 48 hours."
+            width={1024}
+            height={855}
+            className="h-auto w-full rounded-2xl border border-[#E8DED2] bg-white"
+          />
+        </div>
+      </Fold>
 
       <section className="bg-[#faf9f7] px-4 pb-8 pt-6 text-center">
         <h2 className="font-serif text-2xl tracking-[0.08em] text-neutral-900 md:text-3xl">
@@ -251,35 +279,32 @@ export function CalendlyLanding() {
         />
       </section>
 
-      <Fold title="View portfolio">
+      <Fold title="View portfolio" startOpen>
         <PortfolioMedia />
       </Fold>
 
-      <Fold title="Questions before you book">
-        <div className="mx-auto max-w-3xl space-y-6 px-4 pb-6">
-          {questions.map((item) => (
-            <div key={item.q}>
-              <h2 className="font-serif text-lg text-neutral-900">{item.q}</h2>
-              <p className="mt-1 font-sans text-sm leading-relaxed text-neutral-700 md:text-base">
-                {item.a}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Fold>
+      <section>
+        <h2 className="mx-auto max-w-3xl px-4 pb-1 pt-8 text-center font-serif text-2xl text-neutral-900 md:pt-10 md:text-3xl">
+          Questions before you book
+        </h2>
+        {questions.map((item) => (
+          <Fold key={item.q} title={item.q} compact>
+            <p className="mx-auto max-w-3xl px-4 pb-5 font-sans text-sm leading-relaxed text-neutral-700 md:text-base">
+              {item.a}
+            </p>
+          </Fold>
+        ))}
+      </section>
 
-      <Fold title="What couples say about us">
+      <Fold title="What couples say about us" compact>
         <div className="mx-auto max-w-3xl px-4 pb-8">
-          <p className="mb-8 text-center font-sans text-base text-neutral-600 md:text-lg">
-            Films and photographs from real weddings, with free travel ✈️
-          </p>
           <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
             {COUPLE_NOTES.map((item) => (
               <blockquote
                 key={item.names}
                 className="rounded-2xl border border-[#E8DED2] bg-white p-5 shadow-sm md:p-6"
               >
-                <p className="mb-4 font-serif text-sm leading-relaxed text-neutral-800 md:text-base">
+                <p className="mb-4 font-sans text-sm leading-relaxed text-neutral-800 md:text-base">
                   &ldquo;{item.quote}&rdquo;
                 </p>
                 <footer className="font-sans text-sm font-semibold text-[#8b8370]">
