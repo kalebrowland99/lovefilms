@@ -294,29 +294,28 @@ function WhoWeAre() {
 
 export function CalendlyLanding({ area }: { area: string }) {
   const questions = buildQuestions(area);
+  const expires = endOfThisMonth();
   return (
     <div className="min-h-screen bg-[#faf9f7] text-neutral-800">
       <section id="booking" className="scroll-mt-4 bg-[#faf9f7] px-5 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]">
         <div className="mx-auto max-w-xl text-center">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[#8b8370]">
-            <Word index={0}>Limited</Word> <Word index={1}>Time</Word>
+          <p className="whitespace-nowrap font-sans text-[clamp(10px,2.8vw,12px)] font-medium uppercase tracking-[0.14em] text-[#8b8370]">
+            <Word index={0}>Expires</Word> <Word index={1}>{expires}</Word>
           </p>
-          <h1 className="mt-3 font-serif text-[1.7rem] font-normal leading-[1.12] tracking-[-0.015em] text-neutral-950 sm:text-[2.35rem] sm:leading-[1.08]">
-            <Word index={2}>10</Word> <Word index={3}>hours</Word> <Word index={4}>of</Word>{' '}
-            <Word index={5}>photo,</Word> <Word index={6}>video,</Word>{' '}
-            <Word index={7} className="italic">and</Word> <Word index={8} className="italic">content</Word>{' '}
-            <Word index={9} className="italic">creation</Word>
+          <h1 className="mt-3 font-serif text-[1.55rem] font-normal leading-[1.15] tracking-[-0.02em] text-neutral-950 sm:text-[2.15rem] sm:leading-[1.1]">
+            <Word index={2}>Wedding</Word> <Word index={3}>Photography,</Word>
+            <br />
+            <Word index={4}>Videography,</Word> <Word index={5} className="italic">and</Word>
+            <br />
+            <Word index={6} className="italic">Content</Word> <Word index={7} className="italic">Creation</Word>
           </h1>
           <div className="mx-auto mt-4 h-px w-8 bg-[#c4b8a4]" aria-hidden />
-          <p className="mt-3 whitespace-nowrap font-serif text-[clamp(1.2rem,5.4vw,1.85rem)] leading-none tracking-tight text-neutral-950">
-            <Word index={10}>for</Word> <Word index={11}>$3,500</Word>{' '}
-            <Word index={12} className="align-middle font-sans text-[0.62em] font-normal tracking-normal text-neutral-500">
-              ($100 deposit)
-            </Word>
+          <p className="mt-4 whitespace-nowrap font-serif text-[clamp(2.05rem,8.2vw,3.25rem)] leading-none tracking-tight text-neutral-950">
+            <Word index={8}>For</Word> <Word index={9}>only</Word> <Word index={10}>$3,500</Word>
           </p>
           <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500">
-            <Word index={13}>Book</Word> <Word index={14}>a</Word> <Word index={15}>call</Word>{' '}
-            <Word index={16}>below</Word>
+            <Word index={11}>Book</Word> <Word index={12}>a</Word> <Word index={13}>call</Word>{' '}
+            <Word index={14}>below</Word>
           </p>
         </div>
         <div className="mx-auto mt-4 max-w-3xl overflow-hidden bg-white">

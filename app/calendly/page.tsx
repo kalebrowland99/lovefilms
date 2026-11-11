@@ -5,7 +5,7 @@ import { visitorAreaName } from '@/lib/visitor-area';
 export const metadata: Metadata = {
   title: 'Book a Call | The Love Team',
   description:
-    '10 hours of photo, video, and content creation for $3500. $100 deposit to book a call with The Love Team.',
+    'Wedding photography, videography, and content creation for $3500. $100 deposit to book a call with The Love Team.',
 };
 
 export default async function CalendlyPage() {
