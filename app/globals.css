@@ -160,9 +160,21 @@
   animation: ylf-word-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.ylf-word-later {
+  opacity: 0;
+  filter: blur(12px);
+}
+
+.ylf-words-in .ylf-word-later {
+  animation: ylf-word-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ylf-word {
+  .ylf-word,
+  .ylf-word-later {
     animation: none;
+    opacity: 1;
+    filter: none;
   }
 }
 

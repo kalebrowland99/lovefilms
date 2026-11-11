@@ -217,15 +217,78 @@ function Word({
   children,
   index,
   className = '',
+  hold = false,
 }: {
   children: ReactNode;
   index: number;
   className?: string;
+  hold?: boolean;
 }) {
   return (
-    <span className={`ylf-word inline-block ${className}`} style={{ animationDelay: `${index * 0.07}s` }}>
+    <span
+      className={`${hold ? 'ylf-word-later' : 'ylf-word'} inline-block ${className}`}
+      style={{ animationDelay: `${index * 0.07}s` }}
+    >
       {children}
     </span>
+  );
+}
+
+function WhoWeAre() {
+  const ref = useRef<HTMLElement>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setShown(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setShown(true);
+        observer.disconnect();
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} className={`bg-[#faf9f7] px-4 pb-8 pt-6 text-center ${shown ? 'ylf-words-in' : ''}`}>
+      <h2 className="font-serif text-2xl tracking-[0.08em] text-neutral-900 md:text-3xl">
+        <Word index={0} hold>WHO</Word> <Word index={1} hold>ARE</Word> <Word index={2} hold>WE?</Word>
+      </h2>
+      <p className="mt-3 inline-flex items-center justify-center gap-1.5 whitespace-nowrap font-sans text-[clamp(12px,3.2vw,14px)] leading-none text-neutral-800">
+        <Instagram
+          className="ylf-word-later h-3.5 w-3.5 shrink-0"
+          style={{ animationDelay: '0.21s' }}
+          aria-hidden
+        />
+        <Word index={4} hold className="font-medium">{INSTAGRAM_FOLLOWERS_LABEL}</Word>
+        <Word index={5} hold className="font-medium">followers</Word>
+        <Word index={6} hold className="text-[#8b8370]">·</Word>
+        <Word index={7} hold>{INSTAGRAM_POSTS_LABEL}</Word>
+        <Word index={8} hold>posts</Word>
+        <Word index={9} hold className="text-[#8b8370]">·</Word>
+        <Word index={10} hold>@{INSTAGRAM_HANDLE}</Word>
+      </p>
+      <p className="mt-2 whitespace-nowrap font-sans text-[clamp(12px,3.2vw,14px)] leading-none text-neutral-800">
+        <Word index={11} hold>10+</Word> <Word index={12} hold>years</Word> <Word index={13} hold>of</Word>{' '}
+        <Word index={14} hold>experience,</Word> <Word index={15} hold>team</Word> <Word index={16} hold>of</Word>{' '}
+        <Word index={17} hold>7</Word> <Word index={18} hold>people.</Word>
+      </p>
+      <Image
+        src="/instagram-theloveteam.jpg"
+        alt="The Love Team on Instagram, with 214K followers"
+        width={472}
+        height={1024}
+        className="mx-auto mt-5 w-full max-w-[280px] rounded-2xl border border-[#E8DED2]"
+      />
+    </section>
   );
 }
 
@@ -273,33 +336,7 @@ export function CalendlyLanding({ area }: { area: string }) {
         </div>
       </Fold>
 
-      <section className="bg-[#faf9f7] px-4 pb-8 pt-6 text-center">
-        <h2 className="font-serif text-2xl tracking-[0.08em] text-neutral-900 md:text-3xl">
-          WHO ARE WE?
-        </h2>
-        <p className="mt-3 inline-flex items-center justify-center gap-1.5 text-[clamp(12px,3.2vw,14px)] font-sans leading-none whitespace-nowrap text-neutral-800">
-          <Instagram className="h-3.5 w-3.5 shrink-0" aria-hidden />
-          <span className="font-medium">{INSTAGRAM_FOLLOWERS_LABEL} followers</span>
-          <span className="text-[#8b8370]" aria-hidden>
-            ·
-          </span>
-          <span>{INSTAGRAM_POSTS_LABEL} posts</span>
-          <span className="text-[#8b8370]" aria-hidden>
-            ·
-          </span>
-          <span>@{INSTAGRAM_HANDLE}</span>
-        </p>
-        <p className="mt-2 whitespace-nowrap font-sans text-[clamp(12px,3.2vw,14px)] leading-none text-neutral-800">
-          10+ years of experience, team of 7 people.
-        </p>
-        <Image
-          src="/instagram-theloveteam.jpg"
-          alt="The Love Team on Instagram, with 214K followers"
-          width={472}
-          height={1024}
-          className="mx-auto mt-5 w-full max-w-[280px] rounded-2xl border border-[#E8DED2]"
-        />
-      </section>
+      <WhoWeAre />
 
       <Fold title="View portfolio" startOpen>
         <PortfolioMedia />
