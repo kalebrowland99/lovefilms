@@ -229,34 +229,6 @@ function Word({
   );
 }
 
-function DrawnArrow({ delay }: { delay: string }) {
-  return (
-    <svg viewBox="0 0 24 56" aria-hidden className="mx-auto mt-1 h-12 w-6 text-[#8b8370]">
-      <path
-        d="M12 2 V40"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        pathLength="1"
-        className="ylf-draw"
-        style={{ animationDelay: delay }}
-      />
-      <path
-        d="M4 34 L12 46 L20 34"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        pathLength="1"
-        className="ylf-draw"
-        style={{ animationDelay: `calc(${delay} + 0.4s)` }}
-      />
-    </svg>
-  );
-}
-
 export function CalendlyLanding({ area }: { area: string }) {
   const questions = buildQuestions(area);
   return (
@@ -279,15 +251,12 @@ export function CalendlyLanding({ area }: { area: string }) {
               ($100 deposit)
             </Word>
           </p>
-          <div className="relative z-10 mt-3">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500">
-              <Word index={13}>Book</Word> <Word index={14}>a</Word> <Word index={15}>call</Word>{' '}
-              <Word index={16}>below</Word>
-            </p>
-            <DrawnArrow delay="1.15s" />
-          </div>
+          <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500">
+            <Word index={13}>Book</Word> <Word index={14}>a</Word> <Word index={15}>call</Word>{' '}
+            <Word index={16}>below</Word>
+          </p>
         </div>
-        <div className="relative z-0 mx-auto -mt-3 max-w-3xl overflow-hidden bg-white">
+        <div className="mx-auto mt-4 max-w-3xl overflow-hidden bg-white">
           <CalendlyEmbed url={CALENDLY_INLINE_URL} minHeight={640} />
         </div>
       </section>
@@ -321,7 +290,7 @@ export function CalendlyLanding({ area }: { area: string }) {
           <span>@{INSTAGRAM_HANDLE}</span>
         </p>
         <p className="mt-2 whitespace-nowrap font-sans text-[clamp(12px,3.2vw,14px)] leading-none text-neutral-800">
-          10+ years of experience, team of 7.
+          10+ years of experience, team of 7 people.
         </p>
         <Image
           src="/instagram-theloveteam.jpg"
