@@ -213,6 +213,50 @@ function Fold({
   );
 }
 
+function Word({
+  children,
+  index,
+  className = '',
+}: {
+  children: ReactNode;
+  index: number;
+  className?: string;
+}) {
+  return (
+    <span className={`ylf-word inline-block ${className}`} style={{ animationDelay: `${index * 0.07}s` }}>
+      {children}
+    </span>
+  );
+}
+
+function DrawnArrow({ delay }: { delay: string }) {
+  return (
+    <svg viewBox="0 0 24 56" aria-hidden className="mx-auto mt-1 h-12 w-6 text-[#8b8370]">
+      <path
+        d="M12 2 V40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        pathLength="1"
+        className="ylf-draw"
+        style={{ animationDelay: delay }}
+      />
+      <path
+        d="M4 34 L12 46 L20 34"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        pathLength="1"
+        className="ylf-draw"
+        style={{ animationDelay: `calc(${delay} + 0.4s)` }}
+      />
+    </svg>
+  );
+}
+
 export function CalendlyLanding({ area }: { area: string }) {
   const questions = buildQuestions(area);
   return (
@@ -220,24 +264,30 @@ export function CalendlyLanding({ area }: { area: string }) {
       <section id="booking" className="scroll-mt-4 bg-[#faf9f7] px-5 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]">
         <div className="mx-auto max-w-xl text-center">
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[#8b8370]">
-            Limited Time
+            <Word index={0}>Limited</Word> <Word index={1}>Time</Word>
           </p>
           <h1 className="mt-3 font-serif text-[1.7rem] font-normal leading-[1.12] tracking-[-0.015em] text-neutral-950 sm:text-[2.35rem] sm:leading-[1.08]">
-            10 hours of photo, video,
-            <span className="italic"> and content creation</span>
+            <Word index={2}>10</Word> <Word index={3}>hours</Word> <Word index={4}>of</Word>{' '}
+            <Word index={5}>photo,</Word> <Word index={6}>video,</Word>{' '}
+            <Word index={7} className="italic">and</Word> <Word index={8} className="italic">content</Word>{' '}
+            <Word index={9} className="italic">creation</Word>
           </h1>
           <div className="mx-auto mt-4 h-px w-8 bg-[#c4b8a4]" aria-hidden />
-          <p className="mt-3 whitespace-nowrap font-serif leading-none text-neutral-950">
-            <span className="text-[clamp(1.2rem,5.4vw,1.85rem)] tracking-tight">for $3,500</span>
-            <span className="ml-2 align-middle font-sans text-[0.62em] font-normal tracking-normal text-neutral-500">
+          <p className="mt-3 whitespace-nowrap font-serif text-[clamp(1.2rem,5.4vw,1.85rem)] leading-none tracking-tight text-neutral-950">
+            <Word index={10}>for</Word> <Word index={11}>$3,500</Word>{' '}
+            <Word index={12} className="align-middle font-sans text-[0.62em] font-normal tracking-normal text-neutral-500">
               ($100 deposit)
-            </span>
+            </Word>
           </p>
-          <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500">
-            Book a call below
-          </p>
+          <div className="relative z-10 mt-3">
+            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500">
+              <Word index={13}>Book</Word> <Word index={14}>a</Word> <Word index={15}>call</Word>{' '}
+              <Word index={16}>below</Word>
+            </p>
+            <DrawnArrow delay="1.15s" />
+          </div>
         </div>
-        <div className="mx-auto mt-5 max-w-3xl overflow-hidden bg-white">
+        <div className="relative z-0 mx-auto -mt-3 max-w-3xl overflow-hidden bg-white">
           <CalendlyEmbed url={CALENDLY_INLINE_URL} minHeight={640} />
         </div>
       </section>
@@ -269,6 +319,9 @@ export function CalendlyLanding({ area }: { area: string }) {
             ·
           </span>
           <span>@{INSTAGRAM_HANDLE}</span>
+        </p>
+        <p className="mt-2 whitespace-nowrap font-sans text-[clamp(12px,3.2vw,14px)] leading-none text-neutral-800">
+          10+ years of experience, team of 7.
         </p>
         <Image
           src="/instagram-theloveteam.jpg"
