@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { CalendlyLanding } from '@/components/blocks/calendly-landing';
+import MetaBookedCall from '@/components/MetaBookedCall';
 import { visitorAreaName } from '@/lib/visitor-area';
 
 export const metadata: Metadata = {
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 
 export default async function CalendlyPage() {
   const area = await visitorAreaName();
-  return <CalendlyLanding area={area} />;
+  return (
+    <>
+      <CalendlyLanding area={area} />
+      <MetaBookedCall />
+    </>
+  );
 }
