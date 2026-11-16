@@ -1031,7 +1031,7 @@ export function RecordStudio() {
     return (
       <div className="min-h-screen bg-white text-[#111] flex items-center justify-center px-4">
         <form onSubmit={handleLogin} className="w-full max-w-md border border-black/10 rounded-2xl p-8 shadow-sm">
-          <p className="text-[11px] tracking-[0.2em] uppercase text-black/45">Your Love Films</p>
+          <p className="text-[11px] tracking-[0.2em] uppercase text-black/45">The Love Team</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">Record</h1>
           <p className="mt-3 text-sm text-black/60">Team access for live call recording, transcription, and notes.</p>
           <label className="block mt-6 text-sm">
@@ -1071,7 +1071,7 @@ export function RecordStudio() {
               </button>
             ) : (
               <Link href="/" className="text-[11px] tracking-[0.18em] uppercase text-black/40 hover:text-black">
-                YLF
+                TLT
               </Link>
             )}
             <span className="truncate text-lg font-semibold tracking-tight">

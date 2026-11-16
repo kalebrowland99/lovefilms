@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
     // Send email via Resend
     const { data, error } = await resend.emails.send({
-      from: 'Your Love Films <hi@yourlovefilms.com>',
+      from: 'The Love Team <hi@yourlovefilms.com>',
       to: recipient,
       subject: emailSubject,
       html: emailHtml,

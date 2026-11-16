@@ -69,7 +69,7 @@ export async function GET(request: Request) {
         
         // Prepare email options
         const emailOptions: any = {
-          from: 'Your Love Films <hi@yourlovefilms.com>',
+          from: 'The Love Team <hi@yourlovefilms.com>',
           to: scheduledEmail.recipientEmail,
           subject: emailSubject,
           html: emailHtml,

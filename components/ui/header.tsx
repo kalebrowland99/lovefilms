@@ -17,8 +17,8 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <Image 
-                src="/YLFText.png" 
-                alt="Your Love Films" 
+                src="/TLTText.png" 
+                alt="The Love Team" 
                 width={400}
                 height={80}
                 className="h-10 md:h-16 w-auto object-contain dark:invert"

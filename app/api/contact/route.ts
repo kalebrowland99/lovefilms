@@ -227,7 +227,7 @@ export async function POST(request: Request) {
                       const followUpSubject = renderSubject(template.subject, emailData);
                       
                       await resend.emails.send({
-                        from: 'Your Love Films <hi@yourlovefilms.com>',
+                        from: 'The Love Team <hi@yourlovefilms.com>',
                         to: email,
                         subject: followUpSubject,
                         html: followUpHtml,

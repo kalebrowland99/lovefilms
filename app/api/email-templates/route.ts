@@ -145,7 +145,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "If you'd like to review our packages and pricing before our call, you can find our Price and Info Guide attached to this email. We'll also go over it together during our call! We've included both desktop and mobile versions for easy viewing.",
       "paragraph3": "*A quick note: We cannot hold your date until a contract is signed and the booking is made. We book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films and photographs!",
       "paragraph4": "We're so excited to get started!",
-      "footer": "Thank you for reaching out, {{name}}, and we can't wait to work with you!\n\nBest,\nYour Love Films",
+      "footer": "Thank you for reaching out, {{name}}, and we can't wait to work with you!\n\nBest,\nThe Love Team",
         "attachmentUrl": ""
     }
     },
@@ -178,7 +178,7 @@ function getDefaultTemplates(): any {
       "paragraph2": "We'd love to learn more about your wedding plans and talk through how our team would capture your day.",
       "callToAction": "Schedule a Call",
       "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
-      "footer": "Looking forward to connecting!\n\nBest,\nYour Love Films"
+      "footer": "Looking forward to connecting!\n\nBest,\nThe Love Team"
     }
   },
   "manualFollowupDay3": {
@@ -194,7 +194,7 @@ function getDefaultTemplates(): any {
       "paragraph3": "Would love to chat more about your vision for the day!",
       "callToAction": "Let's Talk",
       "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
-      "footer": "Best,\nYour Love Films"
+      "footer": "Best,\nThe Love Team"
     }
   },
   "manualFollowupDay4": {
@@ -227,7 +227,7 @@ function getDefaultTemplates(): any {
       "paragraph3": "No pressure at all - just want to make sure you have all the information you need to make the best decision for your big day.",
       "callToAction": "Check My Availability",
       "callToActionUrl": "https://calendly.com/d/dv7k-zz2-dqs/love-films-quick-call",
-      "footer": "Best wishes,\nYour Love Films"
+      "footer": "Best wishes,\nThe Love Team"
     }
   },
   "manualFollowupDay10": {
@@ -248,7 +248,7 @@ function getDefaultTemplates(): any {
   },
   "manualFollowupDay14": {
     "name": "Manual Follow-up Day 14",
-    "subject": "Final follow-up from Your Love Films",
+    "subject": "Final follow-up from The Love Team",
     "enabled": true,
     "sendTo": "inquirer",
     "timing": "14 days after manual enrollment",
@@ -257,7 +257,7 @@ function getDefaultTemplates(): any {
       "paragraph1": "This will be our last follow-up email — we don't want to be a bother!",
       "paragraph2": "If you're still interested in wedding photography and videography, our door is always open. Feel free to reach out anytime if your plans change or if you have questions down the road.",
       "paragraph3": "We wish you nothing but the best for your wedding day and hope it's everything you've dreamed of!",
-      "footer": "Warmest regards,\nYour Love Films"
+      "footer": "Warmest regards,\nThe Love Team"
     }
     }
   };

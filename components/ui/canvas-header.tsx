@@ -50,10 +50,10 @@ export function CanvasHeader() {
             </Link>
           </div>
 
-          <Link href="/" className="absolute left-1/2 -translate-x-1/2" aria-label="Your Love Films">
+          <Link href="/" className="absolute left-1/2 -translate-x-1/2" aria-label="The Love Team">
             <Image
-              src="/YLFText.png"
-              alt="Your Love Films"
+              src="/TLTText.png"
+              alt="The Love Team"
               width={500}
               height={200}
               priority
@@ -92,8 +92,8 @@ export function CanvasHeader() {
         <div className="fixed inset-0 z-[60] bg-[#070707] px-8 py-6 md:hidden">
           <div className="flex items-center justify-between">
             <Image
-              src="/YLFText.png"
-              alt="Your Love Films"
+              src="/TLTText.png"
+              alt="The Love Team"
               width={500}
               height={200}
               className="h-8 w-auto object-contain [filter:brightness(0)_invert(1)]"

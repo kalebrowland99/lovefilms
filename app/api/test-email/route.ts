@@ -83,7 +83,7 @@ export async function POST(request: Request) {
 
     // Send email via Resend
     const result = await resend.emails.send({
-      from: 'Your Love Films <hi@yourlovefilms.com>',
+      from: 'The Love Team <hi@yourlovefilms.com>',
       to: testEmail,
       subject: `[TEST] ${subject}`,
       html: emailHtml,

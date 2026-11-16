@@ -63,8 +63,8 @@ export const Footer = ({ className }: { className?: string }) => {
         <div className="flex flex-col items-center md:items-start text-center md:text-left w-full">
           <Link href="/">
             <Image
-              src="/YLFText.png"
-              alt="Your Love Films"
+              src="/TLTText.png"
+              alt="The Love Team"
               width={300}
               height={60}
               className="h-10 md:h-14 w-auto object-contain mb-2"

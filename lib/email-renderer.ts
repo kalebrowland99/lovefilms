@@ -96,7 +96,7 @@ export function renderTemplate(template: any, data: any): string {
                 <tr>
                   <td style="padding: 0 40px 40px 40px; border-top: 1px solid #eeeeee;">
                     <p style="margin: 24px 0 0 0; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5; color: #999999;">
-                      Your Love Films<br>
+                      The Love Team<br>
                       Wedding Videography<br>
                       hi@yourlovefilms.com
                     </p>

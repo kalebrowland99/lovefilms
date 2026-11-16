@@ -30,8 +30,8 @@ export function CallConfirmedContent() {
       <div className="border-b border-[#E8DED2] bg-white">
         <div className="max-w-3xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <Image
-            src="/YLFText.png"
-            alt="Your Love Films"
+            src="/TLTText.png"
+            alt="The Love Team"
             width={280}
             height={56}
             className="h-9 md:h-11 w-auto object-contain"
