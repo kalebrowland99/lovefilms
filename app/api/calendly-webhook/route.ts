@@ -9,7 +9,7 @@
  * Double-count guard
  * -------------------
  * Bookings whose Calendly tracking carries the website campaign's UTM
- * campaign ID (120251438993290509) came through yourlovefilms.com/calendly
+ * campaign ID (120251500584190509) came through yourlovefilms.com/calendly
  * — the website flow (browser pixel + /api/meta-capi, sharing one
  * event_id) already reported them. Re-sending here under a different
  * event_id would defeat Meta's dedupe and count the booking twice, so
@@ -37,7 +37,7 @@ import { sendMetaCapiEvent } from "@/lib/metaCapi";
 export const runtime = "nodejs";
 
 /** Website Booked Calls campaign ID — bookings from it are already covered. */
-const WEBSITE_CAMPAIGN_ID = "120251438993290509";
+const WEBSITE_CAMPAIGN_ID = "120251500584190509";
 
 const TIMESTAMP_TOLERANCE_SECONDS = 5 * 60;
 
