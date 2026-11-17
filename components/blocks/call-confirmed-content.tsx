@@ -158,7 +158,7 @@ export function CallConfirmedContent() {
         <CoupleSocialProof />
 
         <p className="text-xs md:text-sm font-sans text-neutral-500 text-center leading-relaxed">
-          © {new Date().getFullYear()} YOUR LOVE FILMS LLC (The Love Team). All rights reserved.
+          © {new Date().getFullYear()} The Love Team LLC. All rights reserved.
           <br />
           Need to reschedule?{' '}
           <a

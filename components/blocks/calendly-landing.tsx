@@ -405,7 +405,7 @@ export function CalendlyLanding({ area }: { area: string }) {
         </section>
 
         <p className="mt-10 text-center font-sans text-xs leading-relaxed text-neutral-500 md:text-sm">
-          © {new Date().getFullYear()} {LEGAL_ENTITY} (The Love Team). All rights reserved.
+          © {new Date().getFullYear()} {LEGAL_ENTITY}. All rights reserved.
           <br />
           hi@yourlovefilms.com
         </p>

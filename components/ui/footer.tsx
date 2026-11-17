@@ -137,7 +137,7 @@ export const Footer = ({ className }: { className?: string }) => {
       </div>
 
       <div className="py-6 text-center text-sm text-[#070707]/50">
-        <p>&copy; {currentYear} {LEGAL_ENTITY} (The Love Team). All rights reserved.</p>
+        <p>&copy; {currentYear} {LEGAL_ENTITY}. All rights reserved.</p>
       </div>
     </footer>
   );
