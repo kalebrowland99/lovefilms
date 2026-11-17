@@ -39,6 +39,9 @@ export const metadata: Metadata = {
       "Cinematic wedding photography and videography. Capturing your love story in photographs and on film, wherever you say I do.",
     type: "website",
   },
+  other: {
+    "facebook-domain-verification": "n3n0v41e9yl8ujmlnd39m1o7u0oqm3",
+  },
 };
 
 export default async function RootLayout({
