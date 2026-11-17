@@ -7,7 +7,7 @@ export const CALENDLY_INLINE_URL =
 
 /** Calendly → Confirmation Page → Redirect to an external site */
 export const CALENDLY_CONFIRMATION_REDIRECT =
-  'https://www.yourlovefilms.com/call-confirmed';
+  'https://www.theloveteams.com/call-confirmed';
 
 export const PRE_CALL_VIDEO_ID = 'gdI_m58D0k4';
 

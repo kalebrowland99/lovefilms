@@ -8,7 +8,7 @@
     "content": {
       "heading": "New Wedding Inquiry - Respond in 5-15 minutes!",
       "showDetails": true,
-      "footer": "Submitted from yourlovefilms.com/contact"
+      "footer": "Submitted from theloveteams.com/contact"
     }
   },
   "availabilityday0": {
@@ -21,7 +21,7 @@
       "greeting": "AWESOME NEWS FOR YOU: {{weddingDate}} is available for you! 🎉",
       "paragraph1": "We'd love to hear more—let's schedule a time to meet over a video call so we can connect \"in person\" and make sure we're the perfect fit! Feel free to bring any questions. Here's a scheduling link where you can pick a day and time that works best for you, or message us if you need a time outside the available slots:",
       "callToAction": "Schedule Your Call",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://theloveteams.com/contact",
       "paragraph2": "If you'd like to review our packages and pricing before our call, you can find our Price and Info Guide attached to this email. We'll also go over it together during our call! We've included both desktop and mobile versions for easy viewing.",
       "paragraph3": "*A quick note: We cannot hold your date until a contract is signed and the booking is made. We book dates as they come and do not disclose info about other inquiries for the same date—so to avoid any disappointment, let's schedule that call and get started as soon as you can to secure your date and those dreamy films and photographs!",
       "paragraph4": "We're so excited to get started!",
@@ -41,7 +41,7 @@
       "paragraph2": "Quick question: What matters most to you two on the day? Some couples care most about the ceremony vows, others want every toast captured, and some just want the party. It helps our team plan coverage.",
       "paragraph3": "Also — what's your biggest concern about booking a wedding team? (Price? Feeling awkward on camera? Not sure what you'll actually get?) I promise there's no wrong answer.",
       "callToAction": "Reply or Book a Call",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://theloveteams.com/contact",
       "footer": "P.S. Your date is still open, but we have 2 other couples looking at the same weekend. Want us to hold it for 48 hours while you decide?"
     }
   },
@@ -58,7 +58,7 @@
       "paragraph3": "The stuff they'd have forgotten. The moments photos can't capture.",
       "paragraph4": "We're not saying this to sell you — we're saying it because we don't want you to look back and wish you had video. Especially for {{weddingDate}}.",
       "callToAction": "See Sarah & Mike's Film",
-      "callToActionUrl": "https://yourlovefilms.com",
+      "callToActionUrl": "https://theloveteams.com",
       "footer": "Want to chat about what matters most for your day? We're here."
     }
   },
@@ -75,7 +75,7 @@
       "paragraph3": "If you still want it, you can lock it in with the $100 retainer and we'll officially secure the date.",
       "paragraph4": "If not, totally okay (I just want to respect everyone's timeline and keep things fair).",
       "callToAction": "Lock In My Date",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://theloveteams.com/contact",
       "footer": "Let me know what feels right for you 🤍"
     }
   },
@@ -92,7 +92,7 @@
       "paragraph3": "Also — quick tip for your timeline: If you want golden hour photos/video, plan your ceremony to end 90 minutes before sunset. That's the magic window.",
       "paragraph4": "Anyway. We're still holding {{weddingDate}} for you. Want us to officially pencil it in, or should we release it?",
       "callToAction": "Hold My Date",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://theloveteams.com/contact",
       "footer": "No pressure — just didn't want you to miss the window if you were still interested."
     }
   },
@@ -108,7 +108,7 @@
       "paragraph2": "We don't want to pressure you — but we also don't want you to lose the date if you were still planning to book.",
       "paragraph3": "Can we hold it for another 24 hours? Or should we let it go?",
       "callToAction": "Yes, Hold It",
-      "callToActionUrl": "https://yourlovefilms.com/contact",
+      "callToActionUrl": "https://theloveteams.com/contact",
       "footer": "Either way, no worries. Just want to respect your timeline (and theirs)."
     }
   },

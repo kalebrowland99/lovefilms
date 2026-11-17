@@ -34,7 +34,7 @@ const EVENT_NAME = "BookedCall";
 export interface SendMetaCapiEventInput {
   /** Unique ID for this booking. Shared browser/server in the website flow. */
   eventId: string;
-  /** Page the conversion is credited to, e.g. https://www.yourlovefilms.com/calendly */
+  /** Page the conversion is credited to, e.g. https://www.theloveteams.com/calendly */
   eventSourceUrl: string;
   /** Unix seconds. Defaults to now. */
   eventTime?: number;

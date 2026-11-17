@@ -41,7 +41,7 @@ const WEBSITE_CAMPAIGN_ID = "120251500584190509";
 
 const TIMESTAMP_TOLERANCE_SECONDS = 5 * 60;
 
-const EVENT_SOURCE_URL = "https://www.yourlovefilms.com/calendly";
+const EVENT_SOURCE_URL = "https://www.theloveteams.com/calendly";
 
 /* ------------------------------------------------------------------ */
 /* Signature verification                                              */

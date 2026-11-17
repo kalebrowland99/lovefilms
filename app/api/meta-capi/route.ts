@@ -23,7 +23,7 @@ interface MetaCapiRequestBody {
   eventSourceUrl?: string;
 }
 
-const FALLBACK_SOURCE_URL = "https://www.yourlovefilms.com/calendly";
+const FALLBACK_SOURCE_URL = "https://www.theloveteams.com/calendly";
 
 function clientIp(request: NextRequest): string | undefined {
   // On Vercel the real visitor IP is the first entry of x-forwarded-for.
