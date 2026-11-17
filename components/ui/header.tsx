@@ -20,7 +20,7 @@ export function Header() {
                 src="/TLTText.png" 
                 alt="The Love Team" 
                 width={400}
-                height={80}
+                height={125}
                 className="h-10 md:h-16 w-auto object-contain dark:invert"
               />
             </Link>

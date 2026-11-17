@@ -33,7 +33,7 @@ export function CallConfirmedContent() {
             src="/TLTText.png"
             alt="The Love Team"
             width={280}
-            height={56}
+            height={87}
             className="h-9 md:h-11 w-auto object-contain"
             priority
           />

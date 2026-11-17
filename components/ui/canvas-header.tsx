@@ -55,7 +55,7 @@ export function CanvasHeader() {
               src="/TLTText.png"
               alt="The Love Team"
               width={500}
-              height={200}
+              height={156}
               priority
               // The wordmark ships as black strokes on transparency.
               className="h-8 md:h-[60px] w-auto object-contain [filter:brightness(0)_invert(1)]"
@@ -95,7 +95,7 @@ export function CanvasHeader() {
               src="/TLTText.png"
               alt="The Love Team"
               width={500}
-              height={200}
+              height={156}
               className="h-8 w-auto object-contain [filter:brightness(0)_invert(1)]"
             />
             <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="relative h-6 w-6">

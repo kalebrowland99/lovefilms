@@ -66,7 +66,7 @@ export const Footer = ({ className }: { className?: string }) => {
               src="/TLTText.png"
               alt="The Love Team"
               width={300}
-              height={60}
+              height={93}
               className="h-10 md:h-14 w-auto object-contain mb-2"
             />
           </Link>
