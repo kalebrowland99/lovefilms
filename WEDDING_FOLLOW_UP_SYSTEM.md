@@ -123,7 +123,7 @@ Your CRM now includes a **professional wedding videography follow-up sequence** 
 **Goal:** Instant response, offer personalized help
 
 **Example:**
-> "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
+> "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - The Love Team"
 
 **160 characters max** • Feels personal, not automated
 
@@ -133,7 +133,7 @@ Your CRM now includes a **professional wedding videography follow-up sequence** 
 **Goal:** Make booking easy, offer choice
 
 **Example:**
-> "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
+> "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - The Love Team"
 
 ---
 
@@ -141,7 +141,7 @@ Your CRM now includes a **professional wedding videography follow-up sequence** 
 **Goal:** Create urgency, easy response
 
 **Example:**
-> "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
+> "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - The Love Team"
 
 ---
 

@@ -17,7 +17,7 @@ export function CallConfirmedContent() {
   useEffect(() => {
     if (typeof window.fbq === 'function') {
       window.fbq('track', 'Purchase', {
-        content_name: 'Love Films Quick Call Booked',
+        content_name: 'Love Team Quick Call Booked',
         content_category: 'Calendly',
         value: 0,
         currency: 'USD',

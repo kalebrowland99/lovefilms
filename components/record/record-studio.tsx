@@ -1255,7 +1255,7 @@ function HomeFeed({
                       {new Date(item.startedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                       {' • '}
                       {formatDuration(item.durationMs)}
-                      {' • Love Films'}
+                      {' • The Love Team'}
                     </span>
                     {item.notes?.summary ? (
                       <span className="mt-2 block text-[14px] leading-relaxed text-black/70 line-clamp-3">
@@ -1422,7 +1422,7 @@ function CallDetail({
             >
               {avatarLetter(call.title)}
             </span>
-            Love Films
+            The Love Team
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5" />

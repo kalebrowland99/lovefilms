@@ -47,19 +47,19 @@
         "enabled": true,
         "delayInSeconds": 45,
         "name": "Day 0: Welcome Text (45 seconds)",
-        "message": "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - Your Love Films"
+        "message": "Hey {{name}}! Just sent you details for {{weddingDate}}. Want me to recommend the best package based on what matters most to you? - The Love Team"
       },
       "day2": {
         "enabled": true,
         "delayInDays": 2,
         "name": "Day 2: Call Preference",
-        "message": "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - Your Love Films"
+        "message": "{{name}}, do you prefer a quick 10-min call or full 20-min walkthrough to discuss your wedding film? Either works! Reply with your preference. - The Love Team"
       },
       "day4": {
         "enabled": true,
         "delayInDays": 4,
         "name": "Day 4: Date Hold Text",
-        "message": "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - Your Love Films"
+        "message": "Hi {{name}}! Still interested in video for {{weddingDate}}? I can hold it for 24 hrs if you want. Just reply YES or NO. - The Love Team"
       }
     }
   },

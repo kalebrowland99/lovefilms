@@ -4,7 +4,7 @@ export const BRIDES_ON_A_MISSION_URL =
 export const BRIDES_ON_A_MISSION_QUOTE =
   'A Modern Wedding Film Studio Focused on Fun Cinematic Storytelling';
 
-/** Viral Instagram reel — Your Love Films tagged, helped shoot */
+/** Viral Instagram reel — The Love Team tagged, helped shoot */
 export const VIRAL_INSTAGRAM_POST_URL =
   'https://www.instagram.com/p/DXhfzvhH25X/';
 
