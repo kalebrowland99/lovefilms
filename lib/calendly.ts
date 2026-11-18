@@ -9,7 +9,7 @@ export const CALENDLY_INLINE_URL =
 export const CALENDLY_CONFIRMATION_REDIRECT =
   'https://www.theloveteams.com/call-confirmed';
 
-export const PRE_CALL_VIDEO_ID = 'gdI_m58D0k4';
+export const PRE_CALL_VIDEO_ID = 'Kj3cRTvx2Rk';
 
 export const PRE_CALL_VIDEO_START_SECONDS = 0;
 
