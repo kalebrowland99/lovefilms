@@ -169,10 +169,10 @@ export function CallConfirmedContent() {
           </a>
           {' · '}
           <a
-            href="mailto:hi@yourlovefilms.com"
+            href="tel:+16152000429"
             className="text-neutral-800 underline underline-offset-2 hover:text-[#8b8370]"
           >
-            hi@yourlovefilms.com
+            Call or text (615) 200-0429
           </a>
         </p>
       </main>

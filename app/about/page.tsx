@@ -50,6 +50,15 @@ export default async function AboutPage() {
                 Pick a time below. We take on a limited number of weddings each
                 year, and dates book on a first-come basis.
               </p>
+              <p className="mt-4 text-base md:text-lg text-[#070707]/75">
+                Prefer email? Reach us at{' '}
+                <a
+                  href="mailto:hi@yourlovefilms.com"
+                  className="underline underline-offset-2 hover:text-[#070707]"
+                >
+                  hi@yourlovefilms.com
+                </a>
+              </p>
             </div>
             <div className="rounded-2xl border border-[#E8DED2] overflow-hidden bg-white">
               <CalendlyEmbed />

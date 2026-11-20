@@ -118,9 +118,9 @@ export const Footer = ({ className }: { className?: string }) => {
             </Link>
           </nav>
           <p className="text-[#070707]/60 mt-6">
-            Email:{' '}
-            <a href="mailto:hi@yourlovefilms.com" className="hover:text-[#070707] underline underline-offset-2">
-              hi@yourlovefilms.com
+            Call or text:{' '}
+            <a href="tel:+16152000429" className="hover:text-[#070707] underline underline-offset-2">
+              (615) 200-0429
             </a>
           </p>
         </div>

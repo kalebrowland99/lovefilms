@@ -407,7 +407,10 @@ export function CalendlyLanding({ area }: { area: string }) {
         <p className="mt-10 text-center font-sans text-xs leading-relaxed text-neutral-500 md:text-sm">
           © {new Date().getFullYear()} {LEGAL_ENTITY}. All rights reserved.
           <br />
-          hi@yourlovefilms.com
+          Call or text:{' '}
+          <a href="tel:+16152000429" className="underline underline-offset-2 hover:text-neutral-800">
+            (615) 200-0429
+          </a>
         </p>
       </main>
     </div>
