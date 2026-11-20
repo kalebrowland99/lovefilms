@@ -81,7 +81,7 @@ export const NOTES: LeadNotes[] = [
       'Free 50 vintage film-style photo edits ($250 value)',
     ],
     bonusNote:
-      'These come with your booking inside the 48 hour window. Since you were waiting on us for portfolios, we are holding your bonuses while you look this over.',
+      'Since you were waiting on us for portfolios, we are holding your bonuses while you look this over.',
     bonusDeadlineISO: '2026-11-21T12:00:00-06:00',
     areaLabel: 'Naperville',
     weddingDateLabel: 'September 25, 2027',

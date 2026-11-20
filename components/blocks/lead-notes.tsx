@@ -116,26 +116,21 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
         {/* Bonuses + countdown + vintage video */}
         <section className="px-4 md:px-8 lg:px-10 pb-16 md:pb-20">
           <div className="mx-auto max-w-4xl text-center">
-            <Eyebrow>Your 48-hour bonuses</Eyebrow>
-            <h2 className="mt-5 font-serif text-3xl md:text-5xl leading-tight">
-              Book in the window, these are yours
+            <h2 className="font-serif text-3xl md:text-5xl leading-tight">
+              Your 48-hour bonuses
             </h2>
-            <ul className="mt-8 space-y-3">
-              {notes.bonuses.map((b) => (
-                <li
-                  key={b}
-                  className="text-lg md:text-xl leading-relaxed text-[#070707]/85"
-                >
-                  {b}
-                </li>
-              ))}
-            </ul>
             <BonusCountdown
               deadlineISO={notes.bonusDeadlineISO}
               hostFirstName={notes.hostFirstName}
             />
-            <p className="mt-6 mx-auto max-w-2xl text-base md:text-lg leading-relaxed text-[#070707]/70">
-              {notes.bonusNote}
+            <p className="mt-8 mx-auto max-w-2xl text-base md:text-lg leading-relaxed text-[#070707]/80">
+              {notes.bonuses
+                .map((b, i) =>
+                  i === 0 ? b : b.charAt(0).toLowerCase() + b.slice(1),
+                )
+                .join(', ')
+                .replace(/, ([^,]*)$/, ', and $1')}
+              . {notes.bonusNote}
             </p>
           </div>
           <div className="mx-auto max-w-4xl mt-12">
@@ -163,12 +158,9 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                 Can we see our photographer and videographer before the wedding?
               </h3>
               <p className="mt-6 text-base md:text-lg leading-relaxed text-[#070707]/80">
-                Yes! After the deposit, we&rsquo;ll all hop on a call with your
-                photographer and videographer so you can meet them properly,
-                talk through your day, and look through more of their work
-                together. And if their personality or portfolio isn&rsquo;t
-                your vibe, no hard feelings at all. We&rsquo;ll set up another
-                meeting with someone you like more.
+                Yes! We&rsquo;ll all hop on a call with your photographer and
+                videographer so you can meet them properly once the deposit is
+                made!
               </p>
               <p className="mt-5 text-base md:text-lg leading-relaxed text-[#070707]/80">
                 Our goal is to be your{' '}

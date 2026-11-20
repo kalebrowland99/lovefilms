@@ -38,10 +38,10 @@ export function BonusCountdown({ deadlineISO, hostFirstName }: BonusCountdownPro
   const seconds = totalSeconds === null ? 0 : totalSeconds % 60;
 
   return (
-    <div className="mt-10">
-      <p className="font-serif text-4xl md:text-6xl leading-tight">
+    <div className="mt-6">
+      <p className="font-serif text-2xl md:text-3xl leading-snug text-[#070707]/85">
         {hours} {hours === 1 ? 'hour' : 'hours'} {minutes} min {seconds}{' '}
-        {seconds === 1 ? 'second' : 'seconds'}
+        {seconds === 1 ? 'second' : 'seconds'} left
       </p>
     </div>
   );
