@@ -47,7 +47,7 @@ export const NOTES: LeadNotes[] = [
     hostFirstName: 'Alanna',
     callDateLabel: 'Thursday, November 19',
     heroLine:
-      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions you asked, plus recent work from the photographers and videographers on your local team.',
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
     dayFacts: [
       { label: 'Your date', value: 'Saturday, September 25, 2027' },
       {
