@@ -20,6 +20,8 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 
 export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
+  const photosPerFilm = Math.ceil(notes.photos.length / notes.films.length);
+
   return (
     <>
       <CanvasHeader />
@@ -35,33 +37,6 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
             </h1>
             <p className="mt-8 mx-auto max-w-2xl text-lg md:text-xl leading-relaxed text-[#070707]/75">
               {notes.heroLine}
-            </p>
-          </div>
-        </section>
-
-        {/* Google reviews */}
-        <section className="px-4 md:px-8 lg:px-10 pb-16 md:pb-20">
-          <div className="mx-auto max-w-4xl text-center">
-            <Eyebrow>Google reviews</Eyebrow>
-            <p className="mt-6 font-serif text-6xl md:text-7xl leading-none">5.0</p>
-            <p className="mt-3 text-2xl tracking-[0.3em] text-[#070707]" aria-label="5 out of 5 stars">
-              ★★★★★
-            </p>
-            <blockquote className="mt-8 mx-auto max-w-2xl font-serif text-2xl md:text-3xl leading-snug">
-              &ldquo;{GOOGLE_REVIEW_QUOTE.text}&rdquo;
-            </blockquote>
-            <p className="mt-4 text-sm md:text-base tracking-wide text-[#070707]/50">
-              {GOOGLE_REVIEW_QUOTE.name} · {GOOGLE_REVIEW_QUOTE.detail}
-            </p>
-            <p className="mt-8">
-              <a
-                href={GOOGLE_REVIEWS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-4 text-base md:text-lg"
-              >
-                Read our reviews on Google
-              </a>
             </p>
           </div>
         </section>
@@ -130,7 +105,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                 )
                 .join(', ')
                 .replace(/, ([^,]*)$/, ', and $1')}
-              . {notes.bonusNote}
+              .
             </p>
           </div>
           <div className="mx-auto max-w-4xl mt-12">
@@ -138,22 +113,13 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
               videoId={VINTAGE_EDIT_VIDEO_ID}
               title="Super 8 vintage film preview — The Love Team"
             />
-            <p className="mt-4 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
-              This is what the vintage bonus looks like, a Super 8 cut of your film, plus vintage style edits of your photos
-            </p>
           </div>
         </section>
 
         {/* Fixed Q&A */}
         <section className="px-4 md:px-8 lg:px-10 pb-16 md:pb-20">
           <div className="mx-auto max-w-4xl">
-            <div className="text-center">
-              <Eyebrow>Good questions</Eyebrow>
-              <h2 className="mt-5 font-serif text-3xl md:text-5xl leading-tight">
-                The ones everyone asks
-              </h2>
-            </div>
-            <article className="mt-10 border border-[#070707]/15 bg-white/40 p-8 md:p-12">
+            <article className="border border-[#070707]/15 bg-white/40 p-8 md:p-12">
               <h3 className="font-serif text-2xl md:text-3xl leading-snug text-center">
                 Can we see our photographer and videographer before the wedding?
               </h3>
@@ -174,7 +140,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
             </article>
             <article className="mt-6 md:mt-8 border border-[#070707]/15 bg-white/40 p-8 md:p-12">
               <h3 className="font-serif text-2xl md:text-3xl leading-snug text-center">
-                Can we pay with Klarna or Afterpay?
+                Can we split our payments up to 24 months?
               </h3>
               <p className="mt-6 text-base md:text-lg leading-relaxed text-[#070707]/80">
                 Yes! When you check out with your payment link, Klarna and
@@ -188,7 +154,34 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
           </div>
         </section>
 
-        {/* Portfolios: films */}
+        {/* Google reviews */}
+        <section className="px-4 md:px-8 lg:px-10 pb-16 md:pb-20">
+          <div className="mx-auto max-w-4xl text-center">
+            <Eyebrow>Google reviews</Eyebrow>
+            <p className="mt-6 font-serif text-6xl md:text-7xl leading-none">5.0</p>
+            <p className="mt-3 text-2xl tracking-[0.3em] text-[#070707]" aria-label="5 out of 5 stars">
+              ★★★★★
+            </p>
+            <blockquote className="mt-8 mx-auto max-w-2xl font-serif text-2xl md:text-3xl leading-snug">
+              &ldquo;{GOOGLE_REVIEW_QUOTE.text}&rdquo;
+            </blockquote>
+            <p className="mt-4 text-sm md:text-base tracking-wide text-[#070707]/50">
+              {GOOGLE_REVIEW_QUOTE.name} · {GOOGLE_REVIEW_QUOTE.detail}
+            </p>
+            <p className="mt-8">
+              <a
+                href={GOOGLE_REVIEWS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 text-base md:text-lg"
+              >
+                Read our reviews on Google
+              </a>
+            </p>
+          </div>
+        </section>
+
+        {/* Portfolios: films, each with photos spread underneath */}
         <section className="px-4 md:px-8 lg:px-10 pb-16 md:pb-20">
           <div className="mx-auto max-w-4xl">
             <div className="text-center">
@@ -203,7 +196,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
               </p>
             </div>
             <div className="mt-12 space-y-14">
-              {notes.films.map((film) => (
+              {notes.films.map((film, i) => (
                 <div key={film.driveId}>
                   <div className="relative w-full aspect-video bg-[#070707]">
                     <iframe
@@ -218,29 +211,28 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                   <p className="mt-1 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
                     {film.note}
                   </p>
+                  <div className="mt-6 grid grid-cols-3 gap-3 md:gap-4">
+                    {notes.photos
+                      .slice(i * photosPerFilm, i * photosPerFilm + photosPerFilm)
+                      .map((src) => (
+                        <div
+                          key={src}
+                          className="relative aspect-[3/2] overflow-hidden bg-[#070707]/5"
+                        >
+                          <Image
+                            src={src}
+                            alt="Wedding photography by The Love Team"
+                            fill
+                            sizes="(max-width: 768px) 33vw, 300px"
+                            className="object-cover"
+                          />
+                        </div>
+                      ))}
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* Portfolios: photos */}
-        <section className="px-4 md:px-8 lg:px-10 pb-16 md:pb-20">
-          <div className="mx-auto max-w-5xl">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              {notes.photos.map((src, i) => (
-                <div key={src} className="relative aspect-[3/2] overflow-hidden bg-[#070707]/5">
-                  <Image
-                    src={src}
-                    alt={`Wedding photography by The Love Team, photo ${i + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
+            <p className="mt-10 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
               {notes.photoCredit}
             </p>
           </div>

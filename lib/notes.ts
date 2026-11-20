@@ -22,7 +22,6 @@ export type LeadNotes = {
   packageIntro: string;
   packageFacts: string[];
   bonuses: string[];
-  bonusNote: string;
   bonusDeadlineISO: string;
   areaLabel: string;
   weddingDateLabel: string;
@@ -80,8 +79,6 @@ export const NOTES: LeadNotes[] = [
       'Free +2 minutes added to your highlight film ($350 value)',
       'Free 50 vintage film-style photo edits ($250 value)',
     ],
-    bonusNote:
-      'Since you were waiting on us for portfolios, we are holding your bonuses while you look this over.',
     bonusDeadlineISO: '2026-11-21T12:00:00-06:00',
     areaLabel: 'Naperville',
     weddingDateLabel: 'September 25, 2027',
