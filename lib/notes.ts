@@ -103,7 +103,7 @@ export const NOTES: LeadNotes[] = [
       },
       {
         q: 'Do you help with signage?',
-        a: 'Signage is not part of what we do. We stick to photography, videography, and content creation so we can be great at those. Happy to share what other couples have used if it helps.',
+        a: 'Yes, we can add complimentary signage to your package as an add-on. Just let Alanna know what you have in mind and we will fold it into your day.',
       },
     ],
     films: [
