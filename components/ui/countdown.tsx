@@ -7,10 +7,6 @@ interface BonusCountdownProps {
   hostFirstName: string;
 }
 
-function pad(n: number) {
-  return String(n).padStart(2, '0');
-}
-
 export function BonusCountdown({ deadlineISO, hostFirstName }: BonusCountdownProps) {
   const [now, setNow] = useState<number | null>(null);
 
@@ -43,11 +39,9 @@ export function BonusCountdown({ deadlineISO, hostFirstName }: BonusCountdownPro
 
   return (
     <div className="mt-10">
-      <p className="font-serif text-6xl md:text-7xl leading-none tabular-nums">
-        {pad(hours)}:{pad(minutes)}:{pad(seconds)}
-      </p>
-      <p className="mt-3 text-[11px] md:text-sm font-medium uppercase tracking-[0.25em] text-[#070707]/60">
-        Hours · Minutes · Seconds left to lock in your bonuses
+      <p className="font-serif text-4xl md:text-6xl leading-tight">
+        {hours} {hours === 1 ? 'hour' : 'hours'} {minutes} min {seconds}{' '}
+        {seconds === 1 ? 'second' : 'seconds'}
       </p>
     </div>
   );

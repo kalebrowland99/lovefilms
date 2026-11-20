@@ -171,8 +171,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                 meeting with someone you like more.
               </p>
               <p className="mt-5 text-base md:text-lg leading-relaxed text-[#070707]/80">
-                We&rsquo;re not some big company that&rsquo;s going to take
-                your deposit and leave you in the dark. Our goal is to be your{' '}
+                Our goal is to be your{' '}
                 <em className="italic">personal friend</em> through all of
                 this, the people you can actually text, who know your names,
                 your people, and what matters to you on the day. That&rsquo;s
