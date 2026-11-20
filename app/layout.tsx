@@ -1,32 +1,28 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Cormorant_Garamond, Inter, Cinzel } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { VisitorLocationProvider } from "@/components/visitor-location-provider";
 import { getLocationCopyForRequest } from "@/lib/get-visitor-location";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const playfair = localFont({
+  src: [{ path: "./fonts/playfair-var.woff2", weight: "400 600", style: "normal" }],
   variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
 });
 
-const cormorant = Cormorant_Garamond({
+const cormorant = localFont({
+  src: [{ path: "./fonts/cormorant-var.woff2", weight: "300 700", style: "normal" }],
   variable: "--font-serif-alt",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
-const inter = Inter({
+const inter = localFont({
+  src: [{ path: "./fonts/inter-var.woff2", weight: "300 700", style: "normal" }],
   variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
-const cinzel = Cinzel({
+const cinzel = localFont({
+  src: [{ path: "./fonts/cinzel-var.woff2", weight: "400 700", style: "normal" }],
   variable: "--font-engraved",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
