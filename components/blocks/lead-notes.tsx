@@ -3,6 +3,7 @@ import { CanvasHeader } from '@/components/ui/canvas-header';
 import { Footer } from '@/components/ui/footer';
 import { YoutubePreview } from '@/components/ui/youtube-preview';
 import { BonusCountdown } from '@/components/ui/countdown';
+import { DriveFilm } from '@/components/ui/drive-film';
 import {
   GOOGLE_REVIEWS_URL,
   GOOGLE_REVIEW_QUOTE,
@@ -198,15 +199,11 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
             <div className="mt-12 space-y-14">
               {notes.films.map((film, i) => (
                 <div key={film.driveId}>
-                  <div className="relative w-full aspect-video bg-[#070707]">
-                    <iframe
-                      src={`https://drive.google.com/file/d/${film.driveId}/preview`}
-                      className="absolute inset-0 h-full w-full"
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                      title={`${film.couple} wedding film — The Love Team`}
-                    />
-                  </div>
+                  <DriveFilm
+                    driveId={film.driveId}
+                    thumb={film.thumb}
+                    title={`${film.couple} wedding film — The Love Team`}
+                  />
                   <p className="mt-4 text-center font-serif text-2xl">{film.couple}</p>
                   <p className="mt-1 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
                     {film.note}

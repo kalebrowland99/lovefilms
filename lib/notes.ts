@@ -9,6 +9,7 @@ export type LeadFilm = {
   couple: string;
   note: string;
   driveId: string;
+  thumb: string;
 };
 
 export type LeadNotes = {
@@ -87,11 +88,13 @@ export const NOTES: LeadNotes[] = [
         couple: 'Nelly & Jeremiah',
         note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
         driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
       },
       {
         couple: 'Rebecca & David',
         note: 'A colorful garden wedding at a white manor house.',
         driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
       },
     ],
     photos: [
