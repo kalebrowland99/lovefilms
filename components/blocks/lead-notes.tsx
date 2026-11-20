@@ -155,7 +155,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
             <div className="text-center">
               <Eyebrow>Good questions</Eyebrow>
               <h2 className="mt-5 font-serif text-3xl md:text-5xl leading-tight">
-                The one everyone asks
+                The ones everyone asks
               </h2>
             </div>
             <article className="mt-10 border border-[#070707]/15 bg-white/40 p-8 md:p-12">
@@ -179,6 +179,19 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                 how booking your wedding team should feel. We&rsquo;re super
                 flexible, and we&rsquo;ll always find a way to meet your
                 needs.
+              </p>
+            </article>
+            <article className="mt-6 md:mt-8 border border-[#070707]/15 bg-white/40 p-8 md:p-12">
+              <h3 className="font-serif text-2xl md:text-3xl leading-snug text-center">
+                Can we pay with Klarna or Afterpay?
+              </h3>
+              <p className="mt-6 text-base md:text-lg leading-relaxed text-[#070707]/80">
+                Yes! When you check out with your payment link, Klarna and
+                Afterpay are both options, so you can split your package into
+                smaller payments instead of paying it all at once. Pay in 4
+                is interest free, and longer plans are available too. The
+                exact terms depend on what you qualify for, and you will see
+                them at checkout before you confirm anything, no surprises.
               </p>
             </article>
           </div>
