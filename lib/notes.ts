@@ -23,7 +23,9 @@ export type LeadNotes = {
   packageFacts: string[];
   bonuses: string[];
   bonusNote: string;
-  qa: { q: string; a: string }[];
+  bonusDeadlineISO: string;
+  areaLabel: string;
+  weddingDateLabel: string;
   films: LeadFilm[];
   photos: string[];
   photoCredit: string;
@@ -74,38 +76,15 @@ export const NOTES: LeadNotes[] = [
       'Designed album upgrade available for $100',
     ],
     bonuses: [
-      'A vintage Super 8 highlight edit of your film',
-      'Two extra minutes added to your highlight film',
-      '50 vintage style edits of your photos',
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your highlight film ($350 value)',
+      'Free 50 vintage film-style photo edits ($250 value)',
     ],
     bonusNote:
       'These come with your booking inside the 48 hour window. Since you were waiting on us for portfolios, we are holding your bonuses while you look this over.',
-    qa: [
-      {
-        q: 'Can we see our photographer and videographer before the wedding?',
-        a: 'Yes! After the deposit, we will all hop on a call with your photographer and videographer so you can meet them properly and talk through your day. After the call, if their personality or portfolio is not your vibe, we can set up another meeting with someone you like more. You will never be stuck with a team you do not love.',
-      },
-      {
-        q: 'Do we get the raw photos and video?',
-        a: 'Your raw video footage is included in your package, it is yours to keep. For photos, you will see a preview gallery within 72 hours of the wedding, then your full edited gallery, and you can pick favorites from the unedited set too.',
-      },
-      {
-        q: 'Are you local to Naperville?',
-        a: "We're local! We have teams that shoot all over the country and we cover our own travel, so there are no travel or lodging fees added for your day.",
-      },
-      {
-        q: 'How does booking actually work?',
-        a: 'Pick Halo Signature in your proposal, sign the contract, and put down the $100 deposit. That locks your date and your bonuses. After that it is 50 percent thirty days later, and the rest thirty days before the wedding. And the schedule is flexible if you need it to be.',
-      },
-      {
-        q: 'What if we need a little more time to decide?',
-        a: 'Take the time you need. We are holding your bonuses while you review everything, and Alanna is one text away if anything comes up while you talk it over.',
-      },
-      {
-        q: 'Do you help with signage?',
-        a: 'Yes, we can add complimentary signage to your package as an add-on. Just let Alanna know what you have in mind and we will fold it into your day.',
-      },
-    ],
+    bonusDeadlineISO: '2026-11-21T12:00:00-06:00',
+    areaLabel: 'Naperville',
+    weddingDateLabel: 'September 25, 2027',
     films: [
       {
         couple: 'Nelly & Jeremiah',
