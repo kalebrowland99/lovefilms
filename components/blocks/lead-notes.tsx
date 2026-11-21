@@ -89,15 +89,35 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                       (f.label === 'Ceremony' && !hasReception)) && (
                       <PhotoStrip photos={notes.dayPhotos} cols={2} />
                     )}
-                    {f.label === 'Your style' && (
-                      <PhotoStrip photos={notes.stylePhotos} cols={3} />
-                    )}
                   </div>
                 ))}
               </dl>
               <p className="mt-6 text-sm tracking-wide text-[#070707]/50">
                 {notes.photoCredit}
               </p>
+              {notes.inspoMention && (
+                <div className="mt-8 border-t border-[#070707]/10 pt-6">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-[#070707]/50">
+                    Potential inspo?
+                  </p>
+                  <p className="mt-2 text-base md:text-lg leading-relaxed text-[#070707]/85">
+                    You mentioned on the call: {notes.inspoMention}.
+                  </p>
+                  {notes.inspoYoutubeId && (
+                    <div className="mt-5">
+                      <p className="text-[11px] uppercase tracking-[0.2em] text-[#070707]/50">
+                        Film
+                      </p>
+                      <div className="mt-3">
+                        <YoutubePreview
+                          videoId={notes.inspoYoutubeId}
+                          title="Wedding film inspiration — Super 8"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </article>
             <article className="border border-[#070707]/15 bg-white/40 p-8 md:p-12">
               <p className="text-[11px] uppercase tracking-[0.2em] text-[#070707]/50">

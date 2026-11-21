@@ -28,8 +28,9 @@ export type LeadNotes = {
   weddingDateLabel: string;
   films: LeadFilm[];
   dayPhotos: string[];
-  stylePhotos: string[];
   photoCredit: string;
+  inspoMention?: string;
+  inspoYoutubeId?: string;
 };
 
 export const GOOGLE_REVIEWS_URL =
@@ -98,13 +99,11 @@ export const NOTES: LeadNotes[] = [
         thumb: '/notes/shared/film-rebecca.jpg',
       },
     ],
-    dayPhotos: ['/notes/colin/tia-1.jpg', '/notes/colin/tia-3.jpg'],
-    stylePhotos: [
-      '/notes/colin/tia-5.jpg',
-      '/notes/colin/tia-6.jpg',
-      '/notes/colin/tia-4.jpg',
-    ],
-    photoCredit: 'Photography from a recent wedding by your local team.',
+    dayPhotos: ['/notes/colin/venue-1.jpg', '/notes/colin/venue-2.jpg'],
+    photoCredit: 'Your reception venue, Hotel Arista in Naperville.',
+    inspoMention:
+      'nostalgic and family focused, with fun, candid energy mixed in',
+    inspoYoutubeId: 'NRMRVCl4YXw',
   },
 ];
 
