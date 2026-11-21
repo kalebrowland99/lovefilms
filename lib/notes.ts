@@ -171,6 +171,75 @@ export const NOTES: LeadNotes[] = [
     inspoMention: 'nostalgic and natural, focused on family and real memories',
     inspoYoutubeId: 'NRMRVCl4YXw',
   },
+  {
+    slug: 'toyin-notes',
+    coupleTitle: 'Toyin & Joshua',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Saturday, November 21',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Thursday, July 8, 2027' },
+      {
+        label: 'Ceremony',
+        value:
+          'Two ceremonies at The Arlo, your American vow ceremony first, then your Nigerian ceremony',
+      },
+      {
+        label: 'Reception',
+        value: 'At The Arlo, following your ceremonies and cocktail hour',
+      },
+      { label: 'Guests', value: '220 to 250' },
+      { label: 'Coverage', value: '10 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value: 'Editorial and candid, with guided posing and plenty of real moments',
+      },
+      {
+        label: 'First look',
+        value: 'Yes, a first look with just the two of you',
+      },
+    ],
+    packageName: 'Halo Signature',
+    packageIntro:
+      'The package you and Alanna landed on. Ten full hours with your photo and video team, and a longer cinematic film to relive it.',
+    packageFacts: [
+      '10 hours of photography and videography coverage',
+      'Cinematic highlight film, 7 minutes or longer',
+      'Full ceremony film and edited speeches',
+      'All of your raw video footage included, yours to keep',
+      'Content creation included',
+      'Preview gallery within 72 hours of your wedding',
+      'Designed album upgrade available for $100',
+    ],
+    bonuses: [
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your highlight film ($350 value)',
+      'Free 50 vintage film-style photo edits ($250 value)',
+    ],
+    bonusDeadlineISO: '2026-11-23T14:30:00-06:00',
+    areaLabel: 'Austin',
+    weddingDateLabel: 'July 8, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/toyin/venue-1.jpg', '/notes/toyin/venue-2.jpg'],
+    photoCredit: 'Your ceremony and reception venue, The Arlo in Austin.',
+    inspoMention:
+      'editorial but also candid, without spending the whole day posing',
+    inspoYoutubeId: 'IqCevNEOG4U',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
