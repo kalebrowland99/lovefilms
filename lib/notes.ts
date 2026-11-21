@@ -105,6 +105,72 @@ export const NOTES: LeadNotes[] = [
       'nostalgic and family focused, with fun, candid energy mixed in',
     inspoYoutubeId: 'NRMRVCl4YXw',
   },
+  {
+    slug: 'veldis-notes',
+    coupleTitle: 'Veldis King',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Saturday, November 21',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Friday, June 11, 2027' },
+      {
+        label: 'Ceremony',
+        value: "Outdoor ceremony at Benham's Grove in Centerville",
+      },
+      {
+        label: 'Reception',
+        value: "Indoor reception at Benham's Grove, right after the ceremony",
+      },
+      {
+        label: 'Guests',
+        value: 'Around 100 for the ceremony, around 200 for the reception',
+      },
+      { label: 'Coverage', value: '8 to 10 hours of videography' },
+      {
+        label: 'Your style',
+        value: 'Nostalgic and natural, all about family and real memories',
+      },
+      { label: 'Vows', value: 'Private vows, and no first look' },
+    ],
+    packageName: 'Starlight',
+    packageIntro:
+      'The package that fits what you told Alanna you want. Up to ten hours with your videography team, a longer highlight film, and your full ceremony film in 4K.',
+    packageFacts: [
+      'Up to 10 hours of videography coverage',
+      'Highlight film, 5 minutes or longer',
+      'Full length ceremony film',
+      '4K coverage',
+    ],
+    bonuses: [
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your extended highlight film ($350 value)',
+      'Free social media teaser ($250 value)',
+      'Free all raw footage and unedited files ($600 value)',
+      'Free content clips, vertical phone videos from behind the scenes ($250 value)',
+    ],
+    bonusDeadlineISO: '2026-11-23T12:15:00-06:00',
+    areaLabel: 'Centerville',
+    weddingDateLabel: 'June 11, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/veldis/venue-1.jpg', '/notes/veldis/venue-2.jpg'],
+    photoCredit: "Your ceremony and reception venue, Benham's Grove in Centerville.",
+    inspoMention: 'nostalgic and natural, focused on family and real memories',
+    inspoYoutubeId: 'NRMRVCl4YXw',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
