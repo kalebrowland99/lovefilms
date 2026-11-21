@@ -15,6 +15,7 @@ import { withCanvasText } from '@/lib/showit-canvas';
 import { SimpleVideoHero } from '@/components/ui/simple-video-hero';
 import { PortfolioGrid } from '@/components/blocks/portfolio-grid';
 import { LoveNotes } from '@/components/blocks/love-notes';
+import { GoogleReviews } from '@/components/blocks/google-reviews';
 import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
 import { BookingSection } from '@/components/blocks/booking-section';
 import { Footer } from '@/components/ui/footer';
@@ -58,6 +59,8 @@ export default function Home() {
       <ShowitCanvas blocks={HOME_OFFERINGS_BLOCKS} />
 
       <LoveNotes />
+
+      <GoogleReviews />
 
       <ShowitCanvas blocks={HOME_STORIES_BLOCKS} />
 

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FONT_VAR } from '@/components/blocks/showit-canvas';
 import { CALENDLY_BOOKING_URL } from '@/lib/calendly';
-import { FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/social';
+import { FACEBOOK_URL, GOOGLE_REVIEWS_URL, INSTAGRAM_URL } from '@/lib/social';
 
 /** Height of the fixed nav bar, per breakpoint. */
 export const CANVAS_HEADER_HEIGHT = { mobile: 54, desktop: 103 };
@@ -14,6 +14,7 @@ const LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Portfolio', href: '/portfolio' },
   { label: 'Experience', href: '/experience' },
+  { label: 'Google Reviews', href: GOOGLE_REVIEWS_URL },
 ];
 
 /** Scrolls to the booking section, or opens Calendly on pages without one. */
