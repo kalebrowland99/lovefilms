@@ -13,7 +13,6 @@ import {
 } from '@/lib/home-canvas';
 import { withCanvasText } from '@/lib/showit-canvas';
 import { SimpleVideoHero } from '@/components/ui/simple-video-hero';
-import { PortfolioGrid } from '@/components/blocks/portfolio-grid';
 import { LoveNotes } from '@/components/blocks/love-notes';
 import { GoogleReviews } from '@/components/blocks/google-reviews';
 import { InstagramScrollDemo } from '@/components/blocks/instagram-scroll-demo';
@@ -53,8 +52,6 @@ export default function Home() {
         title={copy.ctaTitle}
         description={copy.ctaDescription}
       />
-
-      <PortfolioGrid title="Quick Previews" />
 
       <ShowitCanvas blocks={HOME_OFFERINGS_BLOCKS} />
 
