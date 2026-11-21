@@ -27,7 +27,8 @@ export type LeadNotes = {
   areaLabel: string;
   weddingDateLabel: string;
   films: LeadFilm[];
-  photos: string[];
+  dayPhotos: string[];
+  stylePhotos: string[];
   photoCredit: string;
 };
 
@@ -97,13 +98,11 @@ export const NOTES: LeadNotes[] = [
         thumb: '/notes/shared/film-rebecca.jpg',
       },
     ],
-    photos: [
-      '/notes/colin/tia-1.jpg',
-      '/notes/colin/tia-2.jpg',
-      '/notes/colin/tia-3.jpg',
-      '/notes/colin/tia-4.jpg',
+    dayPhotos: ['/notes/colin/tia-1.jpg', '/notes/colin/tia-3.jpg'],
+    stylePhotos: [
       '/notes/colin/tia-5.jpg',
       '/notes/colin/tia-6.jpg',
+      '/notes/colin/tia-4.jpg',
     ],
     photoCredit: 'Photography from a recent wedding by your local team.',
   },

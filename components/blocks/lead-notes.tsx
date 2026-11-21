@@ -20,8 +20,32 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
+function PhotoStrip({ photos, cols }: { photos: string[]; cols: 2 | 3 }) {
+  if (photos.length === 0) return null;
+  return (
+    <div
+      className={`mt-4 grid gap-3 ${cols === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}
+    >
+      {photos.map((src) => (
+        <div
+          key={src}
+          className="relative aspect-[3/2] overflow-hidden bg-[#070707]/5"
+        >
+          <Image
+            src={src}
+            alt="Wedding photography by The Love Team"
+            fill
+            sizes="(max-width: 768px) 33vw, 300px"
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
-  const photosPerFilm = Math.ceil(notes.photos.length / notes.films.length);
+  const hasReception = notes.dayFacts.some((f) => f.label === 'Reception');
 
   return (
     <>
@@ -61,9 +85,19 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                     <dd className="mt-1 text-base md:text-lg leading-relaxed text-[#070707]/85">
                       {f.value}
                     </dd>
+                    {((f.label === 'Reception' && hasReception) ||
+                      (f.label === 'Ceremony' && !hasReception)) && (
+                      <PhotoStrip photos={notes.dayPhotos} cols={2} />
+                    )}
+                    {f.label === 'Your style' && (
+                      <PhotoStrip photos={notes.stylePhotos} cols={3} />
+                    )}
                   </div>
                 ))}
               </dl>
+              <p className="mt-6 text-sm tracking-wide text-[#070707]/50">
+                {notes.photoCredit}
+              </p>
             </article>
             <article className="border border-[#070707]/15 bg-white/40 p-8 md:p-12">
               <p className="text-[11px] uppercase tracking-[0.2em] text-[#070707]/50">
@@ -188,7 +222,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
             <div className="text-center">
               <Eyebrow>Portfolios</Eyebrow>
               <h2 className="mt-5 font-serif text-3xl md:text-5xl leading-tight">
-                More work from your potential photographer and videographer in{' '}
+                More work from your potential photographer and videographer near{' '}
                 {notes.areaLabel}
               </h2>
               <p className="mt-6 mx-auto max-w-2xl text-lg leading-relaxed text-[#070707]/75">
@@ -197,7 +231,7 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
               </p>
             </div>
             <div className="mt-12 space-y-14">
-              {notes.films.map((film, i) => (
+              {notes.films.map((film) => (
                 <div key={film.driveId}>
                   <DriveFilm
                     driveId={film.driveId}
@@ -208,30 +242,9 @@ export function LeadNotesPage({ notes }: { notes: LeadNotes }) {
                   <p className="mt-1 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
                     {film.note}
                   </p>
-                  <div className="mt-6 grid grid-cols-3 gap-3 md:gap-4">
-                    {notes.photos
-                      .slice(i * photosPerFilm, i * photosPerFilm + photosPerFilm)
-                      .map((src) => (
-                        <div
-                          key={src}
-                          className="relative aspect-[3/2] overflow-hidden bg-[#070707]/5"
-                        >
-                          <Image
-                            src={src}
-                            alt="Wedding photography by The Love Team"
-                            fill
-                            sizes="(max-width: 768px) 33vw, 300px"
-                            className="object-cover"
-                          />
-                        </div>
-                      ))}
-                  </div>
                 </div>
               ))}
             </div>
-            <p className="mt-10 text-center text-sm md:text-base tracking-wide text-[#070707]/50">
-              {notes.photoCredit}
-            </p>
           </div>
         </section>
 
