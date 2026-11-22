@@ -240,6 +240,65 @@ export const NOTES: LeadNotes[] = [
       'editorial but also candid, without spending the whole day posing',
     inspoYoutubeId: 'IqCevNEOG4U',
   },
+  {
+    slug: 'samuel-notes',
+    coupleTitle: 'Samuel & Isabel',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Sunday, November 22',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, May 22, 2027' },
+      {
+        label: 'Ceremony',
+        value:
+          'Still deciding, likely a church in the U District in Seattle or in Kent',
+      },
+      { label: 'Reception', value: 'At the same place as your ceremony' },
+      { label: 'Guests', value: '150 to 200' },
+      { label: 'Coverage', value: '8 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Timeless, classic, elegant and romantic, garden inspired, with a mix of candid and posed photos',
+      },
+      { label: 'First look', value: 'No first look planned' },
+    ],
+    packageName: 'Halo Essential',
+    packageIntro:
+      'The package that fits the day you described to Alanna. Eight hours with your photo and video team, a highlight film, and content creation included.',
+    packageFacts: [
+      '8 hours of photography and videography coverage',
+      '500 plus edited photos',
+      'Highlight film, 5 minutes or longer',
+      'Full ceremony film',
+      'Content creation included',
+      'Preview gallery within one week of your wedding',
+    ],
+    bonuses: ['Free 50 vintage film-style photo edits'],
+    bonusDeadlineISO: '2026-11-24T14:30:00-06:00',
+    areaLabel: 'Seattle',
+    weddingDateLabel: 'May 22, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: [],
+    photoCredit: '',
+    inspoMention:
+      'timeless, classic, elegant and romantic, garden inspired and not overly modern or trendy',
+    inspoYoutubeId: 'QWcTdxTo-AI',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
