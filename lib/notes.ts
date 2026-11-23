@@ -299,6 +299,73 @@ export const NOTES: LeadNotes[] = [
       'timeless, classic, elegant and romantic, garden inspired and not overly modern or trendy',
     inspoYoutubeId: 'QWcTdxTo-AI',
   },
+  {
+    slug: 'menna-notes',
+    coupleTitle: 'Menna Aldalati',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Monday, November 23',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, October 23, 2027' },
+      {
+        label: 'Ceremony',
+        value:
+          'A private ceremony about a week before, photographed by a family member',
+      },
+      {
+        label: 'Reception',
+        value: 'Dove Canyon Courtyard, a completely outdoor courtyard venue',
+      },
+      { label: 'Guests', value: 'Around 170' },
+      { label: 'Coverage', value: '8 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Natural and not overly posed, focused on the memories and the energy of the celebration',
+      },
+      { label: 'First look', value: 'Yes, a first look while getting ready' },
+      {
+        label: 'Traditions',
+        value:
+          'A fusion wedding, part Egyptian and part American, with a traditional Arab and Egyptian entrance',
+      },
+    ],
+    packageName: 'Halo Essential',
+    packageIntro:
+      'The package you and Alanna landed on. Eight hours with your photo and video team, a highlight film, and content creation included.',
+    packageFacts: [
+      '8 hours of photography and videography coverage',
+      '500 plus edited photos',
+      'Highlight film, 5 minutes or longer',
+      'Full ceremony film',
+      'Content creation included',
+      'Preview gallery within one week of your wedding',
+    ],
+    bonuses: ['Free 50 vintage film-style photo edits'],
+    bonusDeadlineISO: '2026-11-25T12:15:00-06:00',
+    areaLabel: 'Trabuco Canyon',
+    weddingDateLabel: 'October 23, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/menna/venue-1.jpg', '/notes/menna/venue-2.jpg'],
+    photoCredit: 'Your reception venue, Dove Canyon Courtyard in Trabuco Canyon.',
+    inspoMention:
+      'natural and not overly posed, focused on the memories and the energy of the celebration',
+    inspoYoutubeId: 'NXG7Rq5cIrQ',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
