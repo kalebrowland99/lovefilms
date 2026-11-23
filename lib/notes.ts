@@ -503,6 +503,76 @@ export const NOTES: LeadNotes[] = [
       'soft and airy, dreamy and romantic, like a fairytale, with lots of candid, natural moments',
     inspoYoutubeId: 'JoiXnIZynNM',
   },
+  {
+    slug: 'dakshatha-notes',
+    coupleTitle: 'Dakshatha & Reuben',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Monday, November 23',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, October 9, 2027' },
+      {
+        label: 'Ceremony',
+        value: 'A nearby church, still to pick',
+      },
+      {
+        label: 'Reception',
+        value: 'Spring Mill Manor in Ivyland',
+      },
+      { label: 'Guests', value: 'Around 250' },
+      { label: 'Coverage', value: '10 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Candid and natural, not overly posed, with fall foliage and sunset portraits',
+      },
+      {
+        label: 'First look',
+        value:
+          'No first look, a first touch instead, with vows exchanged then or right after the ceremony',
+      },
+    ],
+    packageName: 'Halo Signature',
+    packageIntro:
+      'The package you and Alanna landed on. Ten full hours with your photo and video team, and a longer cinematic film to relive it.',
+    packageFacts: [
+      '10 hours of photography and videography coverage',
+      'Cinematic highlight film, 7 minutes or longer',
+      'Full ceremony film and edited speeches',
+      'All of your raw video footage included, yours to keep',
+      'Content creation included',
+      'Preview gallery within 72 hours of your wedding',
+      'Designed album upgrade available for $100',
+    ],
+    bonuses: [
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your highlight film ($350 value)',
+      'Free 50 vintage film-style photo edits ($250 value)',
+    ],
+    bonusDeadlineISO: '2026-11-25T16:15:00-06:00',
+    areaLabel: 'Ivyland',
+    weddingDateLabel: 'October 9, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/dakshatha/venue-1.jpg', '/notes/dakshatha/venue-2.jpg'],
+    photoCredit: 'Your reception venue, Spring Mill Manor in Ivyland.',
+    inspoMention:
+      'candid and natural, not overly posed, with fall foliage and sunset light',
+    inspoYoutubeId: 'NXG7Rq5cIrQ',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
