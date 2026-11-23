@@ -573,6 +573,77 @@ export const NOTES: LeadNotes[] = [
       'candid and natural, not overly posed, with fall foliage and sunset light',
     inspoYoutubeId: 'NXG7Rq5cIrQ',
   },
+  {
+    slug: 'juliana-notes',
+    coupleTitle: 'Juliana & Connor',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Monday, November 23',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, June 10, 2028' },
+      {
+        label: 'Ceremony',
+        value: 'At Danversport in Danvers, at the same venue as your reception',
+      },
+      {
+        label: 'Reception',
+        value: 'Indoors at Danversport in Danvers, following your ceremony',
+      },
+      { label: 'Guests', value: 'Around 200' },
+      { label: 'Coverage', value: '10 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Nostalgic and natural, not overly posed, focused on being present and capturing the little moments with the people you love',
+      },
+      {
+        label: 'First look',
+        value:
+          'No first look as a couple, your vows in front of everyone, and maybe a first look with your dad and brother',
+      },
+      { label: 'Traditions', value: 'Traditional dances' },
+    ],
+    packageName: 'Halo Signature',
+    packageIntro:
+      'The package you and Alanna landed on. Ten full hours with your photo and video team, and a longer cinematic film to relive it.',
+    packageFacts: [
+      '10 hours of photography and videography coverage',
+      'Cinematic highlight film, 7 minutes or longer',
+      'Full ceremony film and edited speeches',
+      'All of your raw video footage included, yours to keep',
+      'Content creation included',
+      'Preview gallery within 72 hours of your wedding',
+      'Designed album upgrade available for $100',
+    ],
+    bonuses: [
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your highlight film ($350 value)',
+      'Free 50 vintage film-style photo edits ($250 value)',
+    ],
+    bonusDeadlineISO: '2026-11-25T17:00:00-06:00',
+    areaLabel: 'Danvers',
+    weddingDateLabel: 'June 10, 2028',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/juliana/venue-1.jpg', '/notes/juliana/venue-2.jpg'],
+    photoCredit: 'Your ceremony and reception venue, Danversport in Danvers.',
+    inspoMention:
+      'nostalgic, not overly posed, focused on being present and capturing the little moments',
+    inspoYoutubeId: 'NRMRVCl4YXw',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
