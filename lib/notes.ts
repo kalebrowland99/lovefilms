@@ -366,6 +366,74 @@ export const NOTES: LeadNotes[] = [
       'natural and not overly posed, focused on the memories and the energy of the celebration',
     inspoYoutubeId: 'NXG7Rq5cIrQ',
   },
+  {
+    slug: 'julia-notes',
+    coupleTitle: 'Julia & Marcus',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Monday, November 23',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Friday, June 4, 2027' },
+      {
+        label: 'Ceremony',
+        value: 'At Hyatt Lodge in Oak Brook, at the same venue as your reception',
+      },
+      {
+        label: 'Reception',
+        value: 'At Hyatt Lodge in Oak Brook, following your ceremony',
+      },
+      { label: 'Guests', value: '150 to 175' },
+      { label: 'Coverage', value: '10 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'A mix of candid and posed, nostalgic, like it was just yesterday',
+      },
+      {
+        label: 'First look',
+        value: 'No first look, Marcus sees you when you walk down the aisle',
+      },
+    ],
+    packageName: 'Halo Signature',
+    packageIntro:
+      'The package you and Alanna landed on. Ten full hours with your photo and video team, and a longer cinematic film to relive it.',
+    packageFacts: [
+      '10 hours of photography and videography coverage',
+      'Cinematic highlight film, 7 minutes or longer',
+      'Full ceremony film and edited speeches',
+      'All of your raw video footage included, yours to keep',
+      'Content creation included',
+      'Preview gallery within 72 hours of your wedding',
+      'Designed album upgrade available for $100',
+    ],
+    bonuses: [
+      'Free extra hour of coverage ($500 value)',
+      'Free rehearsal dinner coverage ($1,000 value)',
+      'Free content creator for your wedding day ($2,500 value)',
+    ],
+    bonusDeadlineISO: '2026-11-25T13:30:00-06:00',
+    areaLabel: 'Oak Brook',
+    weddingDateLabel: 'June 4, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/julia/venue-1.jpg', '/notes/julia/venue-2.jpg'],
+    photoCredit: 'Your ceremony and reception venue, Hyatt Lodge in Oak Brook.',
+    inspoMention: 'a mix of candid and posed, nostalgic, like it was just yesterday',
+    inspoYoutubeId: 'NRMRVCl4YXw',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
