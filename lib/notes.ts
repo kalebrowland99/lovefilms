@@ -434,6 +434,75 @@ export const NOTES: LeadNotes[] = [
     inspoMention: 'a mix of candid and posed, nostalgic, like it was just yesterday',
     inspoYoutubeId: 'NRMRVCl4YXw',
   },
+  {
+    slug: 'diana-notes',
+    coupleTitle: 'Diana Rodriguez',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Monday, November 23',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, September 18, 2027' },
+      {
+        label: 'Ceremony',
+        value:
+          'A lakeside gazebo at Little Paradise Farm in Miami, with the Venice boat as part of the ceremony',
+      },
+      {
+        label: 'Reception',
+        value:
+          'Inside the glass barn at Little Paradise Farm, at the same venue as your ceremony',
+      },
+      { label: 'Coverage', value: '8 to 9 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value: 'Soft and airy, dreamy and romantic, like a fairytale',
+      },
+      {
+        label: 'First look',
+        value:
+          'Yes, about an hour before the ceremony, with private vows to each other',
+      },
+      {
+        label: 'Send-off',
+        value: 'Fireworks at 8:30, then a sparkler send-off',
+      },
+    ],
+    packageName: 'Halo Essential',
+    packageIntro:
+      'The package that fits the day you described to Alanna. Eight hours with your photo and video team, and content creation included.',
+    packageFacts: [
+      '8 hours of photography and videography coverage',
+      '300 professionally edited photos',
+      'Content creation included',
+    ],
+    bonuses: [
+      'Free 50 vintage film-style photo edits',
+      'Complimentary drone coverage for your ceremony',
+    ],
+    bonusDeadlineISO: '2026-11-25T15:30:00-06:00',
+    areaLabel: 'Miami',
+    weddingDateLabel: 'September 18, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/diana/venue-1.jpg', '/notes/diana/venue-2.jpg'],
+    photoCredit: 'Your ceremony and reception venue, Little Paradise Farm in Miami.',
+    inspoMention:
+      'soft and airy, dreamy and romantic, like a fairytale, with lots of candid, natural moments',
+    inspoYoutubeId: 'JoiXnIZynNM',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
