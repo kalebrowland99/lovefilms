@@ -707,6 +707,70 @@ export const NOTES: LeadNotes[] = [
       'natural and candid, with some posed shots mixed in, focused on real emotion',
     inspoYoutubeId: 'NXG7Rq5cIrQ',
   },
+  {
+    slug: 'anjelica-notes',
+    coupleTitle: 'Anjelica & Tim',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Tuesday, November 24',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, October 9, 2027' },
+      {
+        label: 'Ceremony',
+        value: 'Outdoors at River Garden, at the same venue as your reception',
+      },
+      {
+        label: 'Reception',
+        value: 'Outdoors at River Garden, under a tent, following your ceremony',
+      },
+      { label: 'Guests', value: 'Around 150' },
+      { label: 'Coverage', value: '8 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Candid and natural, focused on the raw moments and the small details, with a vintage film style you love',
+      },
+      { label: 'Vows', value: 'Writing your own, shared during your ceremony' },
+      {
+        label: 'First look',
+        value: 'No first look, Tim sees you when you walk down the aisle',
+      },
+    ],
+    packageName: 'Halo Essential',
+    packageIntro:
+      'The package you selected with Alanna. Eight hours with your photo and video team, a highlight film, and content creation included.',
+    packageFacts: [
+      '8 hours of photography and videography coverage',
+      '500 plus edited photos',
+      'Highlight film, 3 to 5 minutes',
+      'Full ceremony film',
+      'Content creation included',
+    ],
+    bonuses: ['Free 50 vintage film-style photo edits'],
+    bonusDeadlineISO: '2026-11-26T17:00:00-06:00',
+    areaLabel: 'your area',
+    weddingDateLabel: 'October 9, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: [],
+    photoCredit: '',
+    inspoMention:
+      'candid and natural, focused on the raw moments, with a vintage film style',
+    inspoYoutubeId: 'NXG7Rq5cIrQ',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
