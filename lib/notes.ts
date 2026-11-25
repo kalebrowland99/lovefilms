@@ -914,6 +914,81 @@ export const NOTES: LeadNotes[] = [
       'in the moment, capturing the day as it was, with a cinematic story',
     inspoYoutubeId: 'NXG7Rq5cIrQ',
   },
+  {
+    slug: 'molly-notes',
+    coupleTitle: 'Molly Thayn',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Wednesday, November 25',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, May 15, 2027' },
+      {
+        label: 'Ceremony',
+        value: 'Outdoors in your grandparents backyard, at the same place as your reception',
+      },
+      {
+        label: 'Reception',
+        value: 'Outdoors in your grandparents backyard, following your ceremony',
+      },
+      { label: 'Guests', value: 'Around 150' },
+      { label: 'Coverage', value: '10 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Natural and candid, not overly posed, with a nostalgic feeling that brings the day back when you watch it',
+      },
+      {
+        label: 'First look',
+        value: 'A first look with your dad and family, but not with your fiance',
+      },
+      { label: 'Vows', value: 'Writing your own, shared during your ceremony' },
+      {
+        label: 'Traditions',
+        value: 'A rope tying ceremony, and a dedication dance for loved ones lost',
+      },
+    ],
+    packageName: 'Halo Signature',
+    packageIntro:
+      'The package you were leaning toward with Alanna. Ten full hours with your photo and video team, and a cinematic film to relive it.',
+    packageFacts: [
+      '10 hours of photography and videography coverage',
+      '700 plus edited photos',
+      'Cinematic highlight film, 5 minutes or longer',
+      'Full ceremony film and edited speeches',
+      'All of your raw video footage included, yours to keep',
+      'Content creation included',
+      'Preview gallery within 72 hours of your wedding',
+    ],
+    bonuses: [
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your highlight film ($350 value)',
+      'Free 50 vintage film-style photo edits ($250 value)',
+      'Complimentary drone coverage',
+    ],
+    bonusDeadlineISO: '2026-11-27T16:30:00-06:00',
+    areaLabel: 'your area',
+    weddingDateLabel: 'May 15, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: [],
+    photoCredit: '',
+    inspoMention:
+      'natural and candid, not overly posed, with a nostalgic feeling that brings the day back',
+    inspoYoutubeId: 'NXG7Rq5cIrQ',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
