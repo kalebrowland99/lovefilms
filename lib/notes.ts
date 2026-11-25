@@ -842,6 +842,78 @@ export const NOTES: LeadNotes[] = [
       'natural but guided, with direction for intimate photos and real moments in between',
     inspoYoutubeId: 'NXG7Rq5cIrQ',
   },
+  {
+    slug: 'tachea-notes',
+    coupleTitle: 'TaChea & Darren',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Wednesday, November 25',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Monday, February 21, 2028' },
+      {
+        label: 'Ceremony',
+        value: 'Outside at Villa Toscana, with getting ready in the house on the estate',
+      },
+      {
+        label: 'Reception',
+        value: 'Inside at Villa Toscana, at the same venue as your ceremony',
+      },
+      { label: 'Guests', value: '100' },
+      {
+        label: 'Your style',
+        value:
+          'In the moment and natural, capturing the day as it was, with a cinematic story you can relive',
+      },
+      {
+        label: 'First look',
+        value:
+          'No first look. Darren sees you for the first time when you walk down the aisle',
+      },
+      {
+        label: 'Vows',
+        value: 'Still deciding between traditional vows and personal vows',
+      },
+      {
+        label: 'Send-off',
+        value: 'A possible last dance and sparklers at the end of the night',
+      },
+    ],
+    packageName: 'Halo Essential',
+    packageIntro:
+      'The starting package you and Alanna talked through, ready for you and Darren to review together. Eight hours with your photo and video team, and content creation included.',
+    packageFacts: [
+      '8 hours of photography and videography coverage',
+      '500 plus edited photos',
+      'Cinematic highlight film, 5 minutes or longer',
+      'Full ceremony film',
+      'Content creation included',
+      'Preview gallery within 1 week of your wedding',
+    ],
+    bonuses: ['Free 50 vintage film-style photo edits'],
+    bonusDeadlineISO: '2026-11-27T12:15:00-06:00',
+    areaLabel: 'your area',
+    weddingDateLabel: 'February 21, 2028',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: [],
+    photoCredit: '',
+    inspoMention:
+      'in the moment, capturing the day as it was, with a cinematic story',
+    inspoYoutubeId: 'NXG7Rq5cIrQ',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
