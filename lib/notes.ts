@@ -1129,6 +1129,77 @@ export const NOTES: LeadNotes[] = [
       'nostalgic and natural, focused on being present with your loved ones',
     inspoYoutubeId: 'NRMRVCl4YXw',
   },
+  {
+    slug: 'alexandra-notes',
+    coupleTitle: 'Alexandra Von Wald',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Friday, November 27',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, October 9, 2027' },
+      {
+        label: 'Ceremony',
+        value: 'At Prospect Park in Hudson, overlooking downtown Hudson',
+      },
+      {
+        label: 'Reception',
+        value: 'At Max\'s Social House in Hudson, following your ceremony',
+      },
+      { label: 'Guests', value: 'Around 120' },
+      { label: 'Coverage', value: '6 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Documentary and very natural, not overly posed, with candid shots and raw moments that look like you and look like the moment',
+      },
+      {
+        label: 'First look',
+        value: 'No first look, your first look is down the aisle',
+      },
+      {
+        label: 'Your day',
+        value: 'Very casual and laid back, a second wedding for you both, with no wedding party',
+      },
+    ],
+    packageName: 'Halo Essential',
+    packageIntro:
+      'The customized package you and Alanna landed on. Six hours with your photo and video team, sized to your ceremony and reception, with content creation included.',
+    packageFacts: [
+      '6 hours of photography and videography coverage',
+      'Cinematic highlight film, 5 minutes or longer',
+      'Full ceremony film',
+      'Content creation included',
+      'All of your raw video footage included, yours to keep',
+      'Preview gallery within one week of your wedding',
+    ],
+    bonuses: [
+      'Free 50 vintage film-style photo edits',
+      'Complimentary drone coverage',
+    ],
+    bonusDeadlineISO: '2026-11-29T17:00:00-06:00',
+    areaLabel: 'Hudson',
+    weddingDateLabel: 'October 9, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: [],
+    photoCredit: '',
+    inspoMention:
+      'documentary and very natural, not overly posed, with candid shots and raw moments',
+    inspoYoutubeId: 'NXG7Rq5cIrQ',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
