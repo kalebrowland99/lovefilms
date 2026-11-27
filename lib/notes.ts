@@ -1057,6 +1057,78 @@ export const NOTES: LeadNotes[] = [
     inspoMention: 'airy, natural, and unposed',
     inspoYoutubeId: 'NXG7Rq5cIrQ',
   },
+  {
+    slug: 'ravenne-notes',
+    coupleTitle: 'Ravenne & Yushan',
+    hostFirstName: 'Alanna',
+    callDateLabel: 'Friday, November 27',
+    heroLine:
+      'Everything from our call, in one place. Your day, your package, your bonuses, and the answers to the questions couples ask us most, plus recent work from the photographers and videographers on your local team.',
+    dayFacts: [
+      { label: 'Your date', value: 'Saturday, November 6, 2027' },
+      {
+        label: 'Ceremony',
+        value: 'At Lakeview Pavilion, at the same venue as your reception',
+      },
+      {
+        label: 'Reception',
+        value: 'At Lakeview Pavilion, following your ceremony',
+      },
+      { label: 'Guests', value: '170 to 175' },
+      { label: 'Coverage', value: '10 hours, photography and videography' },
+      {
+        label: 'Your style',
+        value:
+          'Natural and not overly posed, a little of everything, with a mix of indoor and outdoor moments',
+      },
+      { label: 'First look', value: 'Yes, a first look' },
+      {
+        label: 'Vows',
+        value:
+          'Writing your own, still deciding whether to share them at your first look or during your ceremony',
+      },
+    ],
+    packageName: 'Halo Signature',
+    packageIntro:
+      'The package you were leaning toward with Alanna. Ten full hours with your photo and video team, and a longer cinematic film to relive it.',
+    packageFacts: [
+      '10 hours of photography and videography coverage',
+      '700 plus edited photos',
+      'Cinematic highlight film, 7 minutes or longer',
+      'Full ceremony film and edited speeches',
+      'All of your raw video footage included, yours to keep',
+      'Content creation included',
+      'Preview gallery within 72 hours of your wedding',
+      'Designed album upgrade available for $100',
+    ],
+    bonuses: [
+      'Free Vintage Super 8 highlight film bonus edit ($350 value)',
+      'Free +2 minutes added to your highlight film ($350 value)',
+      'Free 50 vintage film-style photo edits ($250 value)',
+    ],
+    bonusDeadlineISO: '2026-11-29T15:30:00-06:00',
+    areaLabel: 'Foxborough',
+    weddingDateLabel: 'November 6, 2027',
+    films: [
+      {
+        couple: 'Nelly & Jeremiah',
+        note: 'Garden ceremony, draped reception hall, and a sparkler finish.',
+        driveId: '1X3-8OmVdMGG-AAzVnapd2IhE8lokXFeB',
+        thumb: '/notes/shared/film-nelly.jpg',
+      },
+      {
+        couple: 'Rebecca & David',
+        note: 'A colorful garden wedding at a white manor house.',
+        driveId: '1UiYb1t-FMJlyc5J8Ib7jffmWcbTFfQBb',
+        thumb: '/notes/shared/film-rebecca.jpg',
+      },
+    ],
+    dayPhotos: ['/notes/ravenne/venue-1.jpg', '/notes/ravenne/venue-2.jpg'],
+    photoCredit: 'Your ceremony and reception venue, Lakeview Pavilion in Foxborough.',
+    inspoMention:
+      'nostalgic and natural, focused on being present with your loved ones',
+    inspoYoutubeId: 'NRMRVCl4YXw',
+  },
 ];
 
 export function notesBySlug(slug: string): LeadNotes | undefined {
